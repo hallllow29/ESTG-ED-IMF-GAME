@@ -191,8 +191,34 @@ public class Graph <T> implements GraphADT<T> {
 	}
 
 	@Override
-	public Iterator iteratorShortestPath(T startVertex, T targetVertex) {
-		return null;
+	public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException {
+		int startIndex = getVertexIndex(startVertex);
+		int targetIndex = getVertexIndex(targetVertex);
+		int index = startIndex;
+
+		if (startIndex == -1 ) {
+			throw new ElementNotFoundException("Vertex 1");
+		}
+
+		if (targetIndex == -1) {
+			throw new ElementNotFoundException("Vertex 2");
+		}
+
+		// INIT
+		final int INF = Integer.MAX_VALUE;
+		// Mark all distances with INF
+		// Mark all previous with -1
+		// Mark all visited vertices false
+		int[] distances = new int[this.numVertices];
+		int[] previous = new int[this.numVertices];
+		boolean[] visited = new boolean[this.numVertices];
+		for (int i = 0; i < numVertices; i++) {
+			distances[i] = INF;
+			previous[i] = -1;
+			visited[i] = false;
+		}
+
+
 	}
 
 	@Override
