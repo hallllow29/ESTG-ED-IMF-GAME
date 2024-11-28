@@ -1,16 +1,18 @@
 package entities;
 
+import lib.exceptions.EmptyCollectionException;
+
 public class Player extends Character {
 
 	/**
 	 * Represents the current position of the player in the game.
-	 * This variable holds a reference to the Room object where the player is currently located.
+	 * This variable holds a reference to the entities.Room object where the player is currently located.
 	 */
 	private Room current_position;
 
 	/**
 	 * Represents the player's backpack.
-	 * This variable holds a reference to the BackPack object containing
+	 * This variable holds a reference to the entities.BackPack object containing
 	 * the items the player has collected in the game.
 	 */
 	private BackPack back_pack;
@@ -23,10 +25,15 @@ public class Player extends Character {
 	 * @param current_position the current position of the player in the game
 	 * @param back_pack the backpack of the player containing collected items
 	 */
+
+	private Kevlar kevlar;
+
+
 	public Player(String name, int fire_power, Room current_position, BackPack back_pack) {
 		super(name, fire_power);
 		this.current_position = current_position;
 		this.back_pack = back_pack;
+		this.kevlar = null;
 	}
 
 	/**
@@ -57,5 +64,34 @@ public class Player extends Character {
 	public void attack(Character character) {
 
 	}
+
+	public String equipKevlar(Kevlar kevlar) {
+		this.kevlar = kevlar;
+
+		super.setCurrentHealth(super.getCurrentHealth() + this.kevlar.getExtraHp());
+
+		return super.getName() + " equipped a kevlar! HP :" + super.getCurrentHealth();
+	}
+
+	public void addKitToBackPack(MediKit kit) {
+		this.back_pack.addKit(kit);
+	}
+
+	public String useMediKit() throws EmptyCollectionException {
+		if (this.back_pack.isBackPackEmpty()) {
+			throw new EmptyCollectionException("There are no medikits available to use!");
+		}
+
+		if (super.getCurrentHealth() >= 100 ) {
+			return "You can't use medikits because your health is already full";
+		}
+
+		MediKit kit = back_pack.useKit();
+
+		int newHealth = Math.min(super.getCurrentHealth() + kit.getHealPower(), 100);
+		super.setCurrentHealth(newHealth);
+
+		return "Medic kit used! HP: " + super.getCurrentHealth() + "/100";
+ 	}
 
 }

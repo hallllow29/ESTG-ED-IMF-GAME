@@ -9,7 +9,7 @@ public class Enemy extends Character {
 	 *
 	 * @param name the name of the enemy
 	 * @param fire_power the fire power of the enemy
-	 * @param current_position the current position of the enemy as a Room object
+	 * @param current_position the current position of the enemy as a entities.Room object
 	 */
 	public Enemy(String name, int fire_power, Room current_position) {
 		super(name, fire_power);
@@ -19,7 +19,7 @@ public class Enemy extends Character {
 	/**
 	 * Retrieves the current position of the enemy.
 	 *
-	 * @return the current position of the enemy as a Room object
+	 * @return the current position of the enemy as a entities.Room object
 	 */
 	public Room getCurrentPosition() {
 		return this.current_position;

@@ -1,3 +1,5 @@
+package entities;
+
 public abstract class Item {
 
 	/**
@@ -6,15 +8,15 @@ public abstract class Item {
 	private final String name;
 
 	/**
-	 * The current position of the item represented as a Room object.
+	 * The current position of the item represented as a entities.Room object.
 	 */
 	private Room position;
 
 	/**
-	 * Constructs a new Item with the specified name and position.
+	 * Constructs a new entities.Item with the specified name and position.
 	 *
 	 * @param name the name of the item.
-	 * @param position the initial position of the item as a Room object.
+	 * @param position the initial position of the item as a entities.Room object.
 	 */
 	public Item(String name, Room position) {
 		this.name = name;
@@ -33,7 +35,7 @@ public abstract class Item {
 	/**
 	 * Retrieves the current position of the item.
 	 *
-	 * @return the current position of the item as a Room object.
+	 * @return the current position of the item as a entities.Room object.
 	 */
 	public Room getPosition() {
 		return this.position;
@@ -42,7 +44,7 @@ public abstract class Item {
 	/**
 	 * Sets the current position of the item.
 	 *
-	 * @param position the new position of the item represented as a Room object.
+	 * @param position the new position of the item represented as a entities.Room object.
 	 */
 	public void setPosition(Room position) {
 		this.position = position;

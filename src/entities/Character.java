@@ -108,6 +108,6 @@ public abstract class Character {
 	 * @param character the character to attack
 	 */
 	public abstract void attack(Character character);
-	}
+
 
 }
