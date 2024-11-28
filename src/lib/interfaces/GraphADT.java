@@ -59,7 +59,7 @@ public interface GraphADT <T> {
 	 * @param targetVertex the target vertex of the path
 	 * @return an iterator for the shortest path from startVertex to targetVertex in the graph
 	 */
-	public Iterator iteratorShortestPath(T startVertex, T targetVertex);
+	public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException;
 
 	/**
 	 * Checks if the graph is empty.
