@@ -1,5 +1,6 @@
 package lib.interfaces;
 import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
 
 import java.util.Iterator;
 
@@ -33,7 +34,7 @@ public interface GraphADT <T> {
 	 * @param vertex1 the first vertex connected by the edge
 	 * @param vertex2 the second vertex connected by the edge
 	 */
-	public void removeEdge (T vertex1, T vertex2);
+	public void removeEdge(T vertex1, T vertex2) throws ElementNotFoundException;
 
 	/**
 	 * Returns an iterator that performs a breadth-first search (BFS) starting from the specified vertex.
@@ -41,7 +42,7 @@ public interface GraphADT <T> {
 	 * @param startVertex the starting vertex for the BFS traversal
 	 * @return an iterator for the BFS traversal of the graph
 	 */
-	public Iterator iteratorBFS(T startVertex);
+	public Iterator<T> iteratorBFS(T startVertex) throws EmptyCollectionException;
 
 	/**
 	 * Returns an iterator that performs a depth-first search (DFS) starting from the specified vertex.
@@ -49,7 +50,7 @@ public interface GraphADT <T> {
 	 * @param startVertex the starting vertex for the DFS traversal
 	 * @return an iterator for the DFS traversal of the graph
 	 */
-	public Iterator iteratorDFS(T startVertex);
+	public Iterator iteratorDFS(T startVertex) throws EmptyCollectionException;
 
 	/**
 	 * Returns an iterator that provides the shortest path between two vertices in the graph.

@@ -58,5 +58,4 @@ public class Player extends Character {
 
 	}
 
-	// TODO: heal?
 }

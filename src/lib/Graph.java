@@ -1,5 +1,6 @@
 package lib;
 import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.GraphADT;
 
 import java.util.Iterator;
@@ -35,15 +36,47 @@ public class Graph <T> implements GraphADT<T> {
 
 	@Override
 	public void removeVertex(T vertex) throws ElementNotFoundException {
+
+		// Finding the index of the vertex
 		int index = getVertexIndex(vertex);
 
 		if (index == -1 ) {
 			throw new ElementNotFoundException("Element not found");
 		}
+
+		// Shifting to the left after removing...
+		for (int i = index; i < this.numVertices - 1; i++) {
+			this.vertices[i] = this.vertices[i + 1];
+		}
+
+		// Shifiting rows in Adjacency matrix...
+		for (int row = index; row < this.numVertices - 1; row++) {
+			for (int col = 0; col < this.numVertices; col++) {
+				this.adjMatrix[row][col] = this.adjMatrix[row + 1][col];
+			}
+		}
+
+		// Fix the removed column of the vertex...
+		for (int col = index; col < this.numVertices - 1; col++) {
+			for (int row = 0; row < this.numVertices - 1; row++) {
+				this.adjMatrix[row][col] = this.adjMatrix[row][col + 1];
+			}
+		}
+
+		// Last goes null
+		this.vertices[numVertices - 1] = null;
+
+		this.numVertices--;
 	}
 
 	@Override
 	public void addEdge(T vertex1, T vertex2) {
+		addEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+	}
+
+	public void addEdge(int index1, int index2) {
+
+
 		if (indexIsValid(index1) && indexIsValid(index2)) {
 			adjMatrix[index1][index2] = true;
 			adjMatrix[index2][index1] = true;
@@ -51,18 +84,110 @@ public class Graph <T> implements GraphADT<T> {
 	}
 
 	@Override
-	public void removeEdge(T vertex1, T vertex2) {
+	public void removeEdge(T vertex1, T vertex2) throws ElementNotFoundException {
 
+		int index1 = getVertexIndex(vertex1);
+		int index2 = getVertexIndex(vertex2);
+
+		if (index1 == -1 ) {
+			throw new ElementNotFoundException("Vertex 1");
+		}
+
+		if (index2 == -1) {
+			throw new ElementNotFoundException("Vertex 2");
+		}
+
+		removeEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+	}
+
+	public void removeEdge(int index1, int index2) {
+		if (indexIsValid(index1) && indexIsValid(index2)) {
+			adjMatrix[index1][index2] = false;
+			adjMatrix[index2][index1] = false;
+		}
+	}
+
+	public Iterator<T> iteratorBFS(T startVertex) throws EmptyCollectionException {
+		int vertexIndex = getVertexIndex(startVertex);
+		return iteratorBFS(vertexIndex);
 	}
 
 	@Override
-	public Iterator iteratorBFS(T startVertex) {
-		return null;
+	public Iterator<T> iteratorDFS(T startVertex) throws EmptyCollectionException {
+		int vertexIndex = getVertexIndex(startVertex);
+		return iteratorDFS(vertexIndex);
 	}
 
-	@Override
-	public Iterator iteratorDFS(T startVertex) {
-		return null;
+	public Iterator<T> iteratorBFS(int startIndex) throws EmptyCollectionException {
+		Integer x;
+		LinkedQueue<Integer> traversalQueue = new LinkedQueue<Integer>();
+		ArrayUnorderedList<T> resultList = new ArrayUnorderedList<T>();
+
+		if (!indexIsValid(startIndex)) {
+			return resultList.iterator();
+		}
+
+		boolean[] visited = new boolean[numVertices];
+
+		for (int i = 0; i < numVertices; i++) {
+			visited[i] = false;
+		}
+
+		traversalQueue.enqueue(new Integer(startIndex));
+		visited[startIndex] = true;
+
+		while (!traversalQueue.isEmpty()) {
+			x = traversalQueue.dequeue();
+			resultList.addToRear(vertices[x.intValue()]);
+
+			for (int i = 0; i < numVertices; i++) {
+				if (adjMatrix[x.intValue()][i] && !visited[i]) {
+					traversalQueue.enqueue(new Integer(i));
+					visited[i] = true;
+				}
+			}
+		}
+		return resultList.iterator();
+	}
+
+
+	public Iterator<T> iteratorDFS(int startIndex) throws EmptyCollectionException {
+		Integer x;
+		boolean found;
+		LinkedStack<Integer> traversalStack = new LinkedStack<Integer>();
+		ArrayUnorderedList<T> resultList = new ArrayUnorderedList<T>();
+		boolean[] visited = new boolean[numVertices];
+
+		if (!indexIsValid(startIndex)) {
+			return resultList.iterator();
+		}
+
+		for (int i = 0; i < numVertices; i++) {
+			visited[i] = false;
+		}
+
+		traversalStack.push(new Integer(startIndex));
+		resultList.addToRear(vertices[startIndex]);
+		visited[startIndex] = true;
+
+		while (!traversalStack.isEmpty()) {
+			x = traversalStack.peek();
+			found = false;
+
+			for (int i = 0; (i < numVertices) && !found; i++) {
+				if (adjMatrix[x.intValue()][i] && !visited[i])
+				{
+					traversalStack.push(new Integer(i));
+					resultList.addToRear(vertices[i]);
+					visited[i] = true;
+					found = true;
+				}
+			}
+			if (!found && !traversalStack.isEmpty()) {
+				traversalStack.pop();
+			}
+		}
+		return resultList.iterator();
 	}
 
 	@Override
@@ -86,12 +211,11 @@ public class Graph <T> implements GraphADT<T> {
 	}
 
 	private void expandCapacity() {
-		// TODO: expand
+
 	}
 
 	private boolean indexIsValid(int index) {
-		// TODO: indexIsVali
-		return false;
+		return ((index < numVertices) && (index >= 0));
 	}
 
 	private int getVertexIndex(T vertex) {
