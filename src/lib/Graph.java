@@ -7,7 +7,7 @@ import java.util.Iterator;
 
 public class Graph <T> implements GraphADT<T> {
 
-	protected final int DEFAULT_CAPACITY = 10;
+	protected final int DEFAULT_CAPACITY = 15;
 	protected int numVertices; // number of vertices in the graph
 	protected boolean[][] adjMatrix; // adjacency matrix
 	protected T[] vertices; // values of vertices
@@ -40,7 +40,7 @@ public class Graph <T> implements GraphADT<T> {
 		// Finding the index of the vertex
 		int index = getVertexIndex(vertex);
 
-		if (index == -1 ) {
+		if (index == -1) {
 			throw new ElementNotFoundException("Element not found");
 		}
 
@@ -51,9 +51,8 @@ public class Graph <T> implements GraphADT<T> {
 
 		// Shifiting rows in Adjacency matrix...
 		for (int row = index; row < this.numVertices - 1; row++) {
-			for (int col = 0; col < this.numVertices; col++) {
-				this.adjMatrix[row][col] = this.adjMatrix[row + 1][col];
-			}
+			if (this.numVertices >= 0)
+				System.arraycopy(this.adjMatrix[row + 1], 0, this.adjMatrix[row], 0, this.numVertices);
 		}
 
 		// Fix the removed column of the vertex...
@@ -71,11 +70,10 @@ public class Graph <T> implements GraphADT<T> {
 
 	@Override
 	public void addEdge(T vertex1, T vertex2) {
-		addEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+		addEdge(getVertexIndex(vertex1), getVertexIndex(vertex2));
 	}
 
 	public void addEdge(int index1, int index2) {
-
 
 		if (indexIsValid(index1) && indexIsValid(index2)) {
 			adjMatrix[index1][index2] = true;
@@ -89,7 +87,7 @@ public class Graph <T> implements GraphADT<T> {
 		int index1 = getVertexIndex(vertex1);
 		int index2 = getVertexIndex(vertex2);
 
-		if (index1 == -1 ) {
+		if (index1 == -1) {
 			throw new ElementNotFoundException("Vertex 1");
 		}
 
@@ -97,7 +95,7 @@ public class Graph <T> implements GraphADT<T> {
 			throw new ElementNotFoundException("Vertex 2");
 		}
 
-		removeEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+		removeEdge(getVertexIndex(vertex1), getVertexIndex(vertex2));
 	}
 
 	public void removeEdge(int index1, int index2) {
@@ -121,7 +119,7 @@ public class Graph <T> implements GraphADT<T> {
 	public Iterator<T> iteratorBFS(int startIndex) throws EmptyCollectionException {
 		Integer x;
 		LinkedQueue<Integer> traversalQueue = new LinkedQueue<Integer>();
-		ArrayUnorderedList<T> resultList = new ArrayUnorderedList<T>();
+		ArrayUnorderedList<T> resultList = new ArrayUnorderedList<>();
 
 		if (!indexIsValid(startIndex)) {
 			return resultList.iterator();
@@ -133,23 +131,26 @@ public class Graph <T> implements GraphADT<T> {
 			visited[i] = false;
 		}
 
-		traversalQueue.enqueue(new Integer(startIndex));
+		traversalQueue.enqueue(Integer.valueOf(startIndex));
 		visited[startIndex] = true;
 
 		while (!traversalQueue.isEmpty()) {
 			x = traversalQueue.dequeue();
 			resultList.addToRear(vertices[x.intValue()]);
 
+			/**
+			 * Find all vertices adjacent to x that have not been visited and
+			 * queue them up.
+			 */
 			for (int i = 0; i < numVertices; i++) {
 				if (adjMatrix[x.intValue()][i] && !visited[i]) {
-					traversalQueue.enqueue(new Integer(i));
+					traversalQueue.enqueue(Integer.valueOf(i));
 					visited[i] = true;
 				}
 			}
 		}
 		return resultList.iterator();
 	}
-
 
 	public Iterator<T> iteratorDFS(int startIndex) throws EmptyCollectionException {
 		Integer x;
@@ -166,7 +167,7 @@ public class Graph <T> implements GraphADT<T> {
 			visited[i] = false;
 		}
 
-		traversalStack.push(new Integer(startIndex));
+		traversalStack.push(Integer.valueOf(startIndex));
 		resultList.addToRear(vertices[startIndex]);
 		visited[startIndex] = true;
 
@@ -174,10 +175,11 @@ public class Graph <T> implements GraphADT<T> {
 			x = traversalStack.peek();
 			found = false;
 
+			/** Find a vertex adjacent to x that has not been visited
+			 and push it on the stack */
 			for (int i = 0; (i < numVertices) && !found; i++) {
-				if (adjMatrix[x.intValue()][i] && !visited[i])
-				{
-					traversalStack.push(new Integer(i));
+				if (adjMatrix[x.intValue()][i] && !visited[i]) {
+					traversalStack.push(Integer.valueOf(i));
 					resultList.addToRear(vertices[i]);
 					visited[i] = true;
 					found = true;
@@ -191,35 +193,88 @@ public class Graph <T> implements GraphADT<T> {
 	}
 
 	@Override
-	public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException {
+	public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException, EmptyCollectionException {
+		Integer x;
 		int startIndex = getVertexIndex(startVertex);
 		int targetIndex = getVertexIndex(targetVertex);
-		int index = startIndex;
 
-		if (startIndex == -1 ) {
-			throw new ElementNotFoundException("Vertex 1");
+		if (startIndex == -1 || targetIndex == -1) {
+			throw new ElementNotFoundException("Vertex");
 		}
 
-		if (targetIndex == -1) {
-			throw new ElementNotFoundException("Vertex 2");
-		}
-
-		// INIT
-		final int INF = Integer.MAX_VALUE;
-		// Mark all distances with INF
-		// Mark all previous with -1
-		// Mark all visited vertices false
+		LinkedQueue<Integer> traversalQueue = new LinkedQueue<Integer>();
+		ArrayUnorderedList<T> resultList = new ArrayUnorderedList<T>();
 		int[] distances = new int[this.numVertices];
+
+		// ...which would be an array for visited?
+		boolean[] tight = new boolean[this.numVertices];
+
 		int[] previous = new int[this.numVertices];
-		boolean[] visited = new boolean[this.numVertices];
+
 		for (int i = 0; i < numVertices; i++) {
-			distances[i] = INF;
+			// All other vertices D[z] as an overestimation to INF.
+			distances[i] = Integer.MAX_VALUE;
+			// Initialize a tight array for every vertex to false.
+			// So you recognize which ones have accurate estimate.
+			tight[i] = false;
 			previous[i] = -1;
-			visited[i] = false;
 		}
 
+		// Set the distance D[s] to 0.
+		distances[startIndex] = 0;
+
+		// ...as well as tighted/visited...
+		tight[startIndex] = true;
+
+		// lets then enqueue this vertex
+		traversalQueue.enqueue(startIndex);
+
+		// for backtracing purpose...
+		// resultList.addToRear(vertices[startIndex]);
+
+		// lets repeat "almost" the same as in BFS?
+
+		boolean is_there_a_path = false;
+
+		while (!traversalQueue.isEmpty()) {
+			x = traversalQueue.dequeue();
+			System.out.println("WHILE " + x);
+			for (int i = 0; i < numVertices; i++) {
+				if (adjMatrix[x.intValue()][i] && !tight[i]) {
+					// I was traversed
+					traversalQueue.enqueue(i);
+					// Accurate overestimation for i
+					tight[i] = true;
+
+					previous[i] = x;
+
+					// Uniform cost of 1  (has no weight man...)
+					// distances[i] = distances[i] + 1;
+					System.out.println("i = " + i + " visited = " + true + " previous of " + i + " is " + x);
+					// What if? better... what should happen if i reaches the
+					// same index as targetIndex?
+					if (i == targetIndex) {
+						// IT means termination...
+						// Backtracking is now needed to build the path, right?
+						// Probably with the previous[i]...
+						// TECHNICALLY...
+						// Can be an an LinkedList or ArrayList!
+						// return resultList.iterator();
+						// JUST BREAK? ...Okay... but then it will be
+						// n * n * n Hold up.
+						for (int v = targetIndex; v != -1; v = previous[v]) {
+							resultList.addToFront(vertices[v]);
+						}
+						return resultList.iterator();
+					}
+				}
+			}
+
+		}
+		return resultList.iterator();
 
 	}
+
 
 	@Override
 	public boolean isEmpty() {

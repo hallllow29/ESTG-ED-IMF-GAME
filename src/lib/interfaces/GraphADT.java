@@ -11,14 +11,14 @@ public interface GraphADT <T> {
 	 *
 	 * @param vertex the vertex to be added to the graph
 	 */
-	public void addVertex (T vertex);
+	void addVertex(T vertex);
 
 	/**
 	 * Removes a vertex from the graph.
 	 *
 	 * @param vertex the vertex to be removed from the graph
 	 */
-	public void removeVertex(T vertex) throws ElementNotFoundException;
+	void removeVertex(T vertex) throws ElementNotFoundException;
 
 	/**
 	 * Adds an edge between two specified vertices in the graph.
@@ -26,7 +26,7 @@ public interface GraphADT <T> {
 	 * @param vertex1 the first vertex to be connected by the edge
 	 * @param vertex2 the second vertex to be connected by the edge
 	 */
-	public void addEdge (T vertex1, T vertex2);
+	void addEdge(T vertex1, T vertex2);
 
 	/**
 	 * Removes an edge between two specified vertices in the graph.
@@ -34,7 +34,7 @@ public interface GraphADT <T> {
 	 * @param vertex1 the first vertex connected by the edge
 	 * @param vertex2 the second vertex connected by the edge
 	 */
-	public void removeEdge(T vertex1, T vertex2) throws ElementNotFoundException;
+	void removeEdge(T vertex1, T vertex2) throws ElementNotFoundException;
 
 	/**
 	 * Returns an iterator that performs a breadth-first search (BFS) starting from the specified vertex.
@@ -42,7 +42,7 @@ public interface GraphADT <T> {
 	 * @param startVertex the starting vertex for the BFS traversal
 	 * @return an iterator for the BFS traversal of the graph
 	 */
-	public Iterator<T> iteratorBFS(T startVertex) throws EmptyCollectionException;
+	Iterator<T> iteratorBFS(T startVertex) throws EmptyCollectionException;
 
 	/**
 	 * Returns an iterator that performs a depth-first search (DFS) starting from the specified vertex.
@@ -50,7 +50,7 @@ public interface GraphADT <T> {
 	 * @param startVertex the starting vertex for the DFS traversal
 	 * @return an iterator for the DFS traversal of the graph
 	 */
-	public Iterator iteratorDFS(T startVertex) throws EmptyCollectionException;
+	Iterator iteratorDFS(T startVertex) throws EmptyCollectionException;
 
 	/**
 	 * Returns an iterator that provides the shortest path between two vertices in the graph.
@@ -59,34 +59,34 @@ public interface GraphADT <T> {
 	 * @param targetVertex the target vertex of the path
 	 * @return an iterator for the shortest path from startVertex to targetVertex in the graph
 	 */
-	public Iterator iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException;
+	Iterator iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException, EmptyCollectionException;
 
 	/**
 	 * Checks if the graph is empty.
 	 *
 	 * @return true if the graph contains no vertices, false otherwise
 	 */
-	public boolean isEmpty();
+	boolean isEmpty();
 
 	/**
 	 * Checks if the entire graph is connected. A graph is considered connected if there is a path between any two vertices.
 	 *
 	 * @return true if the graph is connected, false otherwise
 	 */
-	public boolean isConnected();
+	boolean isConnected();
 
 	/**
 	 * Returns the number of vertices in the graph.
 	 *
 	 * @return the number of vertices in the graph
 	 */
-	public int size();
+	int size();
 
 	/**
 	 * Returns a string representation of the graph.
 	 *
 	 * @return a string description of the graph
 	 */
-	public String toString();
+	String toString();
 
 }
