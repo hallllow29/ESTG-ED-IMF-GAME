@@ -3,6 +3,7 @@ import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.GraphADT;
 
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class Graph <T> implements GraphADT<T> {
@@ -194,49 +195,110 @@ public class Graph <T> implements GraphADT<T> {
 	public Iterator<T> iteratorShortestPath(T startVertex, T targetVertex) throws ElementNotFoundException {
 		int startIndex = getVertexIndex(startVertex);
 		int targetIndex = getVertexIndex(targetVertex);
-		int index = startIndex;
 
-		if (startIndex == -1 ) {
-			throw new ElementNotFoundException("Vertex 1");
+		if (startIndex == -1 || targetIndex == -1) {
+			throw new ElementNotFoundException("Um dos vértices não foi encontrado.");
 		}
 
-		if (targetIndex == -1) {
-			throw new ElementNotFoundException("Vertex 2");
-		}
+		final int INFINITO = Integer.MAX_VALUE;
+		int[] distancias = new int[numVertices];
+		int[] anteriores = new int[numVertices];
+		boolean[] visitados = new boolean[numVertices];
 
-		// INIT
-		final int INF = Integer.MAX_VALUE;
-		// Mark all distances with INF
-		// Mark all previous with -1
-		// Mark all visited vertices false
-		int[] distances = new int[this.numVertices];
-		int[] previous = new int[this.numVertices];
-		boolean[] visited = new boolean[this.numVertices];
+
 		for (int i = 0; i < numVertices; i++) {
-			distances[i] = INF;
-			previous[i] = -1;
-			visited[i] = false;
+			distancias[i] = INFINITO;
+			anteriores[i] = -1;
+			visitados[i] = false;
+		}
+		distancias[startIndex] = 0;
+
+
+		for (int i = 0; i < numVertices; i++) {
+			int maisProximo = -1;
+			for (int j = 0; j < numVertices; j++) {
+				if (!visitados[j] && (maisProximo == -1 || distancias[j] < distancias[maisProximo])) {
+					maisProximo = j;
+				}
+			}
+
+			if (maisProximo == -1) break; //
+			visitados[maisProximo] = true;
+
+
+			for (int vizinho = 0; vizinho < numVertices; vizinho++) {
+				if (adjMatrix[maisProximo][vizinho] && !visitados[vizinho]) {
+					int novaDistancia = distancias[maisProximo] + 1;
+					if (novaDistancia < distancias[vizinho]) {
+						distancias[vizinho] = novaDistancia;
+						anteriores[vizinho] = maisProximo;
+					}
+				}
+			}
 		}
 
+		ArrayUnorderedList<T> caminho = new ArrayUnorderedList<>();
+		int atual = targetIndex;
+		while (atual != -1) {
+			caminho.addToFront(vertices[atual]);
+			atual = anteriores[atual];
+		}
 
+		if (distancias[targetIndex] == INFINITO) {
+			return new ArrayUnorderedList<T>().iterator();
+		}
+
+		return caminho.iterator();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return false;
+		return numVertices == 0;
 	}
 
 	@Override
-	public boolean isConnected() {
-		return false;
+	public boolean isConnected() throws EmptyCollectionException {
+		if (numVertices == 0) {
+			return false;
+		}
+
+		Iterator<T> it = iteratorBFS(0);
+		int count = 0;
+
+		while(it.hasNext()) {
+			it.next();
+			count++;
+		}
+
+		return (count == numVertices);
+
 	}
 
 	@Override
 	public int size() {
-		return 0;
+		return numVertices;
 	}
 
 	private void expandCapacity() {
+		int newCapacity = vertices.length * 2;
+
+		boolean[][] newAdjMatrix = new boolean[newCapacity][newCapacity];
+
+		for (int i = 0; i < numVertices; i++) {
+			for (int j = 0; j < numVertices; j++) {
+				newAdjMatrix[i][j] = adjMatrix[i][j];
+			}
+		}
+
+		adjMatrix = newAdjMatrix;
+
+		T[] newVertices = (T[]) new Object[newCapacity];
+
+		for (int i = 0; i < numVertices; i++) {
+			newVertices[i] = vertices[i];
+		}
+
+		vertices = newVertices;
 
 	}
 

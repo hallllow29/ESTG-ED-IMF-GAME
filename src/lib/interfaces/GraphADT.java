@@ -73,7 +73,7 @@ public interface GraphADT <T> {
 	 *
 	 * @return true if the graph is connected, false otherwise
 	 */
-	public boolean isConnected();
+	public boolean isConnected() throws EmptyCollectionException;
 
 	/**
 	 * Returns the number of vertices in the graph.
