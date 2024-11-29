@@ -56,9 +56,8 @@ public class Graph <T> implements GraphADT<T> {
 
 		// Shifiting rows in Adjacency matrix...
 		for (int row = index; row < this.numVertices - 1; row++) {
-			for (int col = 0; col < this.numVertices; col++) {
-				this.adjMatrix[row][col] = this.adjMatrix[row + 1][col];
-			}
+			if (this.numVertices >= 0)
+				System.arraycopy(this.adjMatrix[row + 1], 0, this.adjMatrix[row], 0, this.numVertices);
 		}
 
 		// Fix the removed column of the vertex...
@@ -140,7 +139,7 @@ public class Graph <T> implements GraphADT<T> {
 			visited[i] = false;
 		}
 
-		traversalQueue.enqueue(new Integer(startIndex));
+		traversalQueue.enqueue(Integer.valueOf(startIndex));
 		visited[startIndex] = true;
 
 		while (!traversalQueue.isEmpty()) {
@@ -149,7 +148,7 @@ public class Graph <T> implements GraphADT<T> {
 
 			for (int i = 0; i < numVertices; i++) {
 				if (adjMatrix[x.intValue()][i] && !visited[i]) {
-					traversalQueue.enqueue(new Integer(i));
+					traversalQueue.enqueue(Integer.valueOf(i));
 					visited[i] = true;
 				}
 			}
@@ -173,7 +172,7 @@ public class Graph <T> implements GraphADT<T> {
 			visited[i] = false;
 		}
 
-		traversalStack.push(new Integer(startIndex));
+		traversalStack.push(Integer.valueOf(startIndex));
 		resultList.addToRear(vertices[startIndex]);
 		visited[startIndex] = true;
 
@@ -184,7 +183,7 @@ public class Graph <T> implements GraphADT<T> {
 			for (int i = 0; (i < numVertices) && !found; i++) {
 				if (adjMatrix[x.intValue()][i] && !visited[i])
 				{
-					traversalStack.push(new Integer(i));
+					traversalStack.push(Integer.valueOf(i));
 					resultList.addToRear(vertices[i]);
 					visited[i] = true;
 					found = true;
@@ -291,18 +290,14 @@ public class Graph <T> implements GraphADT<T> {
 		boolean[][] newAdjMatrix = new boolean[newCapacity][newCapacity];
 
 		for (int i = 0; i < numVertices; i++) {
-			for (int j = 0; j < numVertices; j++) {
-				newAdjMatrix[i][j] = adjMatrix[i][j];
-			}
+			System.arraycopy(adjMatrix[i], 0, newAdjMatrix[i], 0, numVertices);
 		}
 
 		adjMatrix = newAdjMatrix;
 
 		T[] newVertices = (T[]) new Object[newCapacity];
 
-		for (int i = 0; i < numVertices; i++) {
-			newVertices[i] = vertices[i];
-		}
+		if (numVertices >= 0) System.arraycopy(vertices, 0, newVertices, 0, numVertices);
 
 		vertices = newVertices;
 
@@ -321,10 +316,17 @@ public class Graph <T> implements GraphADT<T> {
 		return -1;
 	}
 
+	/**
+	 * Retrieves a Room object from the graph based on its name.
+	 *
+	 * @param name the name of the room to be retrieved
+	 * @return the Room object with the specified name if it exists in the graph,
+	 * or null if no such room is found
+	 */
 	public Room getRoom(String name) {
 		for (T vertex : vertices) {
-			if (vertex.equals(name)) {
-				return new Room(name);
+			if (vertex instanceof Room && ((Room) vertex).getName().equals(name)) {
+				return (Room) vertex;
 			}
 		}
 
