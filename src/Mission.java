@@ -24,6 +24,10 @@ public class Mission {
         return this.version;
     }
 
+    public Target getTarget() {
+        return this.target;
+    }
+
     public void setCode(String code) {
         this.code = code;
     }

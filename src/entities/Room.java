@@ -44,4 +44,8 @@ public class Room implements Comparable<Room> {
 	public String toString() {
 		return "Room name: " + this.name;
 	}
+
+	public boolean hasEnemies() {
+		return !this.enemies.isEmpty();
+	}
 }

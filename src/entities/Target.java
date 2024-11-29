@@ -9,4 +9,8 @@ public class Target {
         this.room = room;
         this.type = type;
     }
+
+    public Room getRoom() {
+        return this.room;
+    }
 }
