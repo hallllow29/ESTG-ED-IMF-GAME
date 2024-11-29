@@ -6,13 +6,13 @@ public class Mission {
 
     private String code;
     private int version;
-    private DoubleLinkedOrderedList<Room> entryPoints;
+    private final DoubleLinkedOrderedList<Room> entry_exit_points;
     private Target target;
 
     public Mission(String code, int versison) {
         this.code = code;
         this.version = versison;
-        this.entryPoints = new DoubleLinkedOrderedList<Room>();
+        this.entry_exit_points = new DoubleLinkedOrderedList<Room>();
         this.target = null;
     }
 
@@ -44,11 +44,11 @@ public class Mission {
         return "Mission " + this.code + " version " + version;
     }
 
-    public void addEntryPoint(Room entryPoint) {
-        this.entryPoints.add(entryPoint);
+    public void addEntryExitPoint(Room entry_exit_point) {
+        this.entry_exit_points.add(entry_exit_point);
     }
 
     public DoubleLinkedOrderedList<Room> getEntryPoints() {
-        return this.entryPoints;
+        return this.entry_exit_points;
     }
 }
