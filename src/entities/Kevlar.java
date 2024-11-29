@@ -32,4 +32,14 @@ public class Kevlar extends Item {
 	public int getItemValue() {
 		return this.extra_hp;
 	}
+
+	/**
+	 * Retrieves the name of the item, which is always "Kevlar" for this class.
+	 *
+	 * @return the name "Kevlar" as a String.
+	 */
+	@Override
+	public String getName() {
+		return "Kevlar";
+	}
 }

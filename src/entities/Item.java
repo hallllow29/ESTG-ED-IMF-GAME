@@ -28,9 +28,8 @@ public abstract class Item implements Comparable<Item> {
 	 *
 	 * @return the name of the item as a String.
 	 */
-	public String getName() {
-		return this.name;
-	}
+	public abstract String getName();
+
 
 	/**
 	 * Retrieves the current position of the item.
