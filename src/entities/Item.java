@@ -1,6 +1,6 @@
 package entities;
 
-public abstract class Item {
+public abstract class Item implements Comparable<Item> {
 
 	/**
 	 * The name of the item.
@@ -48,6 +48,12 @@ public abstract class Item {
 	 */
 	public void setPosition(Room position) {
 		this.position = position;
+	}
+
+	public abstract int getItemValue();
+
+	public int compareTo(Item other) {
+		return Integer.compare(this.getItemValue(), other.getItemValue());
 	}
 
 

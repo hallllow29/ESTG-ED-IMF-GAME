@@ -10,8 +10,8 @@ public class MediKit extends Item {
 	/**
 	 * Constructs a new entities.MediKit with the specified name, position, and healing power.
 	 *
-	 * @param name the name of the entities.MediKit.
-	 * @param position the initial position of the entities.MediKit as a entities.Room object.
+	 * @param name       the name of the entities.MediKit.
+	 * @param position   the initial position of the entities.MediKit as a entities.Room object.
 	 * @param heal_power the healing power of the entities.MediKit.
 	 */
 	public MediKit(String name, Room position, int heal_power) {
@@ -24,7 +24,12 @@ public class MediKit extends Item {
 	 *
 	 * @return the healing power of the entities.MediKit as an integer.
 	 */
-	public int getHealPower(){
+	public int getHealPower() {
+		return this.heal_power;
+	}
+
+	@Override
+	public int getItemValue() {
 		return this.heal_power;
 	}
 

@@ -109,5 +109,9 @@ public abstract class Character {
 	 */
 	public abstract void attack(Character character);
 
-
+	public String toString() {
+		return "Name :" + this.name +
+				"\nHP: " + this.current_health +
+				"\nFire power: " + this.fire_power;
+	}
 }

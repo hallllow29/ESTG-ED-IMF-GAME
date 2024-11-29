@@ -27,4 +27,9 @@ public class Kevlar extends Item {
 	public int getExtraHp() {
 		return extra_hp;
 	}
+
+	@Override
+	public int getItemValue() {
+		return this.extra_hp;
+	}
 }

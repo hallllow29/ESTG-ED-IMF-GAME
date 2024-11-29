@@ -1,4 +1,5 @@
 package lib;
+import entities.Room;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.GraphADT;
@@ -25,6 +26,9 @@ public class Graph <T> implements GraphADT<T> {
 
 	@Override
 	public void addVertex(T vertex) {
+		if (vertex == null) {
+			throw new IllegalArgumentException("Cant be null");
+		}
 		if (numVertices == vertices.length)
 			expandCapacity();
 		vertices[numVertices] = vertex;
@@ -72,12 +76,14 @@ public class Graph <T> implements GraphADT<T> {
 
 	@Override
 	public void addEdge(T vertex1, T vertex2) {
+		if (vertex1 == null || vertex2 == null) {
+			System.out.println("Erro");
+			return;
+		}
 		addEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
 	}
 
 	public void addEdge(int index1, int index2) {
-
-
 		if (indexIsValid(index1) && indexIsValid(index2)) {
 			adjMatrix[index1][index2] = true;
 			adjMatrix[index2][index1] = true;
@@ -313,5 +319,39 @@ public class Graph <T> implements GraphADT<T> {
 			}
 		}
 		return -1;
+	}
+
+	public Room getRoom(String name) {
+		for (T vertex : vertices) {
+			if (vertex.equals(name)) {
+				return new Room(name);
+			}
+		}
+
+		return null;
+	}
+
+	public DoubleLinkedOrderedList<String> getVertices() {
+		DoubleLinkedOrderedList<String> verticesList = new DoubleLinkedOrderedList<>();
+		for (int i = 0; i < numVertices; i++) {
+			verticesList.add((String) this.vertices[i]);
+		}
+
+		return verticesList;
+	}
+
+	public DoubleLinkedOrderedList<String> getConnectedVertices(String roomName) {
+		int index = getVertexIndex((T) roomName);
+		DoubleLinkedOrderedList<String> connectedVertices = new DoubleLinkedOrderedList<>();
+
+		if (index != -1) {
+			for (int i = 0; i < numVertices; i++) {
+				if (adjMatrix[index][i]) {
+					connectedVertices.add((String) vertices[i]);
+				}
+			}
+		}
+
+		return connectedVertices;
 	}
 }

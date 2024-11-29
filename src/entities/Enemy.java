@@ -1,6 +1,6 @@
 package entities;
 
-public class Enemy extends Character {
+public class Enemy extends Character implements Comparable<Enemy> {
 
 	private Room current_position;
 
@@ -34,5 +34,10 @@ public class Enemy extends Character {
 	@Override
 	public void attack(Character character) {
 
+	}
+
+	@Override
+	public int compareTo(Enemy other) {
+		return Integer.compare(super.getFirePower(), other.getFirePower());
 	}
 }
