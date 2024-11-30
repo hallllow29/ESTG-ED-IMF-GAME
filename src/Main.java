@@ -1,3 +1,4 @@
+import entities.Enemy;
 import entities.Room;
 import lib.Graph;
 import lib.Node;
@@ -16,7 +17,7 @@ public class Main {
      */
     public static void main(String[] args) {
         try {
-            Graph<String> graph = new Graph<>();
+            Graph<Room> graph = new Graph<>();
             Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", graph);
 
             System.out.println("===== Missão =====");
@@ -28,17 +29,24 @@ public class Main {
             }
 
             System.out.println("\n===== Divisões no Grafo =====");
-            for (String roomName : graph.getVertices()) {
-                Room room = graph.getRoom(roomName);
+            for (Room roomObj : graph.getVertices()) {
+                Room room = graph.getRoom(roomObj.getName());
                 if (room != null) {
                     System.out.println(room);
                 }
             }
 
             System.out.println("\n===== Conexões =====");
-            for (String roomName : graph.getVertices()) {
-                for (String connectedRoom : graph.getConnectedVertices(roomName)) {
-                    System.out.println(roomName + " está conectado a " + connectedRoom);
+            for (Room roomObj : graph.getVertices()) {
+                for (Room connectedRoom : graph.getConnectedVertices(roomObj)) {
+                    System.out.println(roomObj.getName() + " está conectado a " + connectedRoom.getName());
+                }
+            }
+
+            System.out.println("\n==== Inimigos ====");
+            for (Room roomObj : graph.getVertices()) {
+                for (Enemy enemyObj : roomObj.getEnemies()) {
+                    System.out.println("Divisao: " + roomObj.getName() + "\n" + enemyObj.toString());
                 }
             }
 
