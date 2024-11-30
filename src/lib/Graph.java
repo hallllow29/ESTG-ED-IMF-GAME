@@ -325,31 +325,30 @@ public class Graph <T> implements GraphADT<T> {
 	 */
 	public Room getRoom(String name) {
 		for (T vertex : vertices) {
-			if (vertex instanceof Room && ((Room) vertex).getName().equals(name)) {
+			if (((Room)vertex).getName().equals(name)) {
 				return (Room) vertex;
 			}
 		}
-
 		return null;
 	}
 
-	public DoubleLinkedOrderedList<String> getVertices() {
-		DoubleLinkedOrderedList<String> verticesList = new DoubleLinkedOrderedList<>();
+	public DoubleLinkedOrderedList<Room> getVertices() {
+		DoubleLinkedOrderedList<Room> verticesList = new DoubleLinkedOrderedList<>();
 		for (int i = 0; i < numVertices; i++) {
-			verticesList.add((String) this.vertices[i]);
+			verticesList.add((Room) this.vertices[i]);
 		}
 
 		return verticesList;
 	}
 
-	public DoubleLinkedOrderedList<String> getConnectedVertices(String roomName) {
+	public DoubleLinkedOrderedList<Room>getConnectedVertices(Room roomName) {
 		int index = getVertexIndex((T) roomName);
-		DoubleLinkedOrderedList<String> connectedVertices = new DoubleLinkedOrderedList<>();
+		DoubleLinkedOrderedList<Room> connectedVertices = new DoubleLinkedOrderedList<>();
 
 		if (index != -1) {
 			for (int i = 0; i < numVertices; i++) {
 				if (adjMatrix[index][i]) {
-					connectedVertices.add((String) vertices[i]);
+					connectedVertices.add((Room) vertices[i]);
 				}
 			}
 		}
