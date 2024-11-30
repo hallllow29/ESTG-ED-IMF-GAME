@@ -104,8 +104,13 @@ public class JsonSimpleRead {
 
             Room from_room = graph.getRoom(from_room_name);
             Room to_room = graph.getRoom(to_room_name);
-            // TODO: Null if...
-            graph.addEdge(from_room, to_room);
+
+            if (from_room != null || to_room != null) {
+                graph.addEdge(from_room, to_room);
+            } else {
+                System.err.println("Between " + from_room_name + " and " + to_room_name + " no connection found.");
+            }
+
         }
     }
 
