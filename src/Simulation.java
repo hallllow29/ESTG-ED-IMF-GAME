@@ -4,10 +4,10 @@ import lib.Graph;
 
 public class Simulation {
 
-    private Mission mission;
-    private Graph<Room> graph;
-    private Player player;
-    private boolean gameOver;
+    private final Mission mission;
+    private final Graph<Room> graph;
+    private final Player player;
+    private final boolean gameOver;
 
     public Simulation(Mission mission, Graph<Room> graph, Player player) {
         this.mission = mission;
@@ -37,14 +37,14 @@ public class Simulation {
     private void enemyTurn() {
         System.out.println("Enemies turn!");
 
-        for (String roomName: this.graph.getVertices()) {
+        /*for (String roomName: this.graph.getVertices()) {
             Room room = graph.getRoom(roomName);
 
             if (room != null && room.hasEnemies()) {
                 //moverInimigos;
             }
 
-        }
+        }*/
     }
 
     private void scenario1(Room room) {
