@@ -1,17 +1,19 @@
 package entities;
 
 import lib.DoubleLinkedOrderedList;
+import lib.ArrayUnorderedList;
+import lib.DoubleNode;
 
-public class Room implements Comparable<Room> {
+public class Room extends DoubleNode<Room> implements Comparable<Room> {
 
 	private final String name;
-	private DoubleLinkedOrderedList<Enemy> enemies;
-	private DoubleLinkedOrderedList<Item> items;
-
+	private final ArrayUnorderedList<Enemy> enemies;
+	private final DoubleLinkedOrderedList<Item> items;
 
     public Room(String name) {
-        this.name = name;
-		this.enemies = new DoubleLinkedOrderedList<Enemy>();
+        super(null);
+		this.name = name;
+		this.enemies = new ArrayUnorderedList<Enemy>();
 		this.items = new DoubleLinkedOrderedList<Item>();
     }
 
@@ -20,10 +22,10 @@ public class Room implements Comparable<Room> {
 	}
 
 	public void addEnemy(Enemy enemy) {
-		this.enemies.add(enemy);
+		this.enemies.addToRear(enemy);
 	}
 
-	public DoubleLinkedOrderedList<Enemy> getEnemies() {
+	public ArrayUnorderedList<Enemy> getEnemies() {
 		return this.enemies;
 	}
 
