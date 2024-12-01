@@ -1,8 +1,10 @@
 import entities.Enemy;
 import entities.Room;
 import lib.Graph;
-import lib.Node;
 import org.json.simple.parser.ParseException;
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 import java.io.IOException;
 
@@ -11,7 +13,6 @@ import java.io.IOException;
  * @author 8230068, 8230069
  */
 public class Main {
-
     /**
      * @param args the command line arguments
      */
@@ -46,9 +47,15 @@ public class Main {
             System.out.println("\n==== Inimigos ====");
             for (Room roomObj : graph.getVertices()) {
                 for (Enemy enemyObj : roomObj.getEnemies()) {
-                    System.out.println("Divisao: " + roomObj.getName() + "\n" + enemyObj.toString());
+                    System.out.println(enemyObj);
                 }
             }
+
+            int option = 0;
+            Scanner input = new Scanner(System.in);
+			option = options("\n==== SIMULATION MODE =====\n[1] MANUAL\n[2] SIMULATION");
+
+
 
         } catch (IOException e) {
             System.err.println("Erro ao ler o arquivo JSON: " + e.getMessage());
@@ -58,4 +65,26 @@ public class Main {
             System.err.println("Erro inesperado: " + e.getMessage());
         }
     }
+
+    /**
+     * Displays a menu with options for user input and returns the selected option.
+     *
+     * @param menu the menu text to be displayed to the user
+     * @return the integer value representing the user's selected option, or -1 if the input is invalid
+     */
+    public static int options(String menu) {
+		Scanner input = new Scanner(System.in);
+		int option = -1;
+		System.out.println("---------------------");
+		System.out.println(menu);
+		System.out.println("\n[9] GO BACK");
+		System.out.println("[0] EXIT");
+
+        try {
+			option = input.nextInt();
+		} catch (InputMismatchException e) {
+			System.err.println("SYMBOLS OR LETTERS ARE NO OPTION.");
+		}
+		return option;
+	}
 }
