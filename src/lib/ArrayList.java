@@ -84,12 +84,26 @@ public abstract class ArrayList<T> implements ListADT<T> {
         boolean contains = false;
 
         for (T element : this.list) {
-            if (element.equals(target)) {
-                contains = true;
-            }
+			if (element.equals(target)) {
+				contains = true;
+				break;
+			}
         }
 
         return contains;
+    }
+
+    public T getElement(int index) {
+        T element = null;
+
+        for (int i = 0; i < this.count; i++) {
+            if (i == index) {
+                element = this.list[i];
+                break;
+            }
+        }
+
+        return element;
     }
 
     @Override
