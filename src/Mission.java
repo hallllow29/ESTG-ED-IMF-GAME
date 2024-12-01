@@ -1,23 +1,19 @@
-import entities.Enemy;
 import entities.Room;
 import entities.Target;
 import lib.CircularDoubleLinkedList;
-import lib.DoubleLinkedOrderedList;
 import lib.DoubleLinkedUnorderedList;
-
-import java.util.LinkedList;
 
 public class Mission {
 
     private String code;
     private int version;
     private final DoubleLinkedUnorderedList<Room> entry_exit_points;
-    private LinkedList<Enemy> enemies;
     private Target target;
+    // SE CALHAR ENEIES AQUI DASSE POR HOJE FECHEOU....
 
     public Mission(String code, int versison) {
         this.code = code;
-        this.version = versison;
+        this.version = version;
         this.entry_exit_points = new DoubleLinkedUnorderedList<>();
         this.target = null;
     }
@@ -28,10 +24,6 @@ public class Mission {
 
     public int getVersion() {
         return this.version;
-    }
-
-    public LinkedList<Enemy> getEnemies() {
-        return this.enemies;
     }
 
     public Target getTarget() {
@@ -51,7 +43,7 @@ public class Mission {
     }
 
     public String toString() {
-        return "Mission " + this.code + " version " + version;
+        return "Mission:" + this.code + "\nVersion: " + this.version;
     }
 
     public void addEntryExitPoint(Room entry_exit_point) {

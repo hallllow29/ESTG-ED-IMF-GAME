@@ -1,9 +1,9 @@
 import entities.Enemy;
-import entities.Player;
 import entities.Room;
 import lib.ArrayList;
 import lib.ArrayUnorderedList;
 import lib.Graph;
+import lib.LinkedList;
 import lib.exceptions.EmptyCollectionException;
 
 import java.util.Iterator;
@@ -13,19 +13,30 @@ public class Simulation {
 
 	private final Mission mission;
 	private final Graph<Room> graph;
-	private final Player player;
+	// private final Player player;
 	private final boolean gameOver;
 	private final Room entry_point;
+	private LinkedList<Enemy> enemies;
 
-	public Simulation(Mission mission, Graph<Room> graph, Player player, Room entry_point) {
+
+	public Simulation(Mission mission, Graph<Room> graph, Room entry_point, LinkedList<Enemy> enemies) {
 		this.mission = mission;
 		this.graph = graph;
-		this.player = player;
+		// this.player = player;
 		this.gameOver = false;
 		this.entry_point = entry_point;
+		this.enemies = enemies;
 	}
 
-	private void playerTurn() {
+	public void setEnemies(LinkedList<Enemy> enemies) {
+		this.enemies = enemies;
+	}
+
+	public LinkedList<Enemy> getEnemies() {
+		return this.enemies;
+	}
+
+	/*private void playerTurn() {
 		Room currentRoom = player.getCurrentPosition();
 		System.out.println("Tó Cruz current position is " + currentRoom);
 
@@ -40,7 +51,7 @@ public class Simulation {
 		} else {
 			// cenario2
 		}
-	}
+	}*/
 
 	private void enemyTurn() {
 		System.out.println("Enemies turn!");
@@ -59,7 +70,7 @@ public class Simulation {
 		// TODO: Sala com inimigos TOM CRUISE CONFRONTA
 	}
 
-	private void scnario2(Room room) {
+	public void scnario2(Room room) {
 		// TODO: TO CRUZ ENTRE NA SALA MAS NAO TEM INIMIGOS
 		if (!room.hasEnemies()) {
 			moveEnemies();
@@ -105,7 +116,7 @@ public class Simulation {
 
 		Random random = new Random();
 
-		for (Enemy enemyObj : mission.getEnemies()) {
+		for (Enemy enemyObj : getEnemies()) {
 
 			possible_moves = getPossibleMoves(enemyObj.getCurrentPosition());
 
