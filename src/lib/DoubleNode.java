@@ -58,7 +58,7 @@ public class DoubleNode<T> {
     }
 
     public String toString() {
-        return ("Next: " + this.element);
+        return ((String) this.element);
     }
 
 }

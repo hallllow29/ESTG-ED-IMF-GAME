@@ -2,7 +2,7 @@ package entities;
 
 public class Enemy extends Character implements Comparable<Enemy> {
 
-	private final Room current_position;
+	private Room current_position;
 
 	/**
 	 * Constructs a new Enemy with the specified name, fire power, and current position.
@@ -23,6 +23,10 @@ public class Enemy extends Character implements Comparable<Enemy> {
 	 */
 	public Room getCurrentPosition() {
 		return this.current_position;
+	}
+
+	public void setCurrentPosition(Room current_position) {
+		this.current_position = current_position;
 	}
 
 	/**
@@ -48,6 +52,6 @@ public class Enemy extends Character implements Comparable<Enemy> {
 	 */
 	@Override
 	public String toString(){
-		return "Name: " + super.getName() + "\nFire Power: " + super.getFirePower();
+		return "Name: " + super.getName() + "\tFire Power: " + super.getFirePower() + "\t" + this.getCurrentPosition();
 	}
 }
