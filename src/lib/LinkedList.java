@@ -78,11 +78,16 @@ public class LinkedList <T> implements ListADT<T> {
 		}
 		LinearNode<T> remove = currentNode;
 		T removedElement = remove.getElement();
-		previousNode.setNext(currentNode.getNext());
+
+		if (previousNode == null) {
+			this.front = currentNode.getNext();  // Removing front item
+		} else {
+			previousNode.setNext(currentNode.getNext());
+		}
+		// previousNode.setNext(currentNode.getNext());
 		currentNode = null;
 
 		this.size--;
-		this.modCount--;
 		return removedElement;
 	}
 
@@ -210,7 +215,7 @@ public class LinkedList <T> implements ListADT<T> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.front == null;
+		return this.size == 0;
 	}
 
 	/**
@@ -357,7 +362,8 @@ public class LinkedList <T> implements ListADT<T> {
 	private class LinkedListIterator implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
-		private final int exceptedModCount;
+		private LinearNode<T> previousNode;
+		private int expectedModCount;
 		private boolean okToRemove;
 
 		/**
@@ -367,7 +373,8 @@ public class LinkedList <T> implements ListADT<T> {
 		 */
 		public LinkedListIterator() {
 			this.currentNode = getFront();
-			this.exceptedModCount = getModCount();
+			this.previousNode = null;
+			this.expectedModCount = getModCount();
 			this.okToRemove = false;
 		}
 
@@ -401,6 +408,7 @@ public class LinkedList <T> implements ListADT<T> {
 			}
 			okToRemove = true;
 			T element = currentNode.getElement();
+			this.previousNode = this.currentNode;
 			this.currentNode = currentNode.getNext();
 			return element;
 		}
@@ -410,7 +418,22 @@ public class LinkedList <T> implements ListADT<T> {
 			if (!okToRemove) {
 				throw new UnsupportedOperationException("Remove operation is not supported.");
 			}
-			this.okToRemove = false;
+			if (previousNode == null) {
+				front = currentNode.getNext();
+			} else {
+				previousNode.setNext(currentNode.getNext());
+			}
+
+			if (currentNode == rear) {
+				rear = previousNode;
+			}
+
+			currentNode = previousNode;
+
+			size--;
+			this.expectedModCount = getModCount();
+			okToRemove = false;
+
 		}
 
 		/**
@@ -423,7 +446,7 @@ public class LinkedList <T> implements ListADT<T> {
 		 *                                         concurrently
 		 */
 		private void checkForCurrentModification() {
-			if (modCount != exceptedModCount) {
+			if (modCount != expectedModCount) {
 				throw new ConcurrentModificationException("Concurrent Modification Detected");
 			}
 		}
