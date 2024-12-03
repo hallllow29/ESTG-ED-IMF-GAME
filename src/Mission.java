@@ -1,7 +1,7 @@
+import entities.Enemy;
 import entities.Room;
 import entities.Target;
-import lib.CircularDoubleLinkedList;
-import lib.DoubleLinkedUnorderedList;
+import lib.*;
 
 public class Mission {
 
@@ -9,6 +9,7 @@ public class Mission {
     private int version;
     private final DoubleLinkedUnorderedList<Room> entry_exit_points;
     private Target target;
+    private Graph<Room> map;
     // SE CALHAR ENEIES AQUI DASSE POR HOJE FECHEOU....
 
     public Mission(String code, int versison) {
@@ -16,6 +17,7 @@ public class Mission {
         this.version = version;
         this.entry_exit_points = new DoubleLinkedUnorderedList<>();
         this.target = null;
+        this.map = null;
     }
 
     public String getCode () {
@@ -26,8 +28,26 @@ public class Mission {
         return this.version;
     }
 
+    public LinkedList<Enemy> getEnemies() {
+
+        LinkedList<Enemy> enemies = new LinkedList<>();
+        for (Room roomObj : this.map.getVertices()) {
+            if (roomObj.hasEnemies()) {
+                for (Enemy enemyObj : roomObj.getEnemies()) {
+                    enemies.add(enemyObj);
+                }
+            }
+        }
+
+        return enemies;
+    }
+
     public Target getTarget() {
         return this.target;
+    }
+
+    public void setMap(Graph<Room> map) {
+        this.map = map;
     }
 
     public void setCode(String code) {

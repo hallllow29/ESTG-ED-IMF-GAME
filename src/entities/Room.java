@@ -1,19 +1,19 @@
 package entities;
 
 import lib.DoubleLinkedOrderedList;
-import lib.ArrayUnorderedList;
-import lib.DoubleNode;
+import lib.LinkedList;
+import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
 
-public class Room extends DoubleNode<Room> implements Comparable<Room> {
+public class Room implements Comparable<Room> {
 
 	private final String name;
-	private final ArrayUnorderedList<Enemy> enemies;
+	//private LinkedList<Enemy> enemies;
 	private final DoubleLinkedOrderedList<Item> items;
 
     public Room(String name) {
-        super(null);
 		this.name = name;
-		this.enemies = new ArrayUnorderedList<Enemy>();
+		this.enemies = new LinkedList<Enemy>();
 		this.items = new DoubleLinkedOrderedList<Item>();
     }
 
@@ -22,10 +22,14 @@ public class Room extends DoubleNode<Room> implements Comparable<Room> {
 	}
 
 	public void addEnemy(Enemy enemy) {
-		this.enemies.addToRear(enemy);
+		this.enemies.add(enemy);
 	}
 
-	public ArrayUnorderedList<Enemy> getEnemies() {
+	public void removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
+		this.enemies.remove(enemy);
+	}
+
+	public LinkedList<Enemy> getEnemies() {
 		return this.enemies;
 	}
 

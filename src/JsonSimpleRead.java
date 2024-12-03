@@ -155,7 +155,6 @@ public class JsonSimpleRead {
             if (room != null) {
                 Enemy enemy_in_mission = new Enemy(enemy_name, enemy_power, room);
                 room.addEnemy(enemy_in_mission);
-
             } else {
                 System.err.println("Room " + enemy_location + " not found for the enemy");
             }

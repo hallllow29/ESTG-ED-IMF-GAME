@@ -3,6 +3,7 @@ import entities.Room;
 import lib.CircularDoubleLinkedList;
 import lib.Graph;
 import lib.LinkedList;
+import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import org.json.simple.parser.ParseException;
 
@@ -26,6 +27,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		try {
+			// INIT GRAPH
 			Graph<Room> graph = initGraph();
 
 			setGraph(graph);
@@ -41,6 +43,142 @@ public class Main {
 			displayEntryExitPoints(graph);
 
 			simulationMenu();
+
+			CircularDoubleLinkedList<Room> entry_points_selection =  mission.getEntryPointsSelection();
+
+			Iterator<Room> entry_points = entry_points_selection.iterator();
+
+			Room entry_point = entry_points.next();
+
+			Main.setSimulation(new Simulation(getMission(), getGraph(), entry_point));
+
+			/*
+			Nos nao tamos a ser eficazes...
+
+			Cada Enemy tem só um Room
+
+			Se percorremos a lista de Rooms...
+
+			Por que nao marcar cada Room com o boolean se tem Enemy ou nao?
+
+			Se o Room tem Enemy (boolean = true)
+
+			Entao aí procuramos qual enemy currentPosition bate com o current room nna loop.
+
+			Ou SEJA Tugas... tu percorres a lista de enemies e nao de ROOMS que é onde
+			tá a dar a bronca toda
+
+			PORQUE NOS SO PRECISAMOS DE MUDAR A POSICAO DO ENEMY...
+
+			FODASSE nem escrever consigo hoje.
+
+			Vou Zzz
+			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		} catch (IOException e) {
 			System.err.println("Erro ao ler o arquivo JSON: " + e.getMessage());
@@ -131,6 +269,8 @@ public class Main {
 						selectEntryPoint(mission.getEntryPointsSelection());
 					} catch (EmptyCollectionException e) {
 						System.out.println(e.getMessage());
+					} catch (ElementNotFoundException e) {
+						throw new RuntimeException(e);
 					}
 
 					break;
@@ -151,6 +291,7 @@ public class Main {
 		Graph<Room> graph = new Graph<>();
 		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", graph);
 		setMission(mission);
+		mission.setMap(graph);
 		return graph;
 	}
 
@@ -208,27 +349,26 @@ public class Main {
 		return option;
 	}
 
-	public static void selectEntryPoint(CircularDoubleLinkedList<Room> entry_points_selection) throws EmptyCollectionException {
+	public static void selectEntryPoint(CircularDoubleLinkedList<Room> entry_points_selection) throws EmptyCollectionException, ElementNotFoundException {
 		Scanner input = new Scanner(System.in);
 		int option = -1;
 
-		Iterator<Room> entry_points = entry_points_selection.iterator();
-		Room entry_point = entry_points.next();
+
 		while (true) {
 			option = interactiveSelection(entry_point.getName());
 			switch (option) {
 				case 1:
-					// SELECT Porque nao passar para a simulation?
+					// SELECT
+					// Porque nao passar para a simulation?
 					// ou por Simulation abstract e para o modo que precisa entao instanciar
 					// com entry_point.
-					Main.setSimulation(new Simulation(getMission(), getGraph(), entry_point, getEnemies()));
+
 					// OPAH NAO SEI VOU TENTAR
 					for (Room roomObj : graph.getVertices()) {
-
 						simulation.scnario2(roomObj);
-
 					}
 					displayEnemyIntel(graph);
+
 
 					return;
 				case 2:

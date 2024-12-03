@@ -36,11 +36,9 @@ public class LinkedList <T> implements ListADT<T> {
 		if (isEmpty()) {
 			this.front = newNode;
 			this.rear = newNode;
-			this.rear.setNext(null);
 		} else {
 			this.rear.setNext(newNode);
 			this.rear = newNode;
-			this.rear.setNext(null);
 		}
 		this.size++;
 		this.modCount++;
@@ -211,7 +209,7 @@ public class LinkedList <T> implements ListADT<T> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.front == null;
+		return this.size == 0;
 	}
 
 	/**

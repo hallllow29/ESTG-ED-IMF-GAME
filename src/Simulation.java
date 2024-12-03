@@ -1,9 +1,7 @@
 import entities.Enemy;
 import entities.Room;
-import lib.ArrayList;
-import lib.ArrayUnorderedList;
-import lib.Graph;
-import lib.LinkedList;
+import lib.*;
+import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
 import java.util.Iterator;
@@ -19,21 +17,17 @@ public class Simulation {
 	private LinkedList<Enemy> enemies;
 
 
-	public Simulation(Mission mission, Graph<Room> graph, Room entry_point, LinkedList<Enemy> enemies) {
+	public Simulation(Mission mission, Graph<Room> graph, Room entry_point) {
 		this.mission = mission;
 		this.graph = graph;
 		// this.player = player;
 		this.gameOver = false;
 		this.entry_point = entry_point;
-		this.enemies = enemies;
+		// this.enemies = enemies;
 	}
 
 	public void setEnemies(LinkedList<Enemy> enemies) {
 		this.enemies = enemies;
-	}
-
-	public LinkedList<Enemy> getEnemies() {
-		return this.enemies;
 	}
 
 	/*private void playerTurn() {
@@ -70,10 +64,10 @@ public class Simulation {
 		// TODO: Sala com inimigos TOM CRUISE CONFRONTA
 	}
 
-	public void scnario2(Room room) {
+	public void scnario2(Room room) throws EmptyCollectionException, ElementNotFoundException {
 		// TODO: TO CRUZ ENTRE NA SALA MAS NAO TEM INIMIGOS
 		if (!room.hasEnemies()) {
-			moveEnemies();
+			moveEnemies(room);
 		}
 
 		// IF manual
@@ -110,13 +104,13 @@ public class Simulation {
 	 * the possible rooms chosen at random. The method handles the case where the current
 	 * position stack is empty by catching an EmptyCollectionException.
 	 */
-	private void moveEnemies() {
+	private void moveEnemies(Room room) {
 
-		ArrayList<Room> possible_moves;
+		ArrayUnorderedList<Room> possible_moves;
 
 		Random random = new Random();
 
-		for (Enemy enemyObj : getEnemies()) {
+		for (Enemy enemyObj : mission.getEnemies()) {
 
 			possible_moves = getPossibleMoves(enemyObj.getCurrentPosition());
 
@@ -124,9 +118,23 @@ public class Simulation {
 
 				int random_index = random.nextInt(possible_moves.size());
 
+
+
 				Room next_room = possible_moves.getElement(random_index);
 
+				// MAS getEnemies.... vai ter lá uma loop a rodar pelo o graph constnat...
+				// Nao é eficiente..
+				if (room.getEnemies().size() != 0) {
+					try {
+						room.removeEnemy(enemyObj);
+						next_room.addEnemy(enemyObj);
+					} catch (ElementNotFoundException | EmptyCollectionException e) {
+						System.err.println(e.getStackTrace());
+					}
+				}
 				enemyObj.setCurrentPosition(next_room);
+
+
 			}
 		}
 	}
