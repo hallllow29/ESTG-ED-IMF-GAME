@@ -38,19 +38,24 @@ public class Main {
 
 			displayAdjacentRoomDetails(graph);
 
-			displayEnemyIntel(graph);
+			displayEnemyIntel(mission);
 
-			displayEntryExitPoints(graph);
+			// displayEntryExitPoints(graph);
 
-			simulationMenu();
 
-			CircularDoubleLinkedList<Room> entry_points_selection =  mission.getEntryPointsSelection();
 
-			Iterator<Room> entry_points = entry_points_selection.iterator();
 
-			Room entry_point = entry_points.next();
+			// simulationMenu();
 
-			Main.setSimulation(new Simulation(getMission(), getGraph(), entry_point));
+
+
+			// CircularDoubleLinkedList<Room> entry_points_selection =  mission.getEntryPointsSelection();
+
+			// Iterator<Room> entry_points = entry_points_selection.iterator();
+
+			// Room entry_point = entry_points.next();
+
+			// Main.setSimulation(new Simulation(getMission(), getGraph(), entry_point));
 
 			/*
 			Nos nao tamos a ser eficazes...
@@ -256,7 +261,7 @@ public class Main {
 	 * - 0: Exit the program If an invalid input is received, an error message is
 	 * displayed. The method loops until a valid exit condition (option 9 or 0).
 	 */
-	public static void simulationMenu() {
+	/*public static void simulationMenu() {
 		int option = -1;
 		while (true) {
 			option = options("\n==== SIMULATION MODE =====\n[1] MANUAL\n[2] AUTOMATIC");
@@ -285,13 +290,12 @@ public class Main {
 					break;
 			}
 		}
-	}
+	}*/
 
 	private static Graph<Room> initGraph() throws IOException, ParseException {
 		Graph<Room> graph = new Graph<>();
 		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", graph);
 		setMission(mission);
-		mission.setMap(graph);
 		return graph;
 	}
 
@@ -316,21 +320,19 @@ public class Main {
 		}
 	}
 
-	private static void displayEnemyIntel(Graph<Room> graph) {
+	private static void displayEnemyIntel(Mission mission) {
 		System.out.println("\n==== INIMIGOS ====");
-		for (Room room : graph.getVertices()) {
-			for (Enemy enemy : room.getEnemies()) {
-				System.out.println(enemy);
-			}
+		for (Enemy enemyObj : mission.getEnemies()) {
+			System.out.println(enemyObj);
 		}
 	}
 
-	private static void displayEntryExitPoints(Graph<Room> graph) {
+	/*private static void displayEntryExitPoints(Graph<Room> graph) {
 		System.out.println("\n===== Pontos de Entrada/Saída =====");
 		for (Room roomObj : mission.getEntryPoints()) {
 			System.out.println(roomObj.getName());
 		}
-	}
+	}*/
 
 	public static int interactiveSelection(String entry_point_string) {
 		Scanner input = new Scanner(System.in);
@@ -349,7 +351,7 @@ public class Main {
 		return option;
 	}
 
-	public static void selectEntryPoint(CircularDoubleLinkedList<Room> entry_points_selection) throws EmptyCollectionException, ElementNotFoundException {
+	/*public static void selectEntryPoint(CircularDoubleLinkedList<Room> entry_points_selection) throws EmptyCollectionException, ElementNotFoundException {
 		Scanner input = new Scanner(System.in);
 		int option = -1;
 
@@ -390,6 +392,6 @@ public class Main {
 
 			}
 		}
-	}
+	}*/
 }
 
