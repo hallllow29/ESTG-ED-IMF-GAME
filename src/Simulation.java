@@ -23,7 +23,7 @@ public class Simulation {
 		//this.entry_point = entry_point;
 	}
 
-	public void game() throws EmptyCollectionException, ElementNotFoundException {
+	/*public void game() throws EmptyCollectionException, ElementNotFoundException {
 		Turn currentTurn = Turn.PLAYER;
 		boolean gameOver = false;
 
@@ -34,7 +34,7 @@ public class Simulation {
 					
 			}
 		}
-	}
+	}*/
 	/*private void playerTurn() {
 		Room currentRoom = player.getCurrentPosition();
 		System.out.println("Tó Cruz current position is " + currentRoom);

@@ -73,6 +73,8 @@ public class Main {
 			simulation.enemyTurn();
 			simulation.playerTurn();
 
+			mission.setBestPath();
+
 			displayEnemyIntel(mission);
 
 		} catch (IOException e) {
