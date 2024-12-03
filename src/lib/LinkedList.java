@@ -2,15 +2,14 @@
  * @author 8230069
  * @file LinkedList.java
  * @copyright ESTG IPP
- * @brief ED, Ficha Prática 7, Exercicio 8
- * @date 2024/11/12
+ * @brief ED, Ficha Prática 7, Exercicio 1
+ * @date 2024/11/02
  **/
 
 package lib;
-import lib.interfaces.IteratorADT;
-import lib.interfaces.ListADT;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.interfaces.ListADT;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -36,9 +35,11 @@ public class LinkedList <T> implements ListADT<T> {
 		if (isEmpty()) {
 			this.front = newNode;
 			this.rear = newNode;
+			this.rear.setNext(null);
 		} else {
 			this.rear.setNext(newNode);
 			this.rear = newNode;
+			this.rear.setNext(null);
 		}
 		this.size++;
 		this.modCount++;
@@ -65,26 +66,24 @@ public class LinkedList <T> implements ListADT<T> {
 
 		while (currentNode != null) {
 			if (currentNode.getElement().equals(target)) {
-				if (currentNode == front) {
-					front = front.getNext();
-					if (front == null) {
-						rear = null; // Lista ficou vazia
-					}
-				} else {
-					previousNode.setNext(currentNode.getNext());
-					if (currentNode == rear) {
-						rear = previousNode; // Atualiza o rear
-					}
-				}
-				size--;
-				modCount++;
-				return currentNode.getElement();
+				found = true;
+				break;
 			}
 			previousNode = currentNode;
 			currentNode = currentNode.getNext();
 		}
 
-		throw new ElementNotFoundException("Element not in the list.");
+		if (!found) {
+			throw new ElementNotFoundException("Element not in the list.");
+		}
+		LinearNode<T> remove = currentNode;
+		T removedElement = remove.getElement();
+		previousNode.setNext(currentNode.getNext());
+		currentNode = null;
+
+		this.size--;
+		this.modCount--;
+		return removedElement;
 	}
 
 	/**
@@ -211,7 +210,7 @@ public class LinkedList <T> implements ListADT<T> {
 	 */
 	@Override
 	public boolean isEmpty() {
-		return this.size == 0;
+		return this.front == null;
 	}
 
 	/**
@@ -272,32 +271,6 @@ public class LinkedList <T> implements ListADT<T> {
 		printListRecursive(this.front);
 	}
 
-
-	public void reverseListNonRecursive() throws EmptyCollectionException {
-		if (isEmpty()) {
-			throw new EmptyCollectionException("List is empty.");
-		}
-
-		LinearNode<T> currentNode = this.front;
-		LinearNode<T> previousNode = null;
-		LinearNode<T> tempNode;
-
-		while (currentNode != null) {
-			// Store next
-			tempNode = currentNode.getNext();
-
-			// Reverse next pointer
-			currentNode.setNext(previousNode);
-
-			// Move Pointer one position
-			previousNode = currentNode;
-			currentNode = tempNode;
-		}
-		// Update the the front and rear pointer
-		tempNode = this.front;
-		this.front = this.rear;
-		this.rear = tempNode;
-	}
 	/**
 	 * Returns the front node of the linked list.
 	 *
@@ -384,10 +357,8 @@ public class LinkedList <T> implements ListADT<T> {
 	private class LinkedListIterator implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
-		private LinearNode<T> previousNode;
-		private int exceptedModCount;
-
-		private boolean okayToRemove;
+		private final int exceptedModCount;
+		private boolean okToRemove;
 
 		/**
 		 * Constructs an iterator for a linked list. Initializes the iterator's current
@@ -397,8 +368,7 @@ public class LinkedList <T> implements ListADT<T> {
 		public LinkedListIterator() {
 			this.currentNode = getFront();
 			this.exceptedModCount = getModCount();
-			this.okayToRemove = false;
-			this.previousNode = null;
+			this.okToRemove = false;
 		}
 
 		/**
@@ -429,33 +399,18 @@ public class LinkedList <T> implements ListADT<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
-			okayToRemove = true;
+			okToRemove = true;
 			T element = currentNode.getElement();
 			this.currentNode = currentNode.getNext();
 			return element;
 		}
 
+		@Override
 		public void remove() {
-			if (!okayToRemove ) {
+			if (!okToRemove) {
 				throw new UnsupportedOperationException("Remove operation is not supported.");
 			}
-			if (previousNode != null) {
-				if (previousNode == front) {
-					// If we're removing the first element
-					front = currentNode;
-				} else {
-					// Find the node just before the previousNode
-					LinearNode<T> beforePreviousNode = front;
-					while (beforePreviousNode.getNext() != previousNode) {
-						beforePreviousNode = beforePreviousNode.getNext();
-					}
-					beforePreviousNode.setNext(currentNode);
-				}
-				size--;
-				modCount++;
-				exceptedModCount++;
-				okayToRemove = false;
-			}
+			this.okToRemove = false;
 		}
 
 		/**
