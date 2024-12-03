@@ -2,8 +2,8 @@ package lib;
 
 public class BinaryTreeNode <T> {
 	private T element;
-	private final BinaryTreeNode<T> left;
-	private final BinaryTreeNode<T> right;
+	private  BinaryTreeNode<T> left;
+	private  BinaryTreeNode<T> right;
 
 	public BinaryTreeNode(T element) {
 		this.element = element;
@@ -11,12 +11,29 @@ public class BinaryTreeNode <T> {
 		this.right = null;
 	}
 
+
 	public T getElement() {
 		return this.element;
 	}
 
 	public void setElement(T element) {
 		this.element = element;
+	}
+
+	public BinaryTreeNode<T> getLeft() {
+		return this.left;
+	}
+
+	public void setLeft(BinaryTreeNode<T> leftBinaryTreeNode) {
+		this.left = leftBinaryTreeNode;
+	}
+
+	public BinaryTreeNode<T> getRight() {
+		return this.right;
+	}
+
+	public void setRight(BinaryTreeNode<T> rightBinaryTreeNode) {
+		this.right = rightBinaryTreeNode;
 	}
 
 	public int numChildren() {

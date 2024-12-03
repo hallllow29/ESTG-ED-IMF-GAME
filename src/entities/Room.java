@@ -1,9 +1,6 @@
 package entities;
 
-import lib.DoubleLinkedOrderedList;
 import lib.LinkedList;
-import lib.exceptions.ElementNotFoundException;
-import lib.exceptions.EmptyCollectionException;
 
 public class Room implements Comparable<Room> {
 

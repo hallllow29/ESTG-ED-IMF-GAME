@@ -1,14 +1,10 @@
 import entities.*;
-import lib.CircularDoubleLinkedList;
 import lib.Graph;
 import lib.LinkedList;
-import lib.exceptions.ElementNotFoundException;
-import lib.exceptions.EmptyCollectionException;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**

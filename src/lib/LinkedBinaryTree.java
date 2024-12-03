@@ -1,5 +1,7 @@
 package lib;
 
+import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.BinaryTreeADT;
 
 import java.util.Iterator;
@@ -7,8 +9,8 @@ import java.util.Iterator;
 
 public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 
-	private final int count;
-	private final BinaryTreeNode<T> root;
+	private int count;
+	private BinaryTreeNode<T> root;
 
 	public LinkedBinaryTree() {
 		this.count = 0;
@@ -20,9 +22,22 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 		root = new BinaryTreeNode<T>(element);
 	}
 
+	public int getCount() {
+		return this.count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	@Override
 	public T getRoot() {
 		return this.root.getElement();
+	}
+
+
+	public void setRoot(BinaryTreeNode<T> root) {
+		this.root = root;
 	}
 
 	@Override
@@ -36,34 +51,132 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 	}
 
 	@Override
-	public boolean contains(T targetElement) {
-		return false;
+	public boolean contains(T target) throws EmptyCollectionException, ElementNotFoundException {
+		if (this.isEmpty()) {
+            throw new EmptyCollectionException("Binary Tree is empty");
+        }
+
+        BinaryTreeNode<T> currentBinaryTreeNode = this.root;
+
+        while (currentBinaryTreeNode != null) {
+            int compare = (((Comparable) target).compareTo(currentBinaryTreeNode.getElement()));
+
+            if (compare == 0) {
+                return true;
+            }
+
+            if (compare < 0) {
+                currentBinaryTreeNode = currentBinaryTreeNode.getLeft();
+            } else {
+                currentBinaryTreeNode = currentBinaryTreeNode.getRight();
+            }
+        }
+
+        return false;
+
 	}
 
 	@Override
-	public T find(T targetElement) {
-		return null;
+	public T find(T target) throws ElementNotFoundException {
+		BinaryTreeNode<T> currentBinaryTreeNode = findAgain(target, this.root);
+
+		if (currentBinaryTreeNode == null) {
+			throw new ElementNotFoundException("Element not in Binary Tree");
+		}
+
+		return currentBinaryTreeNode.getElement();
+	}
+
+	private BinaryTreeNode<T> findAgain(T target, BinaryTreeNode<T> nextBinaryTreeNode) {
+		if (nextBinaryTreeNode == null) {
+			return null;
+		}
+
+		if (nextBinaryTreeNode.getElement().equals(target)){
+			return nextBinaryTreeNode;
+		}
+
+		BinaryTreeNode<T> tempBinaryTreeNode = findAgain(target, nextBinaryTreeNode.getLeft());
+
+		if (tempBinaryTreeNode == null) {
+			tempBinaryTreeNode = findAgain(target, nextBinaryTreeNode.getRight());
+		}
+
+		return tempBinaryTreeNode;
+	}
+
+
+	public void inOrder(BinaryTreeNode<T> binaryTreeNode, LinkedUnorderedList<T> linkedList) {
+		if (binaryTreeNode != null) {
+			inOrder(binaryTreeNode.getLeft(), linkedList);
+			linkedList.addToRear(binaryTreeNode.getElement());
+			inOrder(binaryTreeNode.getRight(), linkedList);
+		}
 	}
 
 	@Override
 	public Iterator<T> iteratorInOrder() {
-		// Slides...
+		LinkedUnorderedList<T> linkedList = new LinkedUnorderedList<T>();
+		// TODO: Replace LinkedList for a UnorderedLinkedList
+		inOrder(this.root, linkedList);
+		return linkedList.iterator();
 	}
 
-	@Override
-	public Iterator<T> iteratorPreOrder() {
-		return null;
+	public void postOrder(BinaryTreeNode<T> binaryTreeNode, LinkedUnorderedList<T> linkedList) {
+		if (binaryTreeNode != null) {
+			postOrder(binaryTreeNode.getLeft(), linkedList);
+			postOrder(binaryTreeNode.getRight(), linkedList);
+			linkedList.add(binaryTreeNode.getElement());
+		}
 	}
 
 	@Override
 	public Iterator<T> iteratorPostOrder() {
-		return null;
+		LinkedUnorderedList<T> linkedList = new LinkedUnorderedList<>();
+		postOrder(this.root, linkedList);
+		return linkedList.iterator();
+	}
+
+	public void preOrder(BinaryTreeNode<T> binaryTreeNode, LinkedUnorderedList<T> linkedList) {
+		if (binaryTreeNode != null) {
+			linkedList.add(binaryTreeNode.getElement());
+			preOrder(binaryTreeNode.getLeft(), linkedList);
+			preOrder(binaryTreeNode.getRight(), linkedList);
+		}
 	}
 
 	@Override
-	public Iterator<T> iteratorLevelOrder() {
-		return null;
+	public Iterator<T> iteratorPreOrder() {
+		LinkedUnorderedList<T> linkedList = new LinkedUnorderedList<T>();
+		preOrder(this.root, linkedList);
+		return linkedList.iterator();
+
 	}
 
+	@Override
+	public Iterator<T> iteratorLevelOrder() throws EmptyCollectionException {
+		LinkedQueue<T> binaryNodes = new LinkedQueue<T>();
+        LinkedUnorderedList<T> results = new LinkedUnorderedList<T>();
 
+        binaryNodes.enqueue(this.root.getElement());
+
+        while (!binaryNodes.isEmpty()) {
+            BinaryTreeNode<T> binaryNode = (BinaryTreeNode<T>) binaryNodes.dequeue();
+            if (binaryNode != null) {
+                results.add(binaryNode.getElement());
+
+                if (binaryNode.getLeft() != null) {
+                    binaryNodes.enqueue(binaryNode.getLeft().getElement());
+                }
+
+                if (binaryNode.getRight() != null) {
+                    binaryNodes.enqueue(binaryNode.getRight().getElement());
+                }
+
+            } else {
+                results.add(null);
+            }
+        }
+        return results.iterator();
+	}
 }

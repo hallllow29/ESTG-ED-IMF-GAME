@@ -1,5 +1,8 @@
 package lib.interfaces;
 
+import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
+
 import java.util.Iterator;
 
 public interface BinaryTreeADT<T> {
@@ -31,7 +34,7 @@ public interface BinaryTreeADT<T> {
 	 * @param targetElement the element being searched for in the binary tree
 	 * @return true if the element is found in the binary tree, false otherwise
 	 */
-	boolean contains(T targetElement);
+	boolean contains(T targetElement) throws EmptyCollectionException, ElementNotFoundException;
 
 	/**
 	 * Searches for the specified element in the binary tree.
@@ -40,7 +43,7 @@ public interface BinaryTreeADT<T> {
 	 * @return the target element if it is found within the binary tree
 	 * @throws NoSuchElementException if the element is not found in the tree
 	 */
-	T find(T targetElement);
+	T find(T targetElement) throws ElementNotFoundException;
 
 	/**
 	 * Returns a string representation of the binary tree.
@@ -75,5 +78,5 @@ public interface BinaryTreeADT<T> {
 	 *
 	 * @return an iterator positioned at the first element in level-order traversal of the binary tree
 	 */
-	Iterator<T> iteratorLevelOrder();
+	Iterator<T> iteratorLevelOrder() throws EmptyCollectionException;
 }
