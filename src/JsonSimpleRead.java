@@ -1,5 +1,6 @@
 import entities.*;
 
+import lib.exceptions.NotElementComparableException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -12,7 +13,7 @@ import lib.Graph;
 
 public class JsonSimpleRead {
 
-    public static Mission loadMissionFromJson(String file_in_path, Graph<Room> graph) throws IOException, ParseException {
+    public static Mission loadMissionFromJson(String file_in_path, Graph<Room> graph) throws IOException, ParseException, NotElementComparableException {
 
         JSONObject jsonObject = parseJsonFile(file_in_path);
         Mission mission = newMission(jsonObject, graph);
@@ -125,7 +126,7 @@ public class JsonSimpleRead {
      *                with information about the enemy's name, power, and location
      * @param graph a Graph<Room> used to find and add enemies to the appropriate rooms
      */
-    private static void addEnemiesToMission(JSONArray enemies, Graph<Room> graph, Mission mission) {
+    private static void addEnemiesToMission(JSONArray enemies, Graph<Room> graph, Mission mission) throws NotElementComparableException {
         for (Object enemyObj : enemies) {
             JSONObject enemyJson = (JSONObject) enemyObj;
 
@@ -173,7 +174,7 @@ public class JsonSimpleRead {
      *              with information about the item's location, type, and points
      * @param graph a Graph<Room> used to find and add items to the appropriate rooms
      */
-    private static void addItemsToRooms(JSONArray items, Graph<Room> graph, Mission mission) {
+    private static void addItemsToRooms(JSONArray items, Graph<Room> graph, Mission mission) throws NotElementComparableException {
         for (Object itemObj : items) {
             JSONObject itemJson = (JSONObject) itemObj;
 
@@ -241,7 +242,7 @@ public class JsonSimpleRead {
      * @param graph a Graph<Room> used to retrieve Room objects for the given room names
      * @param mission a Mission object to which the entry and exit points are added
      */
-    private static void addEntryAndExitsPoints(JSONArray entries_exits, Graph<Room> graph, Mission mission) {
+    private static void addEntryAndExitsPoints(JSONArray entries_exits, Graph<Room> graph, Mission mission) throws NotElementComparableException {
         for (Object entry_exit_obj : entries_exits) {
             String room_name = (String) entry_exit_obj;
             Room room = graph.getRoom(room_name);

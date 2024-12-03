@@ -4,6 +4,8 @@ package lib.interfaces;/*
  */
 
 
+import lib.exceptions.NotElementComparableException;
+
 /**
  *
  * @author pedro
@@ -15,5 +17,5 @@ public interface OrderedListADT<T> extends ListADT<T> {
      *
      * @param element the element to be added to this list
      */
-    public void add(T element);
+    public void add(T element) throws NotElementComparableException;
 }

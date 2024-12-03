@@ -9,6 +9,7 @@
 package lib;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.exceptions.NotElementComparableException;
 import lib.interfaces.ListADT;
 
 import java.util.ConcurrentModificationException;
@@ -29,7 +30,38 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		this.modCount = 0;
 	}
 
-	public void add(T element) {
+	public void setSize(int size) {
+		this.size = size;
+	}
+
+	public void setModCount(int modCount) {
+		this.modCount = modCount;
+	}
+	public void setFront(LinearNode<T> front) {
+		this.front = front;
+
+		if (this.front == null) {
+			this.rear = null;
+		}
+	}
+
+	public void setRear(LinearNode<T> rear) {
+		this.rear = rear;
+
+		if (this.rear == null) {
+			this.front = null;
+		}
+	}
+
+	public int getSize() {
+		return this.size;
+	}
+
+	public LinearNode<T> getRear() {
+		return this.rear;
+	}
+
+	public void add(T element) throws NotElementComparableException {
 		LinearNode<T> newNode = new LinearNode<>(element);
 
 		if (isEmpty()) {
@@ -273,7 +305,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @return the front node of the linked list
 	 */
-	private LinearNode<T> getFront() {
+	public LinearNode<T> getFront() {
 		return this.front;
 	}
 
@@ -282,7 +314,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @return the number of modifications made to the list
 	 */
-	private int getModCount() {
+	public int getModCount() {
 		return this.modCount;
 	}
 
@@ -292,7 +324,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @param <T> the type of element held in this node
 	 */
-	private class LinearNode<T> {
+	public static class LinearNode<T> {
 
 		private T element;
 		private LinearNode<T> next;

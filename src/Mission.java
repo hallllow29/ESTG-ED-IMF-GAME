@@ -6,6 +6,7 @@ import lib.Graph;
 import lib.LinkedList;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.exceptions.NotElementComparableException;
 
 import java.util.Iterator;
 
@@ -72,15 +73,15 @@ public class Mission {
 
 	}
 
-	public void setEnemy(Enemy enemy) {
+	public void setEnemy(Enemy enemy) throws NotElementComparableException {
 		this.enemies.add(enemy);
 	}
 
-	public void setItem(Item item) {
+	public void setItem(Item item) throws NotElementComparableException {
 		this.items.add(item);
 	}
 
-	public void setEntryExitPoint(Room entry_exit_point) {
+	public void setEntryExitPoint(Room entry_exit_point) throws NotElementComparableException {
 		this.entry_exit_points.add(entry_exit_point);
 	}
 
