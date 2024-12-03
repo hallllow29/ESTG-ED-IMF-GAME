@@ -15,7 +15,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedList <T> implements ListADT<T> {
+public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 
 	private LinearNode<T> front;
 	private LinearNode<T> rear;
@@ -76,6 +76,7 @@ public class LinkedList <T> implements ListADT<T> {
 		if (!found) {
 			throw new ElementNotFoundException("Element not in the list.");
 		}
+
 		LinearNode<T> remove = currentNode;
 		T removedElement = remove.getElement();
 
@@ -84,10 +85,10 @@ public class LinkedList <T> implements ListADT<T> {
 		} else {
 			previousNode.setNext(currentNode.getNext());
 		}
-		// previousNode.setNext(currentNode.getNext());
 		currentNode = null;
 
 		this.size--;
+		modCount++;
 		return removedElement;
 	}
 
@@ -104,8 +105,7 @@ public class LinkedList <T> implements ListADT<T> {
 			throw new EmptyCollectionException("List is empty.");
 		}
 
-		LinearNode<T> first = this.front;
-		return first.getElement();
+		return this.front.getElement();
 	}
 
 	/**
@@ -120,9 +120,7 @@ public class LinkedList <T> implements ListADT<T> {
 		if (isEmpty()) {
 			throw new EmptyCollectionException("List is empty.");
 		}
-
-		LinearNode<T> last = this.rear;
-		return last.getElement();
+		return this.rear.getElement();
 	}
 
 	/**
@@ -138,7 +136,7 @@ public class LinkedList <T> implements ListADT<T> {
 			throw new EmptyCollectionException("List is empty.");
 		}
 
-		LinearNode<T> first = this.front;
+		T removedFirstElement = this.front.getElement();
 
 		if (size() == 1) {
 			this.front = this.rear = null;
@@ -146,9 +144,9 @@ public class LinkedList <T> implements ListADT<T> {
 			this.front = this.front.getNext();
 		}
 		this.size--;
-		this.modCount--;
+		this.modCount++;
 
-		return first.getElement();
+		return removedFirstElement;
 	}
 
 	/**
@@ -164,23 +162,17 @@ public class LinkedList <T> implements ListADT<T> {
 			throw new EmptyCollectionException("List is empty.");
 		}
 
-		LinearNode<T> lastNode = this.rear;
+		T removedLastElement = this.rear.getElement();
+		LinearNode<T> current = this.front;
 
-		if (size() == 1) {
-			this.front = this.rear = null;
-		} else {
-			LinearNode<T> currentNode = this.front;
-			while (currentNode.getNext() != this.rear) {
-				currentNode = currentNode.getNext();
-			}
-			this.rear = null;
-			this.rear = currentNode;
-			this.rear.setNext(null);
-
+		while (current.getNext() != this.rear) {
+			current = current.getNext();
 		}
+		current.setNext(null);
+		this.rear = current;
 		this.size--;
-		this.modCount--;
-		return lastNode.getElement();
+		this.modCount++;
+		return removedLastElement;
 	}
 
 	/**
@@ -254,7 +246,7 @@ public class LinkedList <T> implements ListADT<T> {
 			return result;
 		}
 
-		return result + " -> NULL";
+		return result;
 	}
 
 	/**
@@ -300,16 +292,17 @@ public class LinkedList <T> implements ListADT<T> {
 	 *
 	 * @param <T> the type of element held in this node
 	 */
-	private class LinearNode <T> {
+	private class LinearNode<T> {
 
-		private LinearNode<T> next;
 		private T element;
+		private LinearNode<T> next;
 
 		/**
 		 * Constructs an empty LinearNode with no element and no next node.
 		 */
 		public LinearNode() {
-			this.next = null; this.element = null;
+			this.element = null;
+			this.next = null;
 		}
 
 		/**
@@ -318,7 +311,8 @@ public class LinkedList <T> implements ListADT<T> {
 		 * @param element the element to be stored in this node
 		 */
 		public LinearNode(T element) {
-			this.next = null; this.element = element;
+			this.element = element;
+			this.next = null;
 		}
 
 		/**
@@ -356,13 +350,11 @@ public class LinkedList <T> implements ListADT<T> {
 		public void setElement(T element) {
 			this.element = element;
 		}
-
 	}
 
 	private class LinkedListIterator implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
-		private LinearNode<T> previousNode;
 		private int expectedModCount;
 		private boolean okToRemove;
 
@@ -373,7 +365,6 @@ public class LinkedList <T> implements ListADT<T> {
 		 */
 		public LinkedListIterator() {
 			this.currentNode = getFront();
-			this.previousNode = null;
 			this.expectedModCount = getModCount();
 			this.okToRemove = false;
 		}
@@ -406,10 +397,9 @@ public class LinkedList <T> implements ListADT<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
-			okToRemove = true;
 			T element = currentNode.getElement();
-			this.previousNode = this.currentNode;
 			this.currentNode = currentNode.getNext();
+			this.okToRemove = true;
 			return element;
 		}
 
@@ -418,21 +408,14 @@ public class LinkedList <T> implements ListADT<T> {
 			if (!okToRemove) {
 				throw new UnsupportedOperationException("Remove operation is not supported.");
 			}
-			if (previousNode == null) {
-				front = currentNode.getNext();
-			} else {
-				previousNode.setNext(currentNode.getNext());
+
+			try {
+				LinkedList.this.remove(this.currentNode.getElement());
+			} catch (EmptyCollectionException | ElementNotFoundException e) {
+				System.err.println(e.getCause());
 			}
-
-			if (currentNode == rear) {
-				rear = previousNode;
-			}
-
-			currentNode = previousNode;
-
-			size--;
-			this.expectedModCount = getModCount();
-			okToRemove = false;
+			this.expectedModCount++;
+			this.okToRemove = false;
 
 		}
 

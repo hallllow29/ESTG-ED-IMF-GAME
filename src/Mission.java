@@ -15,7 +15,7 @@ public class Mission {
 	private final int version;
 	private Target target;
 	private Room entryPoint;
-	private final Graph<Room> bestPath;
+
 	private final Graph<Room> battlefield;
 	private final LinkedList<Enemy> enemies;
 	private final LinkedList<Item> items;
@@ -35,12 +35,32 @@ public class Mission {
 	public void setBestPath() {
 		Iterator<Room> temp_path = null;
 
+
 		for (Room entry_point : this.entry_exit_points) {
 			try {
 
 				if (!entry_point.hasEnemies()) {
+
 					System.out.println("\nBEST PATH WITHOUT ENEMY");
+
 					temp_path = this.battlefield.iteratorShortestPath(entry_point, target.getRoom());
+
+					while (temp_path.hasNext()) {
+						int enemy_counter = 0;
+
+						Room tmp_room = temp_path.next();
+
+						if (tmp_room.hasEnemies()) {
+
+							for (Enemy enemy : enemies) {
+								if (enemy.getCurrentPosition().getName().equals(tmp_room.getName())) {
+									enemy_counter++;
+								}
+							}
+							System.out.println("THIS ROOM " + tmp_room.getName() + " has " + enemy_counter);
+						}
+						System.out.println(tmp_room.getName());
+					}
 				}
 
 			} catch (ElementNotFoundException e) {
