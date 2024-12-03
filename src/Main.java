@@ -52,7 +52,7 @@ public class Main {
 			//Iterator<Room> entry_points = entry_points_selection.iterator();
 			Room coco  = null;
 
-			for (Room room : entry_points_selection) {
+			for (Room room : mission.getBattlefield().getVertices()) {
 				if (room.getName().equals("Heliporto")) {
 					coco = room;
 				}
@@ -70,9 +70,8 @@ public class Main {
 				simulation.scnario2(roomobj);
 			} */
 
-			//simulation.enemyTurn();
+			simulation.enemyTurn();
 			simulation.playerTurn();
-
 
 			displayEnemyIntel(mission);
 

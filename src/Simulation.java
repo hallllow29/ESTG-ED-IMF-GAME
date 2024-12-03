@@ -23,6 +23,18 @@ public class Simulation {
 		//this.entry_point = entry_point;
 	}
 
+	public void game() throws EmptyCollectionException, ElementNotFoundException {
+		Turn currentTurn = Turn.PLAYER;
+		boolean gameOver = false;
+
+		while(!gameOver) {
+			switch(currentTurn) {
+				case PLAYER:
+					System.out.println("Player's turn");
+					
+			}
+		}
+	}
 	/*private void playerTurn() {
 		Room currentRoom = player.getCurrentPosition();
 		System.out.println("Tó Cruz current position is " + currentRoom);
@@ -65,10 +77,16 @@ public class Simulation {
 
 	}
 
-	private String removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
-		mission.removeEnemy(enemy);
+	private String removeEnemy(Enemy enemyToRemove) {
+		try {
+			mission.removeEnemy(enemyToRemove);
+			return "Enemy: " + enemyToRemove.getName() + " is dead";
+		} catch (EmptyCollectionException e) {
+			return "Enemy list is empty";
+		} catch (ElementNotFoundException e) {
+			return "Enemy " + enemyToRemove.getName() + " was not found";
+		}
 
-		return "Enemy " + enemy.getName() + " is dead";
 	}
 
 	private void playerAttack(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
@@ -94,7 +112,7 @@ public class Simulation {
 		}
 	}
 
-	public void scnario2(Room room) {
+	public void scnario2(Room room) throws EmptyCollectionException, ElementNotFoundException {
 			this.checkForItems(room);
 			this.moveEnemies();
 
@@ -176,7 +194,7 @@ public class Simulation {
 		return possible_moves;
 	}
 
-	private void checkForItems(Room room) {
+	private void checkForItems(Room room) throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("Checking if the room has items.....");
 
 		if (room.hasItems()) {
@@ -185,29 +203,16 @@ public class Simulation {
 					if (item instanceof MediKit) {
 						this.player.addKitToBackPack((MediKit) item);
 						item.setPosition(null);
+						mission.removeItem(item);
 						System.out.println("Medikit added to the backPack");
 					} else if (item instanceof Kevlar) {
 						this.player.equipKevlar((Kevlar) item);
 						item.setPosition(null);
+						mission.removeItem(item);
 						System.out.println("Kevlar equipped, current health" + this.player.getCurrentHealth());
 					}
 				}
 			}
 		}
 	}
-
-		/*for (Item item : mission.getItems()) {
-			if (item.getPosition().equals(room)) {
-				if (item instanceof MediKit) {
-					this.player.addKitToBackPack((MediKit) item);
-					item.setPosition(null);
-					System.out.println("Medikit added to the backPack");
-				} else if (item instanceof Kevlar) {
-					this.player.equipKevlar((Kevlar) item);
-					item.setPosition(null);
-					System.out.println("Kevlar equipped, current health" + this.player.getCurrentHealth());
-				}
-			}
-		}
-	}*/
 }

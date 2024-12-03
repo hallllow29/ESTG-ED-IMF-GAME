@@ -1,7 +1,4 @@
-import entities.Enemy;
-import entities.Item;
-import entities.Room;
-import entities.Target;
+import entities.*;
 import lib.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
@@ -11,6 +8,8 @@ public class Mission {
     private final String code;
     private final int version;
     private Target target;
+    private Room entryPoint;
+    private Graph<Room> bestPath;
     private final Graph<Room> battlefield;
     private final LinkedList<Enemy> enemies;
     private final LinkedList<Item> items;
@@ -20,12 +19,16 @@ public class Mission {
         this.code = code;
         this.version = version;
         this.battlefield = battlefield;
-        this.enemies = new LinkedList<Enemy>();
+        this.enemies = new LinkedList<>();
         this.items = new LinkedList<>();
         this.entry_exit_points = new LinkedList<>();
         this.target = null;
+        this.bestPath = null;
     }
 
+    public void setBestPath(Graph<Room> bestPath) {
+
+    }
     public void setEnemy(Enemy enemy) {
         this.enemies.add(enemy);
     }
@@ -64,6 +67,11 @@ public class Mission {
     public void removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
         this.enemies.remove(enemy);
     }
+
+    public void removeItem(Item item) throws EmptyCollectionException, ElementNotFoundException {
+        this.items.remove(item);
+    }
+
 
 
 
