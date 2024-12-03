@@ -100,6 +100,8 @@ public class Simulation {
 
 
 	}
+
+
 	private void enemyAttack(Enemy enemy) {
 		System.out.println("Enemy " + enemy.getName() + " is attacking " + this.player.getName());
 

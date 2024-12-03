@@ -303,11 +303,11 @@ public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 
 	}
 
-	private boolean indexIsValid(int index) {
+	protected boolean indexIsValid(int index) {
 		return ((index < numVertices) && (index >= 0));
 	}
 
-	private int getVertexIndex(T vertex) {
+	protected int getVertexIndex(T vertex) {
 		for (int i = 0; i < numVertices; i++) {
 			if (vertices[i].equals(vertex)) {
 				return i;

@@ -36,10 +36,34 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 	}
 
 	@Override
+	public boolean contains(T targetElement) {
+		return false;
+	}
+
+	@Override
+	public T find(T targetElement) {
+		return null;
+	}
+
+	@Override
 	public Iterator<T> iteratorInOrder() {
 		// Slides...
 	}
 
+	@Override
+	public Iterator<T> iteratorPreOrder() {
+		return null;
+	}
+
+	@Override
+	public Iterator<T> iteratorPostOrder() {
+		return null;
+	}
+
+	@Override
+	public Iterator<T> iteratorLevelOrder() {
+		return null;
+	}
 
 
 }

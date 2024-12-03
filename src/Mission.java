@@ -29,7 +29,6 @@ public class Mission {
 		this.items = new LinkedList<>();
 		this.entry_exit_points = new LinkedList<>();
 		this.target = null;
-		this.bestPath = null;
 	}
 
 	public void setBestPath() {
