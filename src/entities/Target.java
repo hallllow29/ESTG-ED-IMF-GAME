@@ -13,4 +13,9 @@ public class Target {
     public Room getRoom() {
         return this.room;
     }
+
+    public String toString() {
+        return this.room +
+                " Type: " + this.type;
+    }
 }

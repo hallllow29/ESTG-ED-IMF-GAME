@@ -45,4 +45,8 @@ public class MediKit extends Item {
 		return this.heal_power;
 	}
 
+	public String toString() {
+		return super.toString() + " HP: " + this.getHealPower();
+ 	}
+
 }

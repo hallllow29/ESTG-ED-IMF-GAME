@@ -30,7 +30,6 @@ public abstract class Item implements Comparable<Item> {
 	 */
 	public abstract String getName();
 
-
 	/**
 	 * Retrieves the current position of the item.
 	 *
@@ -55,6 +54,10 @@ public abstract class Item implements Comparable<Item> {
 		return Integer.compare(this.getItemValue(), other.getItemValue());
 	}
 
+	public String toString() {
+		return "Name: " + this.name +
+				"\nPosition: " + this.position;
+	}
 
 
 }

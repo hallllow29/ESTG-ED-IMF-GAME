@@ -7,7 +7,7 @@ import lib.interfaces.GraphADT;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Graph <T> implements GraphADT<T> {
+public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 
 	protected final int DEFAULT_CAPACITY = 10;
 	protected int numVertices; // number of vertices in the graph
@@ -21,7 +21,7 @@ public class Graph <T> implements GraphADT<T> {
 	public Graph() {
 		numVertices = 0;
 		this.adjMatrix = new boolean[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
-		this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
+		this.vertices = (T[]) (new Comparable[DEFAULT_CAPACITY]);
 	}
 
 	@Override
@@ -295,7 +295,7 @@ public class Graph <T> implements GraphADT<T> {
 
 		adjMatrix = newAdjMatrix;
 
-		T[] newVertices = (T[]) new Object[newCapacity];
+		T[] newVertices = (T[]) new Comparable[newCapacity];
 
 		if (numVertices >= 0) System.arraycopy(vertices, 0, newVertices, 0, numVertices);
 
@@ -332,23 +332,23 @@ public class Graph <T> implements GraphADT<T> {
 		return null;
 	}
 
-	public DoubleLinkedOrderedList<Room> getVertices() {
-		DoubleLinkedOrderedList<Room> verticesList = new DoubleLinkedOrderedList<>();
+	public DoubleLinkedOrderedList<T> getVertices() {
+		DoubleLinkedOrderedList<T> verticesList = new DoubleLinkedOrderedList<>();
 		for (int i = 0; i < numVertices; i++) {
-			verticesList.add((Room) this.vertices[i]);
+			verticesList.add(this.vertices[i]);
 		}
 
 		return verticesList;
 	}
 
-	public DoubleLinkedOrderedList<Room>getConnectedVertices(Room roomName) {
-		int index = getVertexIndex((T) roomName);
-		DoubleLinkedOrderedList<Room> connectedVertices = new DoubleLinkedOrderedList<>();
+	public DoubleLinkedOrderedList<T>getConnectedVertices(T vertex) {
+		int index = getVertexIndex(vertex);
+		DoubleLinkedOrderedList<T> connectedVertices = new DoubleLinkedOrderedList<T>();
 
 		if (index != -1) {
 			for (int i = 0; i < numVertices; i++) {
 				if (adjMatrix[index][i]) {
-					connectedVertices.add((Room) vertices[i]);
+					connectedVertices.add(vertices[i]);
 				}
 			}
 		}

@@ -24,18 +24,17 @@ public class JsonSimpleRead {
         addConnectionsToGraph(connections, graph);
 
         JSONArray enemies = (JSONArray) jsonObject.get("inimigos");
-         addEnemiesToMission(enemies, graph, mission);
-
+        addEnemiesToMission(enemies, graph, mission);
 
 
         JSONArray items = (JSONArray) jsonObject.get("itens");
-        // addItemsToRooms(items, graph);
+        addItemsToRooms(items, graph, mission);
 
         JSONArray entries_exits = (JSONArray) jsonObject.get("entradas-saidas");
-        // addEntryAndExitsPoints(entries_exits, graph, mission);
+        addEntryAndExitsPoints(entries_exits, graph, mission);
 
         JSONObject targetJson = (JSONObject) jsonObject.get("alvo");
-        // setMissionTarget(targetJson, graph, mission);
+        setMissionTarget(targetJson, graph, mission);
 
         return mission;
     }
@@ -156,7 +155,7 @@ public class JsonSimpleRead {
             if (room != null) {
                 Enemy enemy_in_mission = new Enemy(enemy_name, enemy_power, room);
                 room.setEnemies(true);
-                mission.addEnemy(enemy_in_mission);
+                mission.setEnemy(enemy_in_mission);
             } else {
                 System.err.println("Room " + enemy_location + " not found for the enemy");
             }
@@ -174,7 +173,7 @@ public class JsonSimpleRead {
      *              with information about the item's location, type, and points
      * @param graph a Graph<Room> used to find and add items to the appropriate rooms
      */
-    /*private static void addItemsToRooms(JSONArray items, Graph<Room> graph) {
+    private static void addItemsToRooms(JSONArray items, Graph<Room> graph, Mission mission) {
         for (Object itemObj : items) {
             JSONObject itemJson = (JSONObject) itemObj;
 
@@ -198,18 +197,19 @@ public class JsonSimpleRead {
 
             if (room != null) {
                Item item = defineItem(room, item_points, item_type);
-               room.addItem(item);
+               mission.setItem(item);
+               room.setItemInRoom(true);
             } else {
                 System.err.println("Room " + item_location + " not found for the item " + item_type);
             }
-            *//*String item_type = (String) itemJson.get("tipo");
+            //*String item_type = (String) itemJson.get("tipo");
             if ("kit de vida".equalsIgnoreCase(item_type)) {
                 Item mediKit_in_room = new MediKit("MediKit", room, item_points);
             } else if ("colete".equalsIgnoreCase(item_type)) {
                 Item kevlar_in_room = new Kevlar("Kevlar", room, item_points);
-            }*//*
+            }
         }
-    }*/
+    }
 
     /**
      * Defines and initializes an item within a specified room based on the item's type and points.
@@ -241,18 +241,18 @@ public class JsonSimpleRead {
      * @param graph a Graph<Room> used to retrieve Room objects for the given room names
      * @param mission a Mission object to which the entry and exit points are added
      */
-    /*private static void addEntryAndExitsPoints(JSONArray entries_exits, Graph<Room> graph, Mission mission) {
+    private static void addEntryAndExitsPoints(JSONArray entries_exits, Graph<Room> graph, Mission mission) {
         for (Object entry_exit_obj : entries_exits) {
             String room_name = (String) entry_exit_obj;
             Room room = graph.getRoom(room_name);
 
             if (room != null) {
-                mission.addEntryExitPoint(room);
+                mission.setEntryExitPoint(room);
             } else {
                 System.err.println("Room " + room_name + " not found as entry or exit point");
             }
         }
-    }*/
+    }
 
     /**
      * Sets the target for a mission based on the provided JSON object.
@@ -264,7 +264,7 @@ public class JsonSimpleRead {
      * @param graph a Graph<Room> used to locate the target room based on the specified room name
      * @param mission the Mission object in which the target is to be set
      */
-    /*private static void setMissionTarget(JSONObject targetJson, Graph<Room> graph, Mission mission) {
+    private static void setMissionTarget(JSONObject targetJson, Graph<Room> graph, Mission mission) {
         String target_room = (String) targetJson.get("divisao");
         String target_type = (String) targetJson.get("tipo");
 
@@ -276,5 +276,5 @@ public class JsonSimpleRead {
         } else {
             System.err.println("Room " + target_room + "not found as target room");
         }
-    }*/
+    }
 }

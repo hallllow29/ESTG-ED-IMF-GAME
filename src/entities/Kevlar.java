@@ -42,4 +42,8 @@ public class Kevlar extends Item {
 	public String getName() {
 		return "Kevlar";
 	}
+
+	public String toString() {
+		return super.toString() + " Extra hp: " + this.extra_hp;
+	}
 }

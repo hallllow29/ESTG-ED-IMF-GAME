@@ -9,6 +9,7 @@ public class Room implements Comparable<Room> {
 
 	private final String name;
 	private boolean enemies_in_room;
+	private boolean item_in_room;
 
     public Room(String name) {
 		this.name = name;
@@ -23,6 +24,14 @@ public class Room implements Comparable<Room> {
 		this.enemies_in_room = enemies_in_room;
 	}
 
+	public void setItemInRoom(boolean item_in_room) {
+		this.item_in_room = item_in_room;
+	}
+
+	public boolean hasItems() {
+		return this.item_in_room;
+	}
+
 	public boolean hasEnemies() {
 		return enemies_in_room;
 	}
@@ -35,5 +44,6 @@ public class Room implements Comparable<Room> {
 	public String toString() {
 		return "Room name: " + this.name;
 	}
+
 
 }

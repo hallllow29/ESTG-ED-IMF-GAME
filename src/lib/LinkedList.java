@@ -65,24 +65,26 @@ public class LinkedList <T> implements ListADT<T> {
 
 		while (currentNode != null) {
 			if (currentNode.getElement().equals(target)) {
-				found = true;
-				break;
+				if (currentNode == front) {
+					front = front.getNext();
+					if (front == null) {
+						rear = null; // Lista ficou vazia
+					}
+				} else {
+					previousNode.setNext(currentNode.getNext());
+					if (currentNode == rear) {
+						rear = previousNode; // Atualiza o rear
+					}
+				}
+				size--;
+				modCount++;
+				return currentNode.getElement();
 			}
 			previousNode = currentNode;
 			currentNode = currentNode.getNext();
 		}
 
-		if (!found) {
-			throw new ElementNotFoundException("Element not in the list.");
-		}
-		LinearNode<T> remove = currentNode;
-		T removedElement = remove.getElement();
-		previousNode.setNext(currentNode.getNext());
-		currentNode = null;
-
-		this.size--;
-		this.modCount--;
-		return removedElement;
+		throw new ElementNotFoundException("Element not in the list.");
 	}
 
 	/**
@@ -382,8 +384,10 @@ public class LinkedList <T> implements ListADT<T> {
 	private class LinkedListIterator implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
+		private LinearNode<T> previousNode;
+		private int exceptedModCount;
 
-		private final int exceptedModCount;
+		private boolean okayToRemove;
 
 		/**
 		 * Constructs an iterator for a linked list. Initializes the iterator's current
@@ -393,6 +397,8 @@ public class LinkedList <T> implements ListADT<T> {
 		public LinkedListIterator() {
 			this.currentNode = getFront();
 			this.exceptedModCount = getModCount();
+			this.okayToRemove = false;
+			this.previousNode = null;
 		}
 
 		/**
@@ -423,14 +429,33 @@ public class LinkedList <T> implements ListADT<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
+			okayToRemove = true;
 			T element = currentNode.getElement();
 			this.currentNode = currentNode.getNext();
 			return element;
 		}
 
-		@Override
 		public void remove() {
-			throw new UnsupportedOperationException("Remove operation is not supported.");
+			if (!okayToRemove ) {
+				throw new UnsupportedOperationException("Remove operation is not supported.");
+			}
+			if (previousNode != null) {
+				if (previousNode == front) {
+					// If we're removing the first element
+					front = currentNode;
+				} else {
+					// Find the node just before the previousNode
+					LinearNode<T> beforePreviousNode = front;
+					while (beforePreviousNode.getNext() != previousNode) {
+						beforePreviousNode = beforePreviousNode.getNext();
+					}
+					beforePreviousNode.setNext(currentNode);
+				}
+				size--;
+				modCount++;
+				exceptedModCount++;
+				okayToRemove = false;
+			}
 		}
 
 		/**

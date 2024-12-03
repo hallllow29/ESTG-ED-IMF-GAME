@@ -1,5 +1,4 @@
-import entities.Enemy;
-import entities.Room;
+import entities.*;
 import lib.CircularDoubleLinkedList;
 import lib.Graph;
 import lib.LinkedList;
@@ -40,150 +39,42 @@ public class Main {
 
 			displayEnemyIntel(mission);
 
-			// displayEntryExitPoints(graph);
+			displayItems(mission);
 
+			displayEntryExitPoints(mission);
 
+			//simulationMenu();
 
+			displayTarget(mission);
 
-			// simulationMenu();
+			LinkedList<Room> entry_points_selection = mission.getEntryExitPoints();
 
+			//Iterator<Room> entry_points = entry_points_selection.iterator();
+			Room coco  = null;
 
+			for (Room room : entry_points_selection) {
+				if (room.getName().equals("Heliporto")) {
+					coco = room;
+				}
+			}
 
-			// CircularDoubleLinkedList<Room> entry_points_selection =  mission.getEntryPointsSelection();
+			Room entry_point = entry_points_selection.first();
 
-			// Iterator<Room> entry_points = entry_points_selection.iterator();
+			BackPack mochila = new BackPack();
 
-			// Room entry_point = entry_points.next();
+			Player toCruz = new Player("Tó cruz", 100, coco, mochila);
 
-			// Main.setSimulation(new Simulation(getMission(), getGraph(), entry_point));
+			Main.setSimulation(new Simulation(getMission(), toCruz));
 
-			/*
-			Nos nao tamos a ser eficazes...
+			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
+				simulation.scnario2(roomobj);
+			} */
 
-			Cada Enemy tem só um Room
+			//simulation.enemyTurn();
+			simulation.playerTurn();
 
-			Se percorremos a lista de Rooms...
 
-			Por que nao marcar cada Room com o boolean se tem Enemy ou nao?
-
-			Se o Room tem Enemy (boolean = true)
-
-			Entao aí procuramos qual enemy currentPosition bate com o current room nna loop.
-
-			Ou SEJA Tugas... tu percorres a lista de enemies e nao de ROOMS que é onde
-			tá a dar a bronca toda
-
-			PORQUE NOS SO PRECISAMOS DE MUDAR A POSICAO DO ENEMY...
-
-			FODASSE nem escrever consigo hoje.
-
-			Vou Zzz
-			
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			 */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			displayEnemyIntel(mission);
 
 		} catch (IOException e) {
 			System.err.println("Erro ao ler o arquivo JSON: " + e.getMessage());
@@ -290,7 +181,7 @@ public class Main {
 					break;
 			}
 		}
-	}*/
+	} */
 
 	private static Graph<Room> initGraph() throws IOException, ParseException {
 		Graph<Room> graph = new Graph<>();
@@ -327,12 +218,24 @@ public class Main {
 		}
 	}
 
-	/*private static void displayEntryExitPoints(Graph<Room> graph) {
+	private static void displayItems(Mission mission) {
+		System.out.println("\n==== ITEMS ====");
+		for (Item itemObj : mission.getItems()) {
+			System.out.println(itemObj);
+		}
+	}
+
+	private static void displayEntryExitPoints(Mission mission) {
 		System.out.println("\n===== Pontos de Entrada/Saída =====");
-		for (Room roomObj : mission.getEntryPoints()) {
+		for (Room roomObj : mission.getEntryExitPoints()) {
 			System.out.println(roomObj.getName());
 		}
-	}*/
+	}
+
+	private static void displayTarget(Mission mission) {
+		System.out.println("\n==== TARGET ====");
+		System.out.println(mission.getTarget());
+	}
 
 	public static int interactiveSelection(String entry_point_string) {
 		Scanner input = new Scanner(System.in);
@@ -392,6 +295,8 @@ public class Main {
 
 			}
 		}
-	}*/
+	}
+} */
+
 }
 
