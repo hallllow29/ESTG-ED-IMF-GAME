@@ -84,7 +84,7 @@ public abstract class Character {
 	 *
 	 * @param damage the amount of damage to inflict on the character
 	 */
-	public void takeDamage(int damage) {
+	public void takesDamageFrom(int damage) {
 		this.current_health -= damage;
 
 		if (this.current_health < 0) {
@@ -100,14 +100,6 @@ public abstract class Character {
 	public boolean isAlive() {
 		return this.current_health > 0;
 	}
-
-	/**
-	 * Executes an attack on the specified character. This method should be
-	 * implemented by subclasses to define the specific attack behavior.
-	 *
-	 * @param character the character to attack
-	 */
-	public abstract void attack(Character character);
 
 	public String toString() {
 		return "Name :" + this.name +

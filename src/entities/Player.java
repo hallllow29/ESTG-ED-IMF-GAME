@@ -8,30 +8,30 @@ public class Player extends Character {
 	 * Represents the current position of the player in the game.
 	 * This variable holds a reference to the entities.Room object where the player is currently located.
 	 */
-	private Room current_position;
+	private Room position;
 
 	/**
 	 * Represents the player's backpack.
 	 * This variable holds a reference to the entities.BackPack object containing
 	 * the items the player has collected in the game.
 	 */
-	private BackPack back_pack;
+	private final BackPack back_pack;
 
 	/**
 	 * Constructs a new Player with the specified name, fire power, current position, and backpack.
 	 *
 	 * @param name the name of the player
 	 * @param fire_power the fire power of the player
-	 * @param current_position the current position of the player in the game
+	 * @param position the current position of the player in the game
 	 * @param back_pack the backpack of the player containing collected items
 	 */
 
 	private Kevlar kevlar;
 
 
-	public Player(String name, int fire_power, Room current_position, BackPack back_pack) {
+	public Player(String name, int fire_power, Room position, BackPack back_pack) {
 		super(name, fire_power);
-		this.current_position = current_position;
+		this.position = position;
 		this.back_pack = back_pack;
 		this.kevlar = null;
 	}
@@ -41,8 +41,8 @@ public class Player extends Character {
 	 *
 	 * @return the current position of the player in the room
 	 */
-	public Room getCurrentPosition() {
-		return this.current_position;
+	public Room getPosition() {
+		return this.position;
 	}
 
 	/**
@@ -50,8 +50,8 @@ public class Player extends Character {
 	 *
 	 * @param position the new room where the player will be positioned
 	 */
-	public void setCurrentPosition(Room position) {
-		this.current_position = position;
+	public void setPosition(Room position) {
+		this.position = position;
 	}
 
 	/**
