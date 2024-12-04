@@ -1,5 +1,7 @@
 package lib.interfaces;
 
+import lib.exceptions.EmptyCollectionException;
+
 public interface HeapADT<T> extends BinaryTreeADT<T> {
     /**
      * Adds the specified object to this heap.
@@ -12,7 +14,7 @@ public interface HeapADT<T> extends BinaryTreeADT<T> {
      *
      * @return the element with the lowest value from this heap
      */
-    public T removeMin();
+    public T removeMin() throws EmptyCollectionException;
     /**
      * Returns a reference to the element with the lowest value in
      * this heap.
@@ -20,6 +22,6 @@ public interface HeapADT<T> extends BinaryTreeADT<T> {
      * @return a reference to the element with the lowest value
      * in this heap
      */
-    public T findMin();
+    public T findMin() throws EmptyCollectionException;
 
 }

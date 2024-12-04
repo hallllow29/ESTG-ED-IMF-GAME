@@ -1,5 +1,6 @@
 package lib;
 
+import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.HeapADT;
 
 public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
@@ -76,12 +77,102 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
     }
 
     @Override
-    public T removeMin() {
-        return null;
+    public T removeMin() throws EmptyCollectionException {
+        if (super.isEmpty()) {
+            throw new EmptyCollectionException("Linked Heap");
+        }
+
+        T minElement = super.getRootElement();
+
+        if (getCount() == 1) {
+            super.setRoot(null);
+            this.lastNode = null;
+        } else {
+            HeapNode<T> next_last = getNewLastNode();
+            if (this.lastNode.parent.getLeft() == this.lastNode) {
+                this.lastNode.parent.setLeft(null);
+            } else {
+                this.lastNode.parent.setRight(null);
+            }
+
+            getRoot().setElement(this.lastNode.getElement());
+            this.lastNode = next_last;
+            heapifyRemove();
+
+        }
+
+        super.setCount(super.getCount() + -1);
+
+        return minElement;
     }
 
     @Override
-    public T findMin() {
-        return null;
+    public T findMin() throws EmptyCollectionException {
+        if (super.isEmpty()) {
+            throw new EmptyCollectionException("LinkedHeap");
+        }
+
+        return super.getRoot().getElement();
     }
+
+    private void heapifyRemove() {
+        T temp;
+        HeapNode<T> node = (HeapNode<T>) super.getRoot();
+        HeapNode<T> left = (HeapNode<T>) node.getLeft();
+        HeapNode<T> right = (HeapNode<T>) node.getRight();
+        HeapNode<T> next;
+
+        if ((left == null) && (right == null)) {
+            next = null;
+        } else if(left == null) {
+            next = right;
+        } else if (right == null) {
+            next = left;
+        } else if (((Comparable)left.getElement()).compareTo(right.getElement()) < 0) {
+            next = left;
+        } else {
+            next = right;
+        }
+
+        temp = node.getElement();
+
+        while((next != null) && (((Comparable)next.getElement()).compareTo(temp)) < 0 ) {
+            node.setElement(next.getElement());
+            node = next;
+            left = (HeapNode<T>) node.getLeft();
+            right = (HeapNode<T>) node.getRight();
+
+            if ((left == null) && (right == null)) {
+                next = null;
+            } else if (left == null) {
+                next = right;
+            } else if (right == null) {
+                next = left;
+            } else if (((Comparable)left.getElement()).compareTo(right.getElement()) < 0) {
+                next = left;
+            } else {
+                next = right;
+            }
+
+        }
+
+        node.setElement(temp);
+    }
+
+    private HeapNode<T> getNewLastNode()
+    {
+        HeapNode<T> result = lastNode;
+
+        while ((result != super.getRoot()) && (result.parent.getLeft() == result))
+            result = result.parent;
+
+        if (result != super.getRoot())
+            result = (HeapNode<T>) result.parent.getLeft();
+
+        while ( (result).getRight() != null)
+            result = (HeapNode<T>) result.getRight();
+
+        return result;
+    }
+
 }
