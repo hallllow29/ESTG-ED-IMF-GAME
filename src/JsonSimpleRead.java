@@ -1,5 +1,6 @@
 import entities.*;
 
+import lib.Network;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,7 +14,7 @@ import lib.Graph;
 
 public class JsonSimpleRead {
 
-    public static Mission loadMissionFromJson(String file_in_path, Graph<Room> graph) throws IOException, ParseException, NotElementComparableException {
+    public static Mission loadMissionFromJson(String file_in_path, Network<Room> graph) throws IOException, ParseException, NotElementComparableException {
 
         JSONObject jsonObject = parseJsonFile(file_in_path);
         Mission mission = newMission(jsonObject, graph);
@@ -60,10 +61,10 @@ public class JsonSimpleRead {
      * @param jsonObject the JSON object containing the mission data, expected to have keys "cod-missao" and "versao"
      * @return a new Mission instance initialized with the specified code and version
      */
-    private static Mission newMission(JSONObject jsonObject, Graph<Room> graph) {
+    private static Mission newMission(JSONObject jsonObject, Network<Room> network) {
         String mission_code = (String) jsonObject.get("cod-missao");
         int mission_version = ((Long) jsonObject.get("versao")).intValue();
-        return new Mission(mission_code, mission_version, graph);
+        return new Mission(mission_code, mission_version, network);
     }
 
     /**
@@ -73,7 +74,7 @@ public class JsonSimpleRead {
      * @param building a JSONArray containing room names to be added as vertices in the graph
      * @param graph a Graph where each valid room name from the JSONArray is added as a vertex
      */
-    private static void addRoomsToGraph(JSONArray building, Graph<Room> graph) {
+    private static void addRoomsToGraph(JSONArray building, Network<Room> graph) {
         for (Object roomObj : building) {
 
             String room_name = (String) roomObj;
@@ -96,7 +97,7 @@ public class JsonSimpleRead {
      * @param connections a JSONArray where each element is a JSONArray containing two strings: the starting room and the destination room
      * @param graph a Graph to which connections from the JSONArray are added as directed edges
      */
-    private static void addConnectionsToGraph(JSONArray connections, Graph<Room> graph) {
+    private static void addConnectionsToGraph(JSONArray connections, Network<Room> graph) {
         for (Object connectionObj : connections) {
             JSONArray connectionArray = (JSONArray) connectionObj;
 
@@ -107,7 +108,7 @@ public class JsonSimpleRead {
             Room to_room = graph.getRoom(to_room_name);
 
             if (from_room != null || to_room != null) {
-                graph.addEdge(from_room, to_room);
+                graph.addEdge(from_room, to_room, 0);
             } else {
                 System.err.println("Between " + from_room_name + " and " + to_room_name + " no connection found.");
             }
@@ -174,7 +175,7 @@ public class JsonSimpleRead {
      *              with information about the item's location, type, and points
      * @param graph a Graph<Room> used to find and add items to the appropriate rooms
      */
-    private static void addItemsToRooms(JSONArray items, Graph<Room> graph, Mission mission) throws NotElementComparableException {
+    private static void addItemsToRooms(JSONArray items, Network<Room> graph, Mission mission) throws NotElementComparableException {
         for (Object itemObj : items) {
             JSONObject itemJson = (JSONObject) itemObj;
 
@@ -242,7 +243,7 @@ public class JsonSimpleRead {
      * @param graph a Graph<Room> used to retrieve Room objects for the given room names
      * @param mission a Mission object to which the entry and exit points are added
      */
-    private static void addEntryAndExitsPoints(JSONArray entries_exits, Graph<Room> graph, Mission mission) throws NotElementComparableException {
+    private static void addEntryAndExitsPoints(JSONArray entries_exits, Network<Room> graph, Mission mission) throws NotElementComparableException {
         for (Object entry_exit_obj : entries_exits) {
             String room_name = (String) entry_exit_obj;
             Room room = graph.getRoom(room_name);
@@ -265,7 +266,7 @@ public class JsonSimpleRead {
      * @param graph a Graph<Room> used to locate the target room based on the specified room name
      * @param mission the Mission object in which the target is to be set
      */
-    private static void setMissionTarget(JSONObject targetJson, Graph<Room> graph, Mission mission) {
+    private static void setMissionTarget(JSONObject targetJson, Network<Room> graph, Mission mission) {
         String target_room = (String) targetJson.get("divisao");
         String target_type = (String) targetJson.get("tipo");
 

@@ -1,6 +1,7 @@
 import entities.*;
 import lib.Graph;
 import lib.LinkedList;
+import lib.Network;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.parser.ParseException;
 
@@ -15,7 +16,7 @@ public class Main {
 
 	private static Mission mission;
 	private static Simulation simulation;
-	private static Graph<Room> graph;
+	private static Network<Room> graph;
 	private static LinkedList<Enemy> enemies;
 
 	/**
@@ -24,7 +25,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			// INIT GRAPH
-			Graph<Room> graph = initGraph();
+			Network<Room> graph = (Network<Room>) initGraph();
 
 			setGraph(graph);
 
@@ -70,7 +71,7 @@ public class Main {
 			simulation.enemyTurn();
 			simulation.playerTurn();
 
-			mission.setBestPath();
+			simulation.setBestPath();
 
 			displayEnemyIntel(mission);
 
@@ -142,7 +143,7 @@ public class Main {
 		} catch (ParseException e) {
 			System.err.println("Erro ao processar o arquivo JSON: " + e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Erro inesperado: " + e.getLocalizedMessage());
+			System.err.println("Erro inesperado: " + e.getCause());
 		} catch (NotElementComparableException e) {
 			throw new RuntimeException(e);
 		}
@@ -164,11 +165,11 @@ public class Main {
 		return Main.simulation;
 	}
 
-	public static void setGraph(Graph<Room> graph) {
+	public static void setGraph(Network<Room> graph) {
 		Main.graph = graph;
 	}
 
-	public static Graph<Room> getGraph() {
+	public static Network<Room> getGraph() {
 		return Main.graph;
 	}
 
@@ -246,26 +247,26 @@ public class Main {
 		}
 	} */
 
-	private static Graph<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
-		Graph<Room> graph = new Graph<>();
-		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", graph);
+	private static Network<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
+		Network<Room> network = new Network<>();
+		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", network);
 		setMission(mission);
-		return graph;
+		return network;
 	}
 
-	private static void displayMissionDetails(Graph<Room> graph) {
+	private static void displayMissionDetails(Network<Room> graph) {
 		System.out.println("==== MISSAO ====");
 		System.out.println(getMission());
 	}
 
-	private static void displayRoomDetails(Graph<Room> graph) {
+	private static void displayRoomDetails(Network<Room> graph) {
 		System.out.println("==== DIVISOES ====");
 		for (Room room : graph.getVertices()) {
 			System.out.println(room);
 		}
 	}
 
-	private static void displayAdjacentRoomDetails(Graph<Room> graph) {
+	private static void displayAdjacentRoomDetails(Network<Room> graph) {
 		System.out.println("\n===== Conexões =====");
 		for (Room roomObj : graph.getVertices()) {
 			for (Room connectedRoom : graph.getConnectedVertices(roomObj)) {

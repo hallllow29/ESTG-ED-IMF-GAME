@@ -222,4 +222,44 @@ public class Simulation {
 			}
 		}
 	}
+
+	public void setBestPath() {
+		Iterator<Room> temp_path = null;
+
+		for (Room entry_point : mission.getEntryExitPoints()) {
+			try {
+
+				if (!entry_point.hasEnemies()) {
+
+					System.out.println("\nBEST PATH WITHOUT ENEMY");
+
+					temp_path = this.mission.getBattlefield().iteratorShortestPath(entry_point, mission.getTarget().getRoom());
+
+					while (temp_path.hasNext()) {
+						int enemy_counter = 0;
+
+						Room tmp_room = temp_path.next();
+
+						if (tmp_room.hasEnemies()) {
+							for (Enemy enemy : mission.getEnemies()) {
+								if (enemy.getCurrentPosition().getName().equals(tmp_room.getName())) {
+									enemy_counter++;
+
+								}
+							}
+							System.out.println("THIS ROOM " + tmp_room.getName() + " has " + enemy_counter);
+						}
+						System.out.println(tmp_room.getName());
+					}
+				}
+
+			} catch (ElementNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+			while (temp_path.hasNext()) {
+				System.out.println(temp_path.next());
+			}
+		}
+
+	}
 }

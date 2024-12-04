@@ -11,8 +11,9 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
     private double[][] weightMatrix;
 
     public Network() {
-        super();
+        numVertices = 0;
         this.weightMatrix = new double[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
+        this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
     }
 
     @Override
@@ -21,7 +22,6 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         int index2 = super.getVertexIndex(vertex2);
 
         if (super.indexIsValid(index1) && super.indexIsValid(index2)) {
-            super.addEdge(vertex1, vertex2);
             this.weightMatrix[index1][index2] = weight;
             this.weightMatrix[index2][index1] = weight;
         }
@@ -45,28 +45,29 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
             throw new IllegalArgumentException("Network");
         }
 
-        if (super.numVertices == super.vertices.length) {
+        if (numVertices == super.vertices.length) {
             this.expandCapacity();
         }
-        super.vertices[numVertices] = vertex;
-        for (int i = 0; i <= super.numVertices; i++) {
+        this.vertices[numVertices] = vertex;
+
+        for (int i = 0; i <= numVertices; i++) {
             this.weightMatrix[numVertices][i] = Double.POSITIVE_INFINITY;
             this.weightMatrix[i][numVertices] = Double.POSITIVE_INFINITY;
         }
 
-        super.numVertices++;
+        this.numVertices++;
     }
 
     @Override
     public void removeVertex(T vertex) throws ElementNotFoundException {
         int index = super.getVertexIndex(vertex);
-        super.removeVertex(vertex);
+        this.removeVertex(vertex);
 
         if (index != -1) {
-            for (int i = index; i < super.numVertices; i++) {
-                System.arraycopy(this.weightMatrix[i + 1], 0, this.weightMatrix[i], 0, super.numVertices);
+            for (int i = index; i < this.numVertices; i++) {
+                System.arraycopy(this.weightMatrix[i + 1], 0, this.weightMatrix[i], 0, this.numVertices);
             }
-            for (int i = 0; i < super.numVertices; i++) {
+            for (int i = 0; i < this.numVertices; i++) {
                 this.weightMatrix[i][index] = Double.MAX_VALUE;
             }
         }
@@ -339,10 +340,28 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         super.vertices = newVertices;
     }
 
+    public ArrayUnorderedList<T> getConnectedVertices(T vertex) {
+        int index = super.getVertexIndex(vertex);
+
+        if (index == -1) {
+            throw new IllegalArgumentException("Graph");
+        }
+
+        ArrayUnorderedList<T> connectedVertices = new ArrayUnorderedList<>();
+
+        for (int i = 0; i < this.numVertices; i++) {
+            if (this.weightMatrix[index][i] == 0) {
+                connectedVertices.addToRear(vertices[i]);
+            }
+        }
+
+        return connectedVertices;
+    }
+}
+
     /*public String toString() {
         if (super.numVertices == 0) {
             return "Network";
         }*/
 
-}
 
