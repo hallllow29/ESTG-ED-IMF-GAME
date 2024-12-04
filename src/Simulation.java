@@ -71,44 +71,36 @@ public class Simulation {
 		} else if (this.player.getCurrentPosition().hasEnemies()) {
 
 			Iterator<Enemy> enemies = mission.getEnemies().iterator();
-			while (enemies.hasNext()) {
-				Enemy enemy_current = enemies.next();
-				if (enemy_current.getCurrentPosition().getName().equals(player.getCurrentPosition().getName())) {
-					enemy_current.takeDamage(this.player.getFirePower());
-					if (enemy_current.getCurrentHealth() <= 0) {
-						enemy_current.takeDamage(this.player.getFirePower());
-						enemies.remove();
-						System.out.println("Enemy: " + enemy_current.getName() + " is dead");
-					}
-				}
-			}
+
+			confrontEnemies(enemies);
+
 		}
 
 	}
 
-	private String removeEnemy(Enemy enemyToRemove) {
-		// try {
-		// 	mission.removeEnemy(enemyToRemove);
-		// 	return "Enemy: " + enemyToRemove.getName() + " is dead";
-		// } catch (EmptyCollectionException e) {
-		// 	return "Enemy list is empty";
-		// } catch (ElementNotFoundException e) {
-		// 	return "Enemy " + enemyToRemove.getName() + " was not found";
-		// }
+	public void confrontEnemies(Iterator<Enemy> enemies) {
+		String player_name = this.player.getName();
+		String player_current_position = this.player.getCurrentPosition().getName();
+		int player_damage = this.player.getFirePower();
+
+		while (enemies.hasNext()) {
+
+			Enemy current_enemy = enemies.next();
+			String current_enemy_position = current_enemy.getCurrentPosition().getName();
+			String current_enemy_name = current_enemy.getName();
+
+			if (current_enemy_position.equals(player_current_position)) {
+				current_enemy.takeDamage(player_damage);
+
+				if (current_enemy.getCurrentHealth() <= 0) {
+					System.out.println(player_name + " is attacking " + current_enemy_name);
+					current_enemy.takeDamage(player_damage);
+					enemies.remove();
+					System.out.println("Enemy: " + current_enemy_name + " is dead");
+				}
+			}
+		}
 	}
-
-	private void playerAttack(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
-		// System.out.println(this.player.getName() + " is attacking " + enemy.getName());
-		//
-		// enemy.takeDamage(this.player.getFirePower());
-		//
-		// if (enemy.getCurrentHealth() <= 0) {
-		//
-		// 	removeEnemy(enemy);
-		// }
-
-	}
-
 
 	private void enemyAttack(Enemy enemy) {
 		System.out.println("Enemy " + enemy.getName() + " is attacking " + this.player.getName());
