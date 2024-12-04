@@ -94,4 +94,8 @@ public class Player extends Character {
 		return "Medic kit used! HP: " + super.getCurrentHealth() + "/100";
  	}
 
+	 public boolean hasRecoveryItem() {
+		return !this.back_pack.isBackPackEmpty();
+	 }
+
 }

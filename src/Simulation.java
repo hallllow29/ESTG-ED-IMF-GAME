@@ -51,48 +51,123 @@ public class Simulation {
 	}*/
 
 	public void game() throws ElementNotFoundException, EmptyCollectionException {
+		System.out.println("Game start");
+
 		Room bestEntry = this.findBestEntryPoint();
 		player.setCurrentPosition(bestEntry);
-			this.updateBestPath(this.bestExtractionPoint(mission.getTarget().getRoom()));
+		System.out.println("Player enters at: " + bestEntry.getName());
+
+		boolean foundTarget = false;
+
+		while (!gameOver) {
+			System.out.println("=== New Turn ===");
 
 			playerTurn();
+
+			if (!foundTarget && player.getCurrentPosition().equals(mission.getTarget().getRoom())) {
+				System.out.println("Player reached the target room!");
+				foundTarget = true;
+			}
+
+			if (foundTarget && mission.getEntryExitPoints().contains(player.getCurrentPosition())) {
+				System.out.println("Player exited the building!");
+				gameOver = true;
+				break;
+			}
+
 			enemyTurn();
 
-		if (player.getCurrentHealth() > 0) {
-			System.out.println("Mission done");
-		} else {
-			System.out.println("Mission failed");
+			if (!gameOver) {
+				updateBestPath(foundTarget);
+			}
 		}
+
+		System.out.println(player.getCurrentHealth() > 0 ? "Mission accomplished!" : "Mission failed");
 	}
 	public void enemyTurn() {
 		System.out.println("Enemies turn!");
 
-		Room player_current_position = this.player.getCurrentPosition();
-		Iterator<Enemy> enemies = mission.getEnemies().iterator();
+		Room playerCurrentPosition = this.player.getCurrentPosition();
+		boolean enemiesEnteredPlayerRoom = false;
 
+		for (Enemy enemy : mission.getEnemies()) {
+			Room enemyCurrentPosition = enemy.getCurrentPosition();
 
-		while (enemies.hasNext()) {
-			Enemy enemy_current = enemies.next();
-			Room enemy_current_position = enemy_current.getCurrentPosition();
-
-			if (enemy_current_position.equals(player_current_position)) {
-				this.enemyAttack(enemy_current);
+			if (enemyCurrentPosition.equals(playerCurrentPosition)) {
+				enemiesEnteredPlayerRoom = true;
+				break;
 			}
+		}
+
+		if (enemiesEnteredPlayerRoom) {
+			scenario3();
+		} else {
+			moveEnemies();
 		}
 	}
 
 	public void playerTurn() throws EmptyCollectionException, ElementNotFoundException {
-		System.out.println("Player turn");
-		boolean player_sees_enemies = this.player.getCurrentPosition().hasEnemies();
-		Room player_current_position = this.player.getCurrentPosition();
+		Room currentRoom = player.getCurrentPosition();
+		System.out.println("Players turn. Current room " + currentRoom.getName());
 
-		if (!player_sees_enemies) {
-			this.scenario2(player_current_position);
-		} else if (player_sees_enemies) {
-			Iterator<Enemy> enemies = mission.getEnemies().iterator();
-			attackEnemies(enemies);
+
+		if (currentRoom.equals(mission.getTarget().getRoom())) {
+			if (currentRoom.hasEnemies()) {
+				scenario5();
+			} else {
+				scenario6();
+			}
+			return;
 		}
 
+		if (currentRoom.hasEnemies()) {
+			scenario1();
+		} else {
+			if (playerUseRecoveryItem()) {
+				scenario4();
+			} else {
+				scenario2();
+			}
+		}
+
+	}
+
+	/*private boolean checkEnemiesInPlayerRoom() {
+		for (Enemy enemy : mission.getEnemies()) {
+			if (enemy.getCurrentPosition().equals(player.getCurrentPosition())) {
+				return true;
+			}
+		}
+
+		return false;
+	} */
+
+	private boolean playerUseRecoveryItem() {
+		int healthMissing = 30;
+
+		return player.getCurrentHealth() <= healthMissing && player.hasRecoveryItem();
+	}
+
+	private void movePlayer() throws ElementNotFoundException {
+		System.out.println("Next player move");
+
+		Room currentRoom = player.getCurrentPosition();
+		Room targetRoom = mission.getTarget().getRoom();
+
+		Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(currentRoom, targetRoom);
+
+		if (path.hasNext()) {
+			path.next();
+			if (path.hasNext()) {
+				Room nextRoom = path.next();
+				player.setCurrentPosition(nextRoom);
+				System.out.println("Player moved to: " + nextRoom.getName());
+			} else {
+				System.out.println("No valid moves available from current path.");
+			}
+		} else {
+			System.out.println("No valid path found.");
+		}
 	}
 
 	public void attackEnemies(Iterator<Enemy> enemies) {
@@ -133,67 +208,62 @@ public class Simulation {
 		}
 	}
 
-	public void scenario1(Room currentRoom) {
+	public void scenario1() {
 		System.out.println("Tó cruz confronting enemies");
 
-		Iterator<Enemy> enemies = mission.getEnemies().iterator();
-		attackEnemies(enemies);
+		attackEnemies(mission.getEnemies().iterator());
 
-		if (currentRoom.hasEnemies()) {
-			System.out.println("Not all enemies are dead! End player turn. Enemies will move");
-			enemyTurn();
+		if (!player.getCurrentPosition().hasEnemies()) {
+			System.out.println("All enemies in the room are defeated");
+		} else {
+			System.out.println("Enemies remain. End player turn");
 		}
+
 	}
 
-	public void scenario2(Room room) throws EmptyCollectionException, ElementNotFoundException {
+	public void scenario2() throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("Room is clear. Checking for items....");
-		this.checkForItems(room);
-
-		System.out.println("Moving enemies...");
-		this.moveEnemies();
-
-
-		System.out.println("Player turn ended");
-		// IF manual
-		//  Entra noutra funcao que faz um turno...
-
-		// IF automatico
-		//  Fazer ountra funcao pra saber onde o jogador vai pra a seguir
-		//  get.next.room.for.player.
+		this.checkForItems(player.getCurrentPosition());
+		movePlayer();
 	}
 
-	private void scenario3(Enemy enemy) {
-		System.out.println("Enemy " + enemy.getName() + " is on To cruz room");
-		System.out.println("Enemy has priority attack");
-		this.enemyAttack(enemy);
+	private void scenario3() {
+		System.out.println("Enemies have entered on the players room");
 
-		if (!player.isAlive()) {
-			System.out.println("To cruz is dead");
-			this.gameOver = true;
+		for (Enemy enemy : mission.getEnemies()) {
+			if (enemy.getCurrentPosition().equals(player.getCurrentPosition())) {
+				enemyAttack(enemy);
+			}
+		}
+		if (player.getCurrentHealth() <= 0) {
+			System.out.println("Tó Cruz has been defeated. Game over.");
+			gameOver = true;
+		} else {
+			System.out.println("Tó Cruz survived the attack. Player's turn will continue.");
 		}
 	}
 
 	private void scenario4() throws EmptyCollectionException {
 		System.out.println("To cruz is using medic kit ");
-
 		player.useMediKit();
 
 	}
 
 	private void scenario5() throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("To cruz as reached the target room" + mission.getTarget().getRoom().getName());
-		Room targetRoom = mission.getTarget().getRoom();
 
-		if (targetRoom.hasEnemies()) {
-			Iterator<Enemy> enemyIterator = mission.getEnemies().iterator();
-			while(enemyIterator.hasNext()) {
-				Enemy enemy = enemyIterator.next();
-				if (enemy.getCurrentPosition().equals(targetRoom)) {
-					attackEnemies(enemyIterator);
-				}
-			}
+		attackEnemies(mission.getEnemies().iterator());
+
+		if (!player.getCurrentPosition().hasEnemies()) {
+			System.out.println("All enemies in the target room are defeated");
+		} else {
+			System.out.println("Enemies reamin in the room. Turn ends");
 		}
 
+	}
+
+	private void scenario6() {
+		System.out.println("Target found! Preparing to exit the building");
 	}
 
 	/**
@@ -330,22 +400,17 @@ public class Simulation {
 
 	}
 
-	public void updateBestPath(Room exitRoom) throws ElementNotFoundException {
+	public void updateBestPath(boolean returning) throws ElementNotFoundException {
 		updateWeightsForEnemies();
 		System.out.println("Getting information intel for the best current path to the target..");
 
-		Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(player.getCurrentPosition(), mission.getTarget().getRoom());
-		Iterator<Room> exit = mission.getBattlefield().iteratorShortestPath(mission.getTarget().getRoom(), exitRoom);
-		System.out.println("Best path is: ");
+		Room targetRoom = returning ? bestExtractionPoint() : mission.getTarget().getRoom();
+		Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(player.getCurrentPosition(), targetRoom);
 
 		while(path.hasNext()) {
 			System.out.println("-> " + path.next().getName());
 		}
 
-		System.out.println("Best exit: ");
-		while(exit.hasNext()) {
-			System.out.println("-> " + exit.next().getName());
-		}
  	}
 
 	private void updateWeightsForEnemies() {
@@ -373,12 +438,12 @@ public class Simulation {
 		return weight;
 	}
 
-	public Room bestExtractionPoint(Room currentRoom) throws ElementNotFoundException {
+	public Room bestExtractionPoint() throws ElementNotFoundException {
 		Room bestExtractionPoint = null;
 		double lowestDamage = Double.MAX_VALUE;
 
 		for (Room exit : mission.getEntryExitPoints()) {
-			Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(currentRoom, exit);
+			Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(mission.getTarget().getRoom(), exit);
 			double damage = this.calculatePathDamage(path);
 
 			if (damage < lowestDamage) {

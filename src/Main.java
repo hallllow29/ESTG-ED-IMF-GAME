@@ -72,7 +72,6 @@ public class Main {
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
 
-			displayEnemyIntel(mission);
 
 			/*
 				LinkedList has no add!
