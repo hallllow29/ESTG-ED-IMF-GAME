@@ -6,7 +6,7 @@ import lib.interfaces.NetworkADT;
 
 import java.util.Iterator;
 
-public class Network<T extends Comparable<T>> extends Graph<T> implements NetworkADT<T> {
+public class Network<T> extends Graph<T> implements NetworkADT<T> {
 
     private double[][] weightMatrix;
 
