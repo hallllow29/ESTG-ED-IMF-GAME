@@ -16,7 +16,7 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedUnorderedList <T> implements ListADT<T>, Iterable<T> {
+public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 
 	private LinearNode<T> front;
 	private LinearNode<T> rear;

@@ -126,7 +126,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 		if (binaryTreeNode != null) {
 			postOrder(binaryTreeNode.getLeft(), linkedList);
 			postOrder(binaryTreeNode.getRight(), linkedList);
-			linkedList.add(binaryTreeNode.getElement());
+			linkedList.addToRear(binaryTreeNode.getElement());
 		}
 	}
 
@@ -139,7 +139,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 
 	public void preOrder(BinaryTreeNode<T> binaryTreeNode, LinkedUnorderedList<T> linkedList) {
 		if (binaryTreeNode != null) {
-			linkedList.add(binaryTreeNode.getElement());
+			linkedList.addToRear(binaryTreeNode.getElement());
 			preOrder(binaryTreeNode.getLeft(), linkedList);
 			preOrder(binaryTreeNode.getRight(), linkedList);
 		}
@@ -163,7 +163,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
         while (!binaryNodes.isEmpty()) {
             BinaryTreeNode<T> binaryNode = (BinaryTreeNode<T>) binaryNodes.dequeue();
             if (binaryNode != null) {
-                results.add(binaryNode.getElement());
+                results.addToRear(binaryNode.getElement());
 
                 if (binaryNode.getLeft() != null) {
                     binaryNodes.enqueue(binaryNode.getLeft().getElement());
@@ -174,7 +174,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
                 }
 
             } else {
-                results.add(null);
+                results.addToRear(null);
             }
         }
         return results.iterator();
