@@ -1,6 +1,7 @@
 import entities.*;
 import lib.ArrayList;
 import lib.ArrayUnorderedList;
+import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -244,7 +245,11 @@ public class Simulation {
 							for (Enemy enemy : mission.getEnemies()) {
 								if (enemy.getCurrentPosition().getName().equals(tmp_room.getName())) {
 									enemy_counter++;
-
+									// setBestPathWeight(Room from_room, Room to_room double possibleDamage);
+									// setBestPathWeight(entry_point, tmp_room, this.player.getCurrentHealth() - enemy.getFirePower());
+									// Nao sei man, tenho que pensar a minha logica nao bate certo....
+									// pois se calhar temos que alterar o interatorShorthestPath
+									// de formar a adicionar edges com weight? ou até mesmo subsituir....
 								}
 							}
 							System.out.println("THIS ROOM " + tmp_room.getName() + " has " + enemy_counter);
@@ -262,4 +267,11 @@ public class Simulation {
 		}
 
 	}
+
+
+	public void setBestPathWeight(Room from_room, Room to_room, double possibleDamage) {
+		Network<Room> bestPathWeight =  mission.getBattlefield();
+		bestPathWeight.addEdge(from_room, to_room, possibleDamage);
+	}
+
 }
