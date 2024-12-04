@@ -75,8 +75,8 @@ public class Main {
 			displayEnemyIntel(mission);
 
 			/*
-				LinkedList has no add
-				Since the add gets extended to addToRear or addToFront in
+				LinkedList has no add!
+				The add gets extended to addToRear or addToFront in
 				UnorderedLinkedList or OrderedLinkedList, right?
 
 				Probably since we now need to change that LinkedList to Unordered
@@ -84,6 +84,13 @@ public class Main {
 				Just like I said... the exception got thrown... FUCK!!!!
 
 				I will fix that tomorrow....
+
+				Fuck it, it was fixed today!!!
+
+				Run and you will see it works for now.
+
+				So next objective is the weight Graph aka. the Network...
+
 
 			 */
 
