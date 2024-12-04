@@ -53,11 +53,15 @@ public class Simulation {
 	public void enemyTurn() {
 		System.out.println("Enemies turn!");
 
+		Room player_current_position = this.player.getCurrentPosition();
 		Iterator<Enemy> enemies = mission.getEnemies().iterator();
+
 
 		while (enemies.hasNext()) {
 			Enemy enemy_current = enemies.next();
-			if (enemy_current.getCurrentPosition().equals(player.getCurrentPosition())) {
+			Room enemy_current_position = enemy_current.getCurrentPosition();
+
+			if (enemy_current_position.equals(player_current_position)) {
 				this.enemyAttack(enemy_current);
 			}
 		}
@@ -65,31 +69,29 @@ public class Simulation {
 
 	public void playerTurn() throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("Player turn");
+		boolean player_sees_enemies = this.player.getCurrentPosition().hasEnemies();
+		Room player_current_position = this.player.getCurrentPosition();
 
-		if (!this.player.getCurrentPosition().hasEnemies()) {
-			this.scnario2(this.player.getCurrentPosition());
-		} else if (this.player.getCurrentPosition().hasEnemies()) {
-
+		if (!player_sees_enemies) {
+			this.scnario2(player_current_position);
+		} else if (player_sees_enemies) {
 			Iterator<Enemy> enemies = mission.getEnemies().iterator();
-
-			confrontEnemies(enemies);
-
+			attackEnemies(enemies);
 		}
 
 	}
 
-	public void confrontEnemies(Iterator<Enemy> enemies) {
+	public void attackEnemies(Iterator<Enemy> enemies) {
 		String player_name = this.player.getName();
-		String player_current_position = this.player.getCurrentPosition().getName();
+		Room player_current_position = this.player.getCurrentPosition();
 		int player_damage = this.player.getFirePower();
 
 		while (enemies.hasNext()) {
-
 			Enemy current_enemy = enemies.next();
-			String current_enemy_position = current_enemy.getCurrentPosition().getName();
+			Room enemy_current_position = current_enemy.getCurrentPosition();
 			String current_enemy_name = current_enemy.getName();
 
-			if (current_enemy_position.equals(player_current_position)) {
+			if (enemy_current_position.equals(player_current_position)) {
 				current_enemy.takeDamage(player_damage);
 
 				if (current_enemy.getCurrentHealth() <= 0) {
@@ -103,13 +105,16 @@ public class Simulation {
 	}
 
 	private void enemyAttack(Enemy enemy) {
-		System.out.println("Enemy " + enemy.getName() + " is attacking " + this.player.getName());
+		String enemy_current_name = enemy.getName();
+		String player_name = this.player.getName();
+		int player_current_health = this.player.getCurrentHealth();
+		int enemy_damage = enemy.getFirePower();
 
-		this.player.setCurrentHealth(this.player.getCurrentHealth() - enemy.getFirePower());
+		System.out.println("Enemy " + enemy_current_name + " is attacking " + player_name);
+		this.player.setCurrentHealth(player_current_health - enemy_damage);
+		System.out.println("Enemy deal " + enemy_damage + " damage " + player_name + " current HP is " + player_current_health);
 
-		System.out.println("Enemy deal " + enemy.getFirePower() + " damage " + this.player.getName() + " current HP is " + this.player.getCurrentHealth());
-
-		if (this.player.getCurrentHealth() <= 0) {
+		if (player_current_health <= 0) {
 			this.gameOver = true;
 		}
 	}
