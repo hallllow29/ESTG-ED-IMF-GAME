@@ -18,11 +18,11 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
         BinaryTreeNode<T> temp = new BinaryTreeNode<T>(element);
         Comparable<T> comparableElement = (Comparable<T>) element;
 
-        if (this.isEmpty()) {
-            this.setRoot(temp);
+        if (super.isEmpty()) {
+            super.setRoot(temp);
         } else {
             // BinaryTreeNode<T> current = this.root;
-            BinaryTreeNode<T> current = this.getRoot();
+            BinaryTreeNode<T> current = super.getRoot();
             // TODO: ASK THIS.
 
             boolean added = false;
@@ -48,7 +48,7 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
                 }
             }
         }
-        this.setCount(getCount()+1);
+        super.setCount(super.getCount()+1);
     }
 
     @Override
@@ -56,29 +56,29 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
 
         T result = null;
 
-        if (!this.isEmpty()) {
-            if (targetElement.equals(this.getRootElement())) {
-                result = this.getRootElement();
-                this.setRoot(this.replacement(getRoot()));
-                this.setCount(getCount()-1);
+        if (!super.isEmpty()) {
+            if (targetElement.equals(super.getRootElement())) {
+                result = super.getRootElement();
+                super.setRoot(replacement(getRoot()));
+                super.setCount(getCount()-1);
             } else {
-                BinaryTreeNode<T> current, parent = this.getRoot();
+                BinaryTreeNode<T> current, parent = super.getRoot();
                 boolean found = false;
 
-                if (((Comparable) targetElement).compareTo(this.getRootElement()) < 0) {
-                    current = this.getRoot().getLeft();
+                if (((Comparable) targetElement).compareTo(super.getRootElement()) < 0) {
+                    current = super.getRoot().getLeft();
                 } else {
-                    current = this.getRoot().getRight();
+                    current = super.getRoot().getRight();
                 }
                 while (current != null && !found) {
                     if (targetElement.equals(current.getElement())) {
                         found = true;
-                        this.setCount(getCount()-1);
+                        super.setCount(getCount()-1);
                         result = current.getElement();
                         if (current == parent.getLeft()) {
-                            parent.setLeft(this.replacement(current));
+                            parent.setLeft(replacement(current));
                         } else {
-                            parent.setRight(this.replacement(current));
+                            parent.setRight(replacement(current));
                         }
                     } else {
                         parent = current;
@@ -128,7 +128,7 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
     }
 
     public void removeAllOccurences(T targetElement) throws EmptyCollectionException, ElementNotFoundException {
-        if (this.isEmpty()) {
+        if (super.isEmpty()) {
             throw new EmptyCollectionException("Binary Search Tree is empty");
         }
 
@@ -144,7 +144,7 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
 
         for (int i = 0; i < numberOfElements; i++) {
             try {
-                this.removeElement(targetElement);
+                removeElement(targetElement);
             } catch (ElementNotFoundException ex) {
                 throw new ElementNotFoundException("Element not in Binary Search Tree");
             }
@@ -153,15 +153,15 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
 
     @Override
     public T removeMin() throws EmptyCollectionException, ElementNotFoundException {
-        if (this.isEmpty()) {
+        if (super.isEmpty()) {
             throw new EmptyCollectionException("Binary Tree is empty");
         }
 
-        T min = this.findMin();
+        T min = findMin();
 
 
         try {
-            this.removeElement(min);
+            removeElement(min);
         } catch (ElementNotFoundException e) {
             // Logger.getLogger(LinkedBinarySearchTree.class.getName()).log(Level.SEVERE, null, ex);
             // System.err.println(e.getMessage());
@@ -172,15 +172,15 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
     }
 
     @Override
-    public T removeMax() throws EmptyCollectionException, ElementNotFoundException {
-        if (this.isEmpty()) {
+    public T removeMox() throws EmptyCollectionException, ElementNotFoundException {
+         if (super.isEmpty()) {
             throw new EmptyCollectionException("Binary Tree is empty");
         }
 
-        T max = this.findMax();
+        T max = findMax();
 
         try {
-            this.removeElement(max);
+            removeElement(max);
         } catch (ElementNotFoundException ex) {
             // Logger.getLogger(LinkedBinarySearchTree.class.getName()).log(Level.SEVERE, null, ex);
             throw new ElementNotFoundException("Element not in Binary Search Tree");
@@ -191,11 +191,11 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
 
     @Override
     public T findMin() throws EmptyCollectionException {
-        if (this.isEmpty()) {
-            throw new EmptyCollectionException("Binary tree");
+        if (super.isEmpty()) {
+            throw new EmptyCollectionException("Binary tree is empty");
         }
 
-        BinaryTreeNode<T> current = this.getRoot();
+        BinaryTreeNode<T> current = super.getRoot();
 
         while(current.getLeft() != null) {
             current = current.getLeft();
@@ -206,11 +206,11 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
 
     @Override
     public T findMax() throws EmptyCollectionException {
-        if (this.isEmpty()) {
+        if (super.isEmpty()) {
             throw new EmptyCollectionException("Binary Search Tree is empty");
         }
 
-        BinaryTreeNode<T> current = this.getRoot();
+        BinaryTreeNode<T> current = super.getRoot();
 
         while(current.getRight() != null) {
             current = current.getRight();

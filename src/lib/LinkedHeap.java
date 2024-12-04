@@ -39,8 +39,10 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
     private HeapNode<T> getNextParentAdd() {
         HeapNode<T> result = lastNode;
 
-        while ((result != getRoot() && (result.parent.getLeft() != result))
+        while ((result != getRoot() && (result.parent.getLeft() != result))) {
             result = result.parent;
+
+        }
 
         if (result != super.getRoot())
             if (result.parent.getRight() == null)

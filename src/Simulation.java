@@ -1,7 +1,6 @@
 import entities.*;
 import lib.ArrayList;
 import lib.ArrayUnorderedList;
-import lib.LinkedList;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -13,14 +12,13 @@ public class Simulation {
 	private final Mission mission;
 	private final Player player;
 	private boolean gameOver;
-	//private final Room entry_point;
-
+	// private final Room entry_point;
 
 	public Simulation(Mission mission, Player player) {
 		this.mission = mission;
 		this.player = player;
 		this.gameOver = false;
-		//this.entry_point = entry_point;
+		// this.entry_point = entry_point;
 	}
 
 	/*public void game() throws EmptyCollectionException, ElementNotFoundException {
@@ -55,9 +53,12 @@ public class Simulation {
 	public void enemyTurn() {
 		System.out.println("Enemies turn!");
 
-		for (Enemy enemy : this.mission.getEnemies()) {
-			if (enemy.getCurrentPosition().equals(player.getCurrentPosition())) {
-				this.enemyAttack(enemy);
+		Iterator<Enemy> enemies = mission.getEnemies().iterator();
+
+		while (enemies.hasNext()) {
+			Enemy enemy_current = enemies.next();
+			if (enemy_current.getCurrentPosition().equals(player.getCurrentPosition())) {
+				this.enemyAttack(enemy_current);
 			}
 		}
 	}
@@ -68,9 +69,17 @@ public class Simulation {
 		if (!this.player.getCurrentPosition().hasEnemies()) {
 			this.scnario2(this.player.getCurrentPosition());
 		} else if (this.player.getCurrentPosition().hasEnemies()) {
-			for (Enemy enemy : mission.getEnemies()) {
-				if (enemy.getCurrentPosition().equals(this.player.getCurrentPosition())) {
-					this.playerAttack(enemy);
+
+			Iterator<Enemy> enemies = mission.getEnemies().iterator();
+			while (enemies.hasNext()) {
+				Enemy enemy_current = enemies.next();
+				if (enemy_current.getCurrentPosition().getName().equals(player.getCurrentPosition().getName())) {
+					enemy_current.takeDamage(this.player.getFirePower());
+					if (enemy_current.getCurrentHealth() <= 0) {
+						enemy_current.takeDamage(this.player.getFirePower());
+						enemies.remove();
+						System.out.println("Enemy: " + enemy_current.getName() + " is dead");
+					}
 				}
 			}
 		}
@@ -78,29 +87,27 @@ public class Simulation {
 	}
 
 	private String removeEnemy(Enemy enemyToRemove) {
-		try {
-			mission.removeEnemy(enemyToRemove);
-			return "Enemy: " + enemyToRemove.getName() + " is dead";
-		} catch (EmptyCollectionException e) {
-			return "Enemy list is empty";
-		} catch (ElementNotFoundException e) {
-			return "Enemy " + enemyToRemove.getName() + " was not found";
-		}
-
+		// try {
+		// 	mission.removeEnemy(enemyToRemove);
+		// 	return "Enemy: " + enemyToRemove.getName() + " is dead";
+		// } catch (EmptyCollectionException e) {
+		// 	return "Enemy list is empty";
+		// } catch (ElementNotFoundException e) {
+		// 	return "Enemy " + enemyToRemove.getName() + " was not found";
+		// }
 	}
 
 	private void playerAttack(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
-		System.out.println(this.player.getName() + " is attacking " + enemy.getName());
-
-		enemy.takeDamage(this.player.getFirePower());
-
-		if (enemy.getCurrentHealth() <= 0) {
-			System.out.println(removeEnemy(enemy));
-		}
-
+		// System.out.println(this.player.getName() + " is attacking " + enemy.getName());
+		//
+		// enemy.takeDamage(this.player.getFirePower());
+		//
+		// if (enemy.getCurrentHealth() <= 0) {
+		//
+		// 	removeEnemy(enemy);
+		// }
 
 	}
-
 
 	private void enemyAttack(Enemy enemy) {
 		System.out.println("Enemy " + enemy.getName() + " is attacking " + this.player.getName());
@@ -115,9 +122,8 @@ public class Simulation {
 	}
 
 	public void scnario2(Room room) throws EmptyCollectionException, ElementNotFoundException {
-			this.checkForItems(room);
-			this.moveEnemies();
-
+		this.checkForItems(room);
+		this.moveEnemies();
 
 		// IF manual
 		//  Entra noutra funcao que faz um turno...
@@ -157,15 +163,16 @@ public class Simulation {
 	}
 
 	/**
-	 * Retrieves a list of possible rooms that can be moved to from the given room
-	 * within a limited distance of 2 BFS levels.
-	 *
-	 * This method performs a breadth-first search starting from the specified room
-	 * and collects rooms at BFS levels 1 and 2, indicating possible adjacent rooms
-	 * and those one step further away from the start room.
+	 * Retrieves a list of possible rooms that can be moved to from the given room within
+	 * a limited distance of 2 BFS levels.
+	 * <p>
+	 * This method performs a breadth-first search starting from the specified room and
+	 * collects rooms at BFS levels 1 and 2, indicating possible adjacent rooms and those
+	 * one step further away from the start room.
 	 *
 	 * @param from_room the starting room from which possible moves are to be determined
-	 * @return an ArrayUnorderedList containing rooms that are reachable within 2 BFS levels
+	 * @return an ArrayUnorderedList containing rooms that are reachable within 2 BFS
+	 * levels
 	 */
 	private ArrayUnorderedList<Room> getPossibleMoves(Room from_room) {
 

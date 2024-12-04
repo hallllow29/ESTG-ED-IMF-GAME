@@ -37,6 +37,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	public void setModCount(int modCount) {
 		this.modCount = modCount;
 	}
+
 	public void setFront(LinearNode<T> front) {
 		this.front = front;
 
@@ -120,7 +121,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		currentNode = null;
 
 		this.size--;
-		modCount++;
+		this.modCount++;
 		return removedElement;
 	}
 
@@ -260,7 +261,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 */
 	@Override
 	public Iterator<T> iterator() {
-		return new LinkedListIterator();
+		return new LinkedListIterator<T>();
 	}
 
 	@Override
@@ -384,7 +385,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		}
 	}
 
-	private class LinkedListIterator implements Iterator<T> {
+	private class LinkedListIterator<E> implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
 		private int expectedModCount;

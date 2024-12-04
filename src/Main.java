@@ -1,6 +1,7 @@
 import entities.*;
 import lib.Graph;
 import lib.LinkedList;
+import lib.exceptions.NotElementComparableException;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -73,12 +74,70 @@ public class Main {
 
 			displayEnemyIntel(mission);
 
+			/*
+				LinkedList has no add
+				Since the add gets extended to addToRear or addToFront in
+				UnorderedLinkedList or OrderedLinkedList, right?
+
+				Probably since we now need to change that LinkedList to Unordered
+				a Concurrent Modifcation Detected Exception will happen..
+				Just like I said... the exception got thrown... FUCK!!!!
+
+				I will fix that tomorrow....
+
+			 */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		} catch (IOException e) {
 			System.err.println("Erro ao ler o arquivo JSON: " + e.getMessage());
 		} catch (ParseException e) {
 			System.err.println("Erro ao processar o arquivo JSON: " + e.getMessage());
 		} catch (Exception e) {
-			System.err.println("Erro inesperado: " + e.getMessage());
+			System.err.println("Erro inesperado: " + e.getLocalizedMessage());
+		} catch (NotElementComparableException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -180,7 +239,7 @@ public class Main {
 		}
 	} */
 
-	private static Graph<Room> initGraph() throws IOException, ParseException {
+	private static Graph<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
 		Graph<Room> graph = new Graph<>();
 		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", graph);
 		setMission(mission);
