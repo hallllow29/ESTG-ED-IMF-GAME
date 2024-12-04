@@ -101,6 +101,7 @@ public class Simulation {
 		int player_damage = this.player.getFirePower();
 
 		while (enemies.hasNext()) {
+
 			Enemy current_enemy = enemies.next();
 			Room enemy_current_position = current_enemy.getCurrentPosition();
 			String current_enemy_name = current_enemy.getName();
@@ -232,26 +233,22 @@ public class Simulation {
 			// CASO ESPECIAL
 			if (!targetRoom.hasEnemies()) {
 				// APANHA NO ALVO
+				// TURNO ACABA PARA O TO CRUZ
+				// VEZ DOS INIMIGOS.
 			} else if (targetRoom.hasEnemies()) {
 				// MATA OS INIMIGOS
 			}
+		}
+	}
 
-
-
-			// Ha um caso especial que...
-			// se to cruz elimnou os inimigos mas nao saiu de la entao turno acaba.
-			// -> enemyTurn()
-
-			// Chama o a lista de Inimigos
-			Iterator<Enemy> enemyIterator = mission.getEnemies().iterator();
-			// Equanto o target Room tiver Inimigos
-			while (enemyIterator.hasNext()) {
-				// Iterator passa um Inimigo para Current Enemy
-				Enemy enemy = enemyIterator.next();
-				// Se a posicao do Inimigo
-				if (enemy.getCurrentPosition().equals(targetRoom)) {
-					attackEnemies(enemyIterator);
-				}
+	void scenario6() {
+		// TO CRUZ encontra o alvo...
+		if (this.player.getCurrentPosition().equals(mission.getTarget().getRoom())) {
+			// ... e nao há inimigos presentes.
+			if (!this.player.getCurrentPosition().hasEnemies()) {
+				// TO CRUZ pode interagir com o alvo
+				// e conclui a missao com sucesso
+				// caso consiga sair do edificio com vida.
 			}
 		}
 	}
