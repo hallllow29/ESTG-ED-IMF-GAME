@@ -50,7 +50,7 @@ public class Simulation {
 		}
 	}*/
 
-	public void game() throws ElementNotFoundException, EmptyCollectionException {
+	public void game_AAAA() throws ElementNotFoundException, EmptyCollectionException {
 		Room bestEntry = this.findBestEntryPoint();
 		player.setCurrentPosition(bestEntry);
 		this.updateBestPath(this.bestExtractionPoint(mission.getTarget().getRoom()));
@@ -65,7 +65,7 @@ public class Simulation {
 		}
 	}
 
-	public void enemyTurn() {
+	public void enemyTurn_AAAAA() {
 		System.out.println("Enemies turn!");
 
 		Room player_current_position = this.player.getCurrentPosition();
@@ -81,7 +81,7 @@ public class Simulation {
 		}
 	}
 
-	public void playerTurn() throws EmptyCollectionException, ElementNotFoundException {
+	public void playerTurn_AAAA() throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("Player turn");
 		boolean player_sees_enemies = this.player.getCurrentPosition().hasEnemies();
 		Room player_current_position = this.player.getCurrentPosition();
@@ -136,7 +136,7 @@ public class Simulation {
 		}
 	}
 
-	public void scenario1(Room currentRoom) {
+	public void scenario1_AAAA(Room currentRoom) {
 		System.out.println("Tó cruz confronting enemies");
 
 		Iterator<Enemy> enemies = mission.getEnemies().iterator();
@@ -148,7 +148,7 @@ public class Simulation {
 		}
 	}
 
-	public void scenario2(Room room) throws EmptyCollectionException, ElementNotFoundException {
+	public void scenario2_AAAAA(Room room) throws EmptyCollectionException, ElementNotFoundException {
 		System.out.println("Room is clear. Checking for items....");
 		this.checkForItems(room);
 
@@ -164,7 +164,7 @@ public class Simulation {
 		//  get.next.room.for.player.
 	}
 
-	private void scenario3(Enemy enemy) {
+	private void scenario3_AAAAA(Enemy enemy) {
 		System.out.println("Enemy " + enemy.getName() + " is on To cruz room");
 		System.out.println("Enemy has priority attack");
 		this.enemyAttack(enemy);
@@ -175,14 +175,14 @@ public class Simulation {
 		}
 	}
 
-	private void scenario4() throws EmptyCollectionException {
+	private void scenario4_AAAAA() throws EmptyCollectionException {
 		System.out.println("To cruz is using medic kit ");
 
 		player.useMediKit();
 
 	}
 
-	private void scenario5() throws EmptyCollectionException, ElementNotFoundException {
+	private void scenario5_AAAAA() throws EmptyCollectionException, ElementNotFoundException {
 
 		System.out.println("To cruz as reached the target room" + mission.getTarget().getRoom().getName
 			());
@@ -241,12 +241,13 @@ public class Simulation {
 		}
 	}
 
-	void scenario6() {
+	void scenario6_AAAAAA() {
 		// TO CRUZ encontra o alvo...
 		if (this.player.getCurrentPosition().equals(mission.getTarget().getRoom())) {
 			// ... e nao há inimigos presentes.
 			if (!this.player.getCurrentPosition().hasEnemies()) {
 				// TO CRUZ pode interagir com o alvo
+					// Maybe um Sout qualquer...
 				// e conclui a missao com sucesso
 				// caso consiga sair do edificio com vida.
 			}
@@ -405,7 +406,7 @@ public class Simulation {
 
 	}
 
-	public void updateBestPath(Room exitRoom) throws ElementNotFoundException {
+	public void updateBestPath_AAAAA(Room exitRoom) throws ElementNotFoundException {
 		updateWeightsForEnemies();
 		System.out.println("Getting information intel for the best current path to the target..");
 
@@ -423,7 +424,7 @@ public class Simulation {
 		}
 	}
 
-	private void updateWeightsForEnemies() {
+	private void updateWeightsForEnemies_AAAA() {
 		for (Room room : mission.getBattlefield().getVertices()) {
 			for (Room connectedRoom : mission.getBattlefield().getConnectedVertices(room)) {
 				double newWeight = calculateWeight(connectedRoom);
@@ -448,7 +449,7 @@ public class Simulation {
 		return weight;
 	}
 
-	public Room bestExtractionPoint(Room currentRoom) throws ElementNotFoundException {
+	public Room bestExtractionPoint_AAAA(Room currentRoom) throws ElementNotFoundException {
 		Room bestExtractionPoint = null;
 		double lowestDamage = Double.MAX_VALUE;
 
