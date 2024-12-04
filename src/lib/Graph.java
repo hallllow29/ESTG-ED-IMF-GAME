@@ -4,10 +4,9 @@ import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.GraphADT;
 
-import java.util.Arrays;
 import java.util.Iterator;
 
-public class Graph <T> implements GraphADT<T> {
+public class Graph <T> implements GraphADT<T>  {
 
 	protected final int DEFAULT_CAPACITY = 10;
 	protected int numVertices; // number of vertices in the graph
@@ -45,7 +44,7 @@ public class Graph <T> implements GraphADT<T> {
 		// Finding the index of the vertex
 		int index = getVertexIndex(vertex);
 
-		if (index == -1 ) {
+		if (index == -1) {
 			throw new ElementNotFoundException("Element not found");
 		}
 
@@ -79,7 +78,7 @@ public class Graph <T> implements GraphADT<T> {
 			System.out.println("Erro");
 			return;
 		}
-		addEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+		addEdge(getVertexIndex(vertex1), getVertexIndex(vertex2));
 	}
 
 	public void addEdge(int index1, int index2) {
@@ -95,7 +94,7 @@ public class Graph <T> implements GraphADT<T> {
 		int index1 = getVertexIndex(vertex1);
 		int index2 = getVertexIndex(vertex2);
 
-		if (index1 == -1 ) {
+		if (index1 == -1) {
 			throw new ElementNotFoundException("Vertex 1");
 		}
 
@@ -103,7 +102,7 @@ public class Graph <T> implements GraphADT<T> {
 			throw new ElementNotFoundException("Vertex 2");
 		}
 
-		removeEdge (getVertexIndex(vertex1), getVertexIndex(vertex2));
+		removeEdge(getVertexIndex(vertex1), getVertexIndex(vertex2));
 	}
 
 	public void removeEdge(int index1, int index2) {
@@ -156,7 +155,6 @@ public class Graph <T> implements GraphADT<T> {
 		return resultList.iterator();
 	}
 
-
 	public Iterator<T> iteratorDFS(int startIndex) throws EmptyCollectionException {
 		Integer x;
 		boolean found;
@@ -181,8 +179,7 @@ public class Graph <T> implements GraphADT<T> {
 			found = false;
 
 			for (int i = 0; (i < numVertices) && !found; i++) {
-				if (adjMatrix[x][i] && !visited[i])
-				{
+				if (adjMatrix[x][i] && !visited[i]) {
 					traversalStack.push(i);
 					resultList.addToRear(vertices[i]);
 					visited[i] = true;
@@ -210,14 +207,12 @@ public class Graph <T> implements GraphADT<T> {
 		int[] anteriores = new int[numVertices];
 		boolean[] visitados = new boolean[numVertices];
 
-
 		for (int i = 0; i < numVertices; i++) {
 			distancias[i] = INFINITO;
 			anteriores[i] = -1;
 			visitados[i] = false;
 		}
 		distancias[startIndex] = 0;
-
 
 		for (int i = 0; i < numVertices; i++) {
 			int maisProximo = -1;
@@ -229,7 +224,6 @@ public class Graph <T> implements GraphADT<T> {
 
 			if (maisProximo == -1) break; //
 			visitados[maisProximo] = true;
-
 
 			for (int vizinho = 0; vizinho < numVertices; vizinho++) {
 				if (adjMatrix[maisProximo][vizinho] && !visitados[vizinho]) {
@@ -270,7 +264,7 @@ public class Graph <T> implements GraphADT<T> {
 		Iterator<T> it = iteratorBFS(0);
 		int count = 0;
 
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			it.next();
 			count++;
 		}
@@ -295,7 +289,7 @@ public class Graph <T> implements GraphADT<T> {
 
 		adjMatrix = newAdjMatrix;
 
-		T[] newVertices = (T[]) new Comparable[newCapacity];
+		T[] newVertices = (T[]) new Object[newCapacity];
 
 		if (numVertices >= 0) System.arraycopy(vertices, 0, newVertices, 0, numVertices);
 
@@ -320,31 +314,32 @@ public class Graph <T> implements GraphADT<T> {
 	 * Retrieves a Room object from the graph based on its name.
 	 *
 	 * @param name the name of the room to be retrieved
-	 * @return the Room object with the specified name if it exists in the graph,
-	 * or null if no such room is found
+	 * @return the Room object with the specified name if it exists in the graph, or null
+	 * if no such room is found
 	 */
 	public Room getRoom(String name) {
 		for (T vertex : vertices) {
-			if (((Room)vertex).getName().equals(name)) {
+			if (((Room) vertex).getName().equals(name)) {
 				return (Room) vertex;
 			}
 		}
 		return null;
 	}
 
-	public T[] getVertices() {
-		Object[] verticesList = new Object[numVertices];
-		Object vertex;
+	public ArrayUnorderedList<T> getVertices() {
+		ArrayUnorderedList<T> verticesList = new ArrayUnorderedList<>();
+		// Object vertex;
 
 		for (int i = 0; i < numVertices; i++) {
-			vertex = this.vertices[i];
-			verticesList[i] = vertex;
-			}
+			// vertex = this.vertices[i];
 
-		return (T[]) verticesList;
+			verticesList.addToRear(this.vertices[i]);
+		}
+
+		return verticesList;
 	}
 
-	public T[] getConnectedVertices(T vertex) {
+	public ArrayUnorderedList<T> getConnectedVertices(T vertex) {
 		int index = getVertexIndex(vertex);
 
 		if (index == -1) {
@@ -358,12 +353,6 @@ public class Graph <T> implements GraphADT<T> {
 			}
 		}
 
-		T[] result = (T[]) new Comparable[connectedVertices.size()];
-		int i = 0;
-		for (T v : connectedVertices) {
-			result[i++] = v;
-		}
-
-		return result;
+		return connectedVertices;
 	}
 }
