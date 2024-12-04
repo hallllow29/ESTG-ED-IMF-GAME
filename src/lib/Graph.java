@@ -172,7 +172,7 @@ public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 			visited[i] = false;
 		}
 
-		traversalStack.push(Integer.valueOf(startIndex));
+		traversalStack.push(startIndex);
 		resultList.addToRear(vertices[startIndex]);
 		visited[startIndex] = true;
 
@@ -181,9 +181,9 @@ public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 			found = false;
 
 			for (int i = 0; (i < numVertices) && !found; i++) {
-				if (adjMatrix[x.intValue()][i] && !visited[i])
+				if (adjMatrix[x][i] && !visited[i])
 				{
-					traversalStack.push(Integer.valueOf(i));
+					traversalStack.push(i);
 					resultList.addToRear(vertices[i]);
 					visited[i] = true;
 					found = true;
