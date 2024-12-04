@@ -11,6 +11,12 @@ public class BinaryTreeNode <T> {
 		this.right = null;
 	}
 
+	public BinaryTreeNode(T element, BinaryTreeNode<T> left, BinaryTreeNode<T> right) {
+		this.element = element;
+		this.left = left;
+		this.right = right;
+	}
+
 
 	public T getElement() {
 		return this.element;
