@@ -1,5 +1,4 @@
 import entities.*;
-import lib.Graph;
 import lib.LinkedList;
 import lib.Network;
 import lib.exceptions.NotElementComparableException;
@@ -68,10 +67,10 @@ public class Main {
 				simulation.scnario2(roomobj);
 			} */
 
-			simulation.enemyTurn();
-			simulation.playerTurn();
-
-			simulation.setBestPath();
+			simulation.game();
+			//simulation.playerTurn();
+			//simulation.enemyTurn();
+			//simulation.setBestPath();
 
 			displayEnemyIntel(mission);
 
