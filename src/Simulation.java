@@ -24,18 +24,78 @@ public class Simulation {
 
 	public void game_A() throws EmptyCollectionException, ElementNotFoundException {
 		Turn currentTurn = Turn.PLAYER;
+
 		boolean gameOver = false;
 
 		while (!gameOver) {
 			switch (currentTurn) {
+
 				case PLAYER:
 					System.out.println("Player's turn");
+					scenariosCase(currentTurn);
+					currentTurn = Turn.ENEMY;
+					break;
+
 				case ENEMY:
 					System.out.println("Enemy's turn");
-
+					scenariosCase(currentTurn);
+					currentTurn = Turn.PLAYER;
+					break;
 			}
 		}
 	}
+
+
+
+	void scenariosCase(Turn currentTurn) {
+		Room playerPosition = this.player.getPosition();
+
+
+
+		if (playerPosition.hasEnemies()) {
+			// TO CRUZ entra na sala e encontra os inimigos.
+			System.out.println("TO CRUZ enters in a room and faces enemies...");
+			scenarioUM();
+		}
+
+
+
+	}
+
+	public void scenarioUM() {
+		// PLAYER
+
+
+
+
+		Room playerPosition = this.player.getPosition();
+		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+
+		System.out.println("Tó cruz confronting enemies");
+
+		playerConfronts(enemies);
+
+		if (!playerPosition.hasEnemies()) {
+			System.out.println("All enemies in the room are defeated");
+		} else {
+			System.out.println("Enemies remain. End player turn");
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private void playerTurn_A() {
 		Room playerPosition = this.player.getPosition();
@@ -262,20 +322,7 @@ public class Simulation {
 		}
 	}
 
-	public void scenario1() {
-		Room playerPosition = this.player.getPosition();
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
 
-		System.out.println("Tó cruz confronting enemies");
-
-		playerConfronts(enemies);
-
-		if (!playerPosition.hasEnemies()) {
-			System.out.println("All enemies in the room are defeated");
-		} else {
-			System.out.println("Enemies remain. End player turn");
-		}
-	}
 
 	public void scenario2() throws EmptyCollectionException, ElementNotFoundException {
 		Room playerPosition = this.player.getPosition();
@@ -329,147 +376,30 @@ public class Simulation {
 		}
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private void scenario4() throws EmptyCollectionException {
-		System.out.println("To cruz is using medic kit "); player.useMediKit();
+		System.out.println("To cruz is using medic kit ");
+		player.useMediKit();
 
 	}
 
 	private void scenario5() throws EmptyCollectionException, ElementNotFoundException {
+		Room playerPosition = this.player.getPosition();
+		Room targetPosition = this.mission.getTarget().getRoom();
+		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
 
-		System.out.println("To cruz as reached the target room" + mission.getTarget().getRoom().getName());
+		System.out.println("To cruz as reached the target room" + targetPosition.getName());
 
-		playerConfronts(mission.getEnemies().iterator());
+		playerConfronts(enemies);
 
-		if (!player.getPosition().hasEnemies()) {
+		if (!playerPosition.hasEnemies()) {
 			System.out.println("All enemies in the target room are defeated");
 		} else {
 			System.out.println("Enemies reamin in the room. Turn ends");
 
-			System.out.println("To cruz as reached the target room" + mission.getTarget().getRoom().getName());
+			System.out.println("To cruz as reached the target room" + targetPosition.getName());
 			// Tó Cruz encontra o alvo, mas há inimigos na sala
 			// Se o Tó Cruz entra numa sala onde está o alvo
-			Room targetRoom = mission.getTarget().getRoom();
-			if (this.player.getPosition().equals(targetRoom) && targetRoom.hasEnemies()) {
+			if (this.player.getPosition().equals(targetPosition) && targetPosition.hasEnemies()) {
 
 				// FASE DO JOGADOR: ESTA MAL
 				if (playerTurn()) {
@@ -483,13 +413,15 @@ public class Simulation {
 					// Calcula o trajeto outra vez MAS do target room para o exit room
 					// Ver qual é o melhor desses trajetos.
 					updateWeightsForEnemies();  // Os inimigos movem-se nao estao fixo.
-					Room exitRoom = bestExtractionPoint(this.player.getPosition());
-					Iterator<Room> exit = mission.getBattlefield().iteratorShortestPath(mission.getTarget().getRoom(), exitRoom);
+					Room extractionPoint = bestExtractionPoint(playerPosition);
+					Iterator<Room> exit = mission.getBattlefield().iteratorShortestPath(targetPosition, extractionPoint);
 					// se houver um
 					// Usa esse trajeto em que ele perde menos vida.
 
 					// TEST....
-					System.out.println("Best exit: "); while (exit.hasNext()) {
+					System.out.println("Best exit: ");
+
+					while (exit.hasNext()) {
 						System.out.println("-> " + exit.next().getName());
 					}
 
@@ -499,10 +431,9 @@ public class Simulation {
 				} else (enemyTurn()) {
 					// MAS aqueles que nao estao no target room,
 					// andam aleatoriamente.
-					Iterator<Enemy> enemies = mission.getEnemies().iterator();
 					while (enemies.hasNext()) {
 						Enemy current_enemy = enemies.next();
-						if (!current_enemy.getPosition().equals(targetRoom)) {
+						if (!current_enemy.getPosition().equals(targetPosition)) {
 							moveEnemy(current_enemy);
 						}
 					}
@@ -510,11 +441,11 @@ public class Simulation {
 				}
 
 				// CASO ESPECIAL
-				if (!targetRoom.hasEnemies()) {
+				if (!targetPosition.hasEnemies()) {
 					// APANHA NO ALVO
 					// TURNO ACABA PARA O TO CRUZ
 					// VEZ DOS INIMIGOS.
-				} else if (targetRoom.hasEnemies()) {
+				} else if (targetPosition.hasEnemies()) {
 					// MATA OS INIMIGOS
 				}
 
@@ -523,10 +454,13 @@ public class Simulation {
 	}
 
 	void scenario6() {
+		Room playerPosition = this.player.getPosition();
+		Room targetPosition = this.mission.getTarget().getRoom();
+
 		// TO CRUZ encontra o alvo...
-		if (this.player.getPosition().equals(mission.getTarget().getRoom())) {
+		if (playerPosition.equals(targetPosition)) {
 			// ... e nao há inimigos presentes.
-			if (!this.player.getPosition().hasEnemies()) {
+			if (!playerPosition.hasEnemies()) {
 				// TO CRUZ pode interagir com o alvo
 				// e conclui a missao com sucesso
 				// caso consiga sair do edificio com vida.
@@ -633,12 +567,15 @@ public class Simulation {
 				if (item.getPosition() != null && item.getPosition().equals(room)) {
 					if (item instanceof MediKit) {
 						this.player.addKitToBackPack((MediKit) item);
-						item.setPosition(null); mission.removeItem(item);
+						item.setPosition(null);
+						mission.removeItem(item);
 						room.setItemInRoom(false);
 						System.out.println("Medikit added to the backPack");
 					} else if (item instanceof Kevlar) {
-						this.player.equipKevlar((Kevlar) item); item.setPosition(null);
-						mission.removeItem(item); room.setItemInRoom(false);
+						this.player.equipKevlar((Kevlar) item);
+						item.setPosition(null);
+						mission.removeItem(item);
+						room.setItemInRoom(false);
 						System.out.println("Kevlar equipped, current health" + this.player.getCurrentHealth());
 					}
 				}
@@ -758,9 +695,9 @@ public class Simulation {
 	}
 
 	private double calculatePathDamage(Iterator<Room> path) {
-		double total_damage = 0;
-		int player_current_health = player.getCurrentHealth();
-		int player_current_health = 100;
+		double totalDamage = 0;
+		int playerHealth = player.getCurrentHealth();
+		int playerMaxHealth = 100;
 
 		while (path.hasNext()) {
 
@@ -771,7 +708,7 @@ public class Simulation {
 				for (Enemy enemy : mission.getEnemies()) {
 					if (enemy.getPosition().equals(room)) {
 
-						total_damage += enemy.getFirePower();
+						totalDamage += enemy.getFirePower();
 
 					}
 				}
@@ -781,7 +718,7 @@ public class Simulation {
 				for (Item item : mission.getItems()) {
 					if (item.getPosition() != null && item.getPosition().equals(room)) {
 						if (item instanceof MediKit) {
-							playerHealth = Math.min(maxHealth, playerHealth + ((MediKit) item).getHealPower());
+							playerHealth = Math.min(playerMaxHealth, playerHealth + ((MediKit) item).getHealPower());
 						} else if (item instanceof Kevlar) {
 							playerHealth += ((Kevlar) item).getExtraHp();
 						}
