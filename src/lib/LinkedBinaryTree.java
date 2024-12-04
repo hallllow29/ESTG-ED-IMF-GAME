@@ -31,10 +31,13 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 	}
 
 	@Override
-	public T getRoot() {
-		return this.root.getElement();
+	public BinaryTreeNode<T> getRoot() {
+		return this.root;
 	}
 
+	public T getRootElement() {
+		return this.root.getElement();
+	}
 
 	public void setRoot(BinaryTreeNode<T> root) {
 		this.root = root;
@@ -117,7 +120,6 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 	@Override
 	public Iterator<T> iteratorInOrder() {
 		LinkedUnorderedList<T> linkedList = new LinkedUnorderedList<T>();
-		// TODO: Replace LinkedList for a UnorderedLinkedList
 		inOrder(this.root, linkedList);
 		return linkedList.iterator();
 	}

@@ -1,5 +1,6 @@
 package lib.interfaces;
 
+import lib.BinaryTreeNode;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -12,8 +13,11 @@ public interface BinaryTreeADT<T> {
 	 *
 	 * @return the root element of the binary tree of type T
 	 */
-	T getRoot();
+	T getRootElement();
 
+
+
+	BinaryTreeNode<T> getRoot();
 	/**
 	 * Determines if the binary tree is empty.
 	 *
