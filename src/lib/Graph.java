@@ -7,7 +7,7 @@ import lib.interfaces.GraphADT;
 import java.util.Arrays;
 import java.util.Iterator;
 
-public class Graph <T extends Comparable<T>> implements GraphADT<T> {
+public class Graph <T> implements GraphADT<T> {
 
 	protected final int DEFAULT_CAPACITY = 10;
 	protected int numVertices; // number of vertices in the graph
@@ -21,7 +21,7 @@ public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 	public Graph() {
 		numVertices = 0;
 		this.adjMatrix = new boolean[DEFAULT_CAPACITY][DEFAULT_CAPACITY];
-		this.vertices = (T[]) (new Comparable[DEFAULT_CAPACITY]);
+		this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
 	}
 
 	@Override
@@ -332,27 +332,38 @@ public class Graph <T extends Comparable<T>> implements GraphADT<T> {
 		return null;
 	}
 
-	public DoubleLinkedOrderedList<T> getVertices() {
-		DoubleLinkedOrderedList<T> verticesList = new DoubleLinkedOrderedList<>();
-		for (int i = 0; i < numVertices; i++) {
-			verticesList.add(this.vertices[i]);
-		}
+	public T[] getVertices() {
+		Object[] verticesList = new Object[numVertices];
+		Object vertex;
 
-		return verticesList;
+		for (int i = 0; i < numVertices; i++) {
+			vertex = this.vertices[i];
+			verticesList[i] = vertex;
+			}
+
+		return (T[]) verticesList;
 	}
 
-	public DoubleLinkedOrderedList<T>getConnectedVertices(T vertex) {
+	public T[] getConnectedVertices(T vertex) {
 		int index = getVertexIndex(vertex);
-		DoubleLinkedOrderedList<T> connectedVertices = new DoubleLinkedOrderedList<T>();
 
-		if (index != -1) {
-			for (int i = 0; i < numVertices; i++) {
-				if (adjMatrix[index][i]) {
-					connectedVertices.add(vertices[i]);
-				}
+		if (index == -1) {
+			throw new IllegalArgumentException("Graph");
+		}
+		ArrayUnorderedList<T> connectedVertices = new ArrayUnorderedList<>();
+
+		for (int i = 0; i < this.numVertices; i++) {
+			if (this.adjMatrix[index][i]) {
+				connectedVertices.addToRear(vertices[i]);
 			}
 		}
 
-		return connectedVertices;
+		T[] result = (T[]) new Comparable[connectedVertices.size()];
+		int i = 0;
+		for (T v : connectedVertices) {
+			result[i++] = v;
+		}
+
+		return result;
 	}
 }
