@@ -78,7 +78,9 @@ public class Player extends Character {
 	}
 
 	public String useMediKit() throws EmptyCollectionException {
-		if (this.back_pack.isBackPackEmpty()) {
+		boolean backpackEmpty = this.back_pack.isBackPackEmpty();
+
+		if (backpackEmpty) {
 			throw new EmptyCollectionException("There are no medikits available to use!");
 		}
 
