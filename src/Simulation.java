@@ -823,7 +823,7 @@ public class Simulation {
 			enemyTurn();
 
 			// TODO: Mudar a call... ( ( ( ) ) )
-			updateBestPath(bestExtractionPoint);
+			//updateBestPath(bestExtractionPoint);
 
 			playerTurn();
 			enemyTurn();

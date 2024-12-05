@@ -29,9 +29,9 @@ public class Player extends Character {
 	private Kevlar kevlar;
 
 
-	public Player(String name, int fire_power, Room position, BackPack back_pack) {
+	public Player(String name, int fire_power, BackPack back_pack) {
 		super(name, fire_power);
-		this.position = position;
+		this.position = null;
 		this.back_pack = back_pack;
 		this.kevlar = null;
 	}
@@ -58,12 +58,12 @@ public class Player extends Character {
 	 * Executes an attack on the specified character. The attack will reduce the health
 	 * of the targeted character based on the attacker's fire power.
 	 *
-	 * @param character the character to attack
+	 * @param //character the character to attack
 	 */
-
+	/*@Override
 	public void attack(Character character) {
 
-	}
+	}*/
 
 	public String equipKevlar(Kevlar kevlar) {
 		this.kevlar = kevlar;

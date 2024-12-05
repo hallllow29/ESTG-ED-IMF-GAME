@@ -17,6 +17,7 @@ public class Mission {
 	private final int version;
 	private Target target;
 	private Room entryPoint;
+	private boolean targetSecured;
 
 	private final Network<Room> battlefield;
 	private final LinkedList<Enemy> enemies;
@@ -31,6 +32,7 @@ public class Mission {
 		this.items = new LinkedList<>();
 		this.entry_exit_points = new LinkedList<>();
 		this.target = null;
+		this.targetSecured = false;
 	}
 
 	public void setEnemy(Enemy enemy) throws NotElementComparableException {
@@ -47,6 +49,10 @@ public class Mission {
 
 	public void setTarget(Target target) {
 		this.target = target;
+	}
+
+	public void setTargetSecured(boolean targetSecured) {
+		this.targetSecured = targetSecured;
 	}
 
 	public LinkedList<Enemy> getEnemies() {
@@ -67,6 +73,10 @@ public class Mission {
 
 	public Target getTarget() {
 		return this.target;
+	}
+
+	public boolean isTargetSecured() {
+		return this.targetSecured;
 	}
 
 	public void removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
