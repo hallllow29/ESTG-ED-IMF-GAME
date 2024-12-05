@@ -24,8 +24,9 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			// INIT GRAPH
+			System.out.println("Carregando ");
 			Network<Room> graph = (Network<Room>) initGraph();
-
+			Mission mission = Main.getMission();
 			setGraph(graph);
 
 			displayMissionDetails(graph);
@@ -49,25 +50,28 @@ public class Main {
 			//Iterator<Room> entry_points = entry_points_selection.iterator();
 			Room coco  = null;
 
-			for (Room room : mission.getBattlefield().getVertices()) {
+			/*for (Room room : mission.getBattlefield().getVertices()) {
 				if (room.getName().equals("Heliporto")) {
 					coco = room;
 				}
-			}
+			}*/
 
-			Room entry_point = entry_points_selection.first();
+
+			//Room entry_point = entry_points_selection.first();
 
 			BackPack mochila = new BackPack();
 
-			Player toCruz = new Player("Tó cruz", 100, coco, mochila);
+			Player toCruz = new Player("Tó cruz", 100, mochila);
 
-			Main.setSimulation(new Simulation(getMission(), toCruz));
+			//Main.setSimulation(new Simulation(getMission(), toCruz));
 
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
 				simulation.scnario2(roomobj);
 			} */
+			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
 
-			simulation.gameManual();
+			automaticSimulation.play();
+
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
