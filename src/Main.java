@@ -25,7 +25,7 @@ public class Main {
 		try {
 			// INIT GRAPH
 			System.out.println("Carregando ");
-			Network<Room> graph = (Network<Room>) initGraph();
+			Network<Room> graph = initGraph();
 			Mission mission = Main.getMission();
 			setGraph(graph);
 
@@ -63,15 +63,15 @@ public class Main {
 
 			Player toCruz = new Player("Tó cruz", 100, mochila);
 
-			//Main.setSimulation(new Simulation(getMission(), toCruz));
+			Main.setSimulation(new Simulation(getMission(), toCruz));
 
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
 				simulation.scnario2(roomobj);
 			} */
 			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
 
-			automaticSimulation.play();
-
+			simulation.game();
+			// automaticSimulation.play();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
