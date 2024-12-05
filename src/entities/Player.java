@@ -60,7 +60,7 @@ public class Player extends Character {
 	 *
 	 * @param character the character to attack
 	 */
-	@Override
+
 	public void attack(Character character) {
 
 	}

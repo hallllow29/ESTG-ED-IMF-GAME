@@ -24,7 +24,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			// INIT GRAPH
-			Network<Room> graph = (Network<Room>) initGraph();
+			Network<Room> graph = initGraph();
 
 			setGraph(graph);
 
@@ -67,7 +67,8 @@ public class Main {
 				simulation.scnario2(roomobj);
 			} */
 
-			simulation.gameManual();
+			simulation.game();
+			// simulation.gameManual();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
