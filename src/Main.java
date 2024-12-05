@@ -67,7 +67,7 @@ public class Main {
 				simulation.scnario2(roomobj);
 			} */
 
-			simulation.game();
+			simulation.gameManual();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
