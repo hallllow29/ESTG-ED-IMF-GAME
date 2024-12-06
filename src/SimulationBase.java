@@ -422,7 +422,7 @@ public abstract class SimulationBase {
         // O Tó Cruz pode apanhar kits de recuperação de vida que permitem
         // recuperar um determinado número de pontos até ao limite máximo permitido.
 
-        int playerCriticalHealth = 30;
+        int playerCriticalHealth = 70;
 
         return this.player.getCurrentHealth() <= playerCriticalHealth && this.player.hasRecoveryItem();
     }

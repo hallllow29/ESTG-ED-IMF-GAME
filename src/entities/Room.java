@@ -1,6 +1,5 @@
 package entities;
 
-import lib.LinkedList;
 
 public class Room implements Comparable<Room> {
 
