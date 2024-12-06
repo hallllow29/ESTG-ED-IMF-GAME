@@ -350,7 +350,7 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         ArrayUnorderedList<T> connectedVertices = new ArrayUnorderedList<>();
 
         for (int i = 0; i < this.numVertices; i++) {
-            if (this.weightMatrix[index][i] == 0) {
+            if (this.weightMatrix[index][i] != Double.POSITIVE_INFINITY) {
                 connectedVertices.addToRear(vertices[i]);
             }
         }

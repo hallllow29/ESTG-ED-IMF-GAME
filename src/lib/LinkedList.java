@@ -125,6 +125,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		return removedElement;
 	}
 
+
 	/**
 	 * Returns the first element in the LinkedList.
 	 *

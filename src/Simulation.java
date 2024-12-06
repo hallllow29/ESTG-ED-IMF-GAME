@@ -484,7 +484,7 @@ public class Simulation {
 		updateBestPath(true);
 
 		Room extractionPoint = bestExtractionPoint();
-		mission.setTarget.;
+		//mission.setTarget;
 
 		movePlayer(true);
 
