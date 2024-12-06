@@ -100,6 +100,7 @@ public class Simulation {
 		} else {
 			movePlayer(false);
 		}
+		scenariosCase(Turn.PLAYER);
 	}
 
 	public void enemyTurn() {
@@ -337,14 +338,29 @@ public class Simulation {
 	}
 
 	public void scenarioDOIS() throws EmptyCollectionException, ElementNotFoundException {
-
-
-		// ENEMY
+		/**
+		 * Cenário 2:
+		 * Na fase do jogador, o Tó Cruz entra na sala e não encontra inimigo.
+		 * Segue-se a fase dos inimigos, na qual estes se movem aleatoriamente.
+		 * o Fim do turno: O turno termina e o próximo começa permitindo que o jogador escolha uma nova ação.
+		 */
 		System.out.println("BUT the enemies are somewhere...");
+		/**
+		 * Segue-se a fase dos inimigos...
+		 */
 		System.out.println("==== ENEMY TURN ====");
 		System.out.println("Enemies are moving...");
+		/**
+		 * na qual estes se movem aleatoriamente.
+		 */
 		moveEnemies();
+		/**
+		 * Fim do turno
+		 */
 		System.out.println("SCENARIO 2 ENDED");
+		/**
+		 * e o proximo jogador escolhe uma nova ação.
+		 */
 		playerTurn();
 	}
 
@@ -516,11 +532,16 @@ public class Simulation {
 
 			if (!possible_moves.isEmpty()) {
 
-				int random_index = random.nextInt(possible_moves.size());
+				// For current Room
+				Room enemyPosition = enemyObj.getPosition();
+				enemyPosition.setEnemies(false);
 
+				int random_index = random.nextInt(possible_moves.size());
 				Room next_room = possible_moves.getElement(random_index);
 
+				// For next Room
 				enemyObj.setPosition(next_room);
+				next_room.setEnemies(true);
 			}
 		}
 	}
@@ -734,10 +755,19 @@ public class Simulation {
 		ArrayList<Room> possibleMoves = getPossibleMoves(enemyPosition);
 
 		if (!possibleMoves.isEmpty()) {
+
+			// For current Room
+			enemyPosition.setEnemies(false);
+
 			Random random = new Random();
 			int random_index = random.nextInt(possibleMoves.size());
+
 			Room next_room = possibleMoves.getElement(random_index);
+
+			// For next Room
 			enemy.setPosition(next_room);
+			next_room.setEnemies(true);
+
 		}
 	}
 
