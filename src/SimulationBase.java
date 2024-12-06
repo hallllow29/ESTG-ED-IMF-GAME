@@ -88,7 +88,7 @@ public abstract class SimulationBase {
 
                     item.setPosition(null);
                     currentRoom.setItemInRoom(false);
-                    itemIterator.remove();
+                    //itemIterator.remove();
                 }
             }
         }
@@ -249,9 +249,7 @@ public abstract class SimulationBase {
 
                 for (Enemy enemy : mission.getEnemies()) {
                     if (enemy.getPosition().equals(room)) {
-
                         totalDamage += enemy.getFirePower();
-
                     }
                 }
             }
@@ -338,6 +336,8 @@ public abstract class SimulationBase {
                 }
             }
             weight += totalDamage;
+        } else {
+            return 0.0;
         }
         return weight;
     }
@@ -461,7 +461,6 @@ public abstract class SimulationBase {
     }
 
     public void displayPathToExit(Room fromRoom, Room toRoom) throws ElementNotFoundException {
-        System.out.println("Path to exit");
         Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(fromRoom, toRoom);
 
         while (path.hasNext()) {
@@ -475,7 +474,6 @@ public abstract class SimulationBase {
 
         if (path.hasNext()) {
             path.next();
-
             if (path.hasNext()) {
                 return path.next();
             } else {

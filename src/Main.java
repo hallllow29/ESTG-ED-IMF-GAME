@@ -69,9 +69,12 @@ public class Main {
 				simulation.scnario2(roomobj);
 			} */
 			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
+			ManualSimulation manualSimulation = new ManualSimulation(mission, toCruz);
 
-			simulation.game();
-			// automaticSimulation.play();
+			//manualSimulation.play();
+
+			//simulation.game();
+			automaticSimulation.play();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
