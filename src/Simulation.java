@@ -5,7 +5,6 @@ import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
-import java.sql.SQLOutput;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -45,6 +44,10 @@ public class Simulation {
 
 			playerTurn();
 
+			if (this.player.getPosition().equals(this.extractionPoint)) {
+				this.gameOver = true;
+			}
+
 			enemyTurn();
 
 		}
@@ -74,10 +77,14 @@ public class Simulation {
 		 */
 	}
 
-	public void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
+	public void playerTurn() throws ElementNotFoundException {
+
 		if (!this.missionAccomplished && this.player.isAlive()) {
 			movePlayer(false);
+		} else if (this.player.isAlive() && this.mission.isTargetSecured()) {
+			movePlayer(true);
 		}
+
 		System.out.println("TO CRUZ is moving...");
 		if (!this.mission.getEnemies().isEmpty()) {
 			System.out.println("BUT the enemies are somewhere...");
@@ -99,34 +106,36 @@ public class Simulation {
 		scenariosCase(this.currentScenario);
 	}
 
-	void roomSituation(Turn currentTurn, Room playerPosition, Boolean hasEnemies) {
-		boolean atTarget = isAtTarget(playerPosition, nextObjective);
+	void scenariosSitiuations(Turn currentTurn) {
+		Room playerPosition = this.player.getPosition();
+		boolean playerPositionHasEnemies = playerPosition.hasEnemies();
 
-		if (hasEnemies) {
+		// System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
 
-			if (currentTurn == Turn.PLAYER) {
-				this.currentScenario = 1;
-			}
-
-			if (currentTurn == Turn.ENEMY) {
-				this.currentScenario = 3;
-			}
-
-		} else if (!hasEnemies) {
-
-			this.currentScenario = 2;
-
-		} else if (hasEnemies && atTarget) {
-
-			this.currentScenario = 5;
-
-		} else if (!hasEnemies && !atTarget) {
-
-			this.currentScenario = 6;
-		}
+		roomSituation(playerPosition, playerPositionHasEnemies);
 	}
 
-	void scenariosCase(int currentScenario) throws EmptyCollectionException, ElementNotFoundException {
+	void roomSituation(Room playerPosition, Boolean hasEnemies) {
+		boolean atTarget = isAtTarget(playerPosition, this.nextObjective);
+
+		if (hasEnemies && atTarget) {
+			this.currentScenario = 5;
+		} else if (hasEnemies) {
+
+			/**
+			 * DESPOLETADO
+			 */
+			this.currentScenario = (this.currentTurn == Turn.PLAYER) ? 1 : 3;
+
+		} else if (!atTarget) {
+			this.currentScenario = 2;
+		} else {
+			this.currentScenario = 6;
+		}
+
+	}
+
+	void scenariosCase(int currentScenario) throws ElementNotFoundException {
 
 		switch (currentScenario) {
 			case 1:
@@ -153,9 +162,11 @@ public class Simulation {
 				break;
 			case 5:
 				scenarioCINCO();
+				this.currentTurn = Turn.PLAYER;
 				break;
 			case 6:
 				scenarioSEIS();
+				this.currentTurn = Turn.PLAYER;
 				break;
 		}
 	}
@@ -181,7 +192,7 @@ public class Simulation {
 			System.out.println("ENEMIES are moving...");
 			moveEnemiesNotInSameRoom();
 		} else {
-			System.out.println("TO CRUZ eliminated all ENEMIES in..." + player.getName() + "...");
+			System.out.println("TO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...");
 		}
 
 		System.out.println("[<< SCENARIO 1 END >>]");
@@ -251,47 +262,49 @@ public class Simulation {
 		System.out.println("AND has priority of attack over ENEMIES...");
 		playerConfronts(enemies);
 
+		if (!playerPosition.hasEnemies()) {
+			System.out.println("TO CRUZ eliminated all ENEMIES in..." + player.getName() + "...");
+		}
+
+		System.out.println("==== ENEMIES TURN ====");
+		System.out.println("ENEMIES are moving...");
+		moveEnemiesNotInSameRoom();
+
+		System.out.println("[<< SCENARIO 5 END >>]");
+	}
+
+	private void scenarioSEIS() throws ElementNotFoundException {
+		Room playerPosition = this.player.getPosition();
+
+		System.out.println("[<< SCENARIO 6 START >>]");
+
+		System.out.println("==== PLAYER TURN ====");
+		System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
+		System.out.println("AND in that room there is the TARGET...");
+		System.out.println("LOOK AT THAT, it is clear...");
+		if (playerPosition.hasItems()) {
+			System.out.println("AND checks if he needs to use the item immediately...");
+			gatherItems(playerPosition);
+		}
+		boolean secured = true;
+		this.mission.setTargetSecured(secured);
+
+		this.returningToExit = true;
+		this.extractionPoint = bestExtractionPoint();
+		this.nextObjective = this.extractionPoint;
+		movePlayer(returningToExit);
+
+		System.out.println("[<< SCENARIO 6 END >>]");
 
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	private void movePlayer(boolean toExtraction) throws ElementNotFoundException {
 		Room playerPosition = this.player.getPosition();
-		Room targetPosition = this.mission.getTarget().getRoom();
+		Room targetPosition = this.nextObjective;
+		Iterator<Room> path = null;
 
 		this.getBestPath();
-		Iterator<Room> path = null;
+
 		if (toExtraction) {
 			// Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(playerPosition,bestExtractionPoint());
 			path = mission.getBattlefield().iteratorShortestPath(playerPosition, this.extractionPoint);
@@ -315,195 +328,8 @@ public class Simulation {
 		}
 	}
 
-	void scenariosSitiuations(Turn currentTurn) {
-		Room playerPosition = this.player.getPosition();
-		boolean playerPositionHasEnemies = playerPosition.hasEnemies();
-
-		System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
-
-		roomSituation(this.currentTurn, playerPosition, playerPositionHasEnemies);
-	}
-
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
 		return playerPosition.equals(targetPosition);
-	}
-
-	// -------------------- ROOM WITH ENEMIES SITUATION ----------------------------------
-	private void roomWithEnemiesSituation(Turn currentTurn, Room playerPosition, Room nextObjective) {
-
-		boolean atTarget = isAtTarget(playerPosition, nextObjective);
-		// Ya man! dou um refactor... que consome tempo, mas tem que ser...man
-
-		if (atTarget) {
-
-			confrontationOccurs(currentTurn);
-
-		} else if (!atTarget) {
-
-			securingTargetPerimeter();
-
-		}
-	}
-
-	private void confrontationOccurs(Turn currentTurn) {
-
-		if (currentTurn == Turn.PLAYER) {
-			// TO CRUZ entra na sala e encontra os inimigos.
-			System.out.println("TO CRUZ enters in a room and faces enemies...");
-			System.out.println("AND has priority of attack over enemies...");
-			scenarioUM();
-		} else if (currentTurn == Turn.ENEMY) {
-			// INIMIGOS entram apos movimentacao,
-			System.out.println("ENEMIES spot TO CRUZ and face TO CRUZ");
-			System.out.println("AND have priority of attack over TO CRUZ");
-			scenarioTRES();
-		}
-	}
-
-	private void securingTargetPerimeter() {
-		// TO CRUZ encontra alvo MAS há inimigos na sala.
-		System.out.println("TO CRUZ enters in a room and faces enemies...");
-		System.out.println("AND in that room there is the TARGET");
-
-		try {
-			scenarioCINCO();
-		} catch (EmptyCollectionException | ElementNotFoundException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-
-	// ------------------ ROOM WITHOUT ENEMIES SITUATION --------------------------------
-	private void roomWithoutEnemiesSituation(Turn currentTurn, Room playerPosition, Room nextObjective) {
-		boolean atTarget = isAtTarget(playerPosition, nextObjective);
-
-		if (atTarget) {
-
-			// Cenário 2
-			this.currentScenario = 2;
-
-		} else if (atTarget) {
-
-			/**
-			 * Cenário 4 e Cenário 6
-			 */
-			securingTarget();
-
-		}
-	}
-
-	private void clearingRoom() {
-		/*Room playerPosition = this.player.getPosition();
-		System.out.println("AND the room TO CRUZ entered is clear...");
-		System.out.println("TO CRUZ checks if there are items...");
-
-		if (playerPosition.hasItems()) {
-			System.out.println("AND LOOK! there are items for him to pick up...");
-			*//**
-		 * possivelmente Cenário 4
-		 *//*
-			roomWithItemsSituation();
-		}*/
-		this.currentScenario = 2;
-
-	}
-
-	private void securingTarget() {
-		// TO CRUZ encontra o alvo sem inimigos.
-		System.out.println("TO CRUZ enters on a room...");
-		System.out.println("AND in that room there is the TARGET...");
-		System.out.println("LOOK AT THAT, it is clear...");
-		try {
-			scenarioSEIS();
-		} catch (ElementNotFoundException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-
-	// --------------------- ROOM WITH ITEMS SITUATION -----------------------------------
-	private void roomWithItemsSituation() {
-		Room playerPosition = this.player.getPosition();
-
-		gatherItems(playerPosition);
-
-		System.out.println("AND checks if he needs to use the item immediately...");
-			if (playerNeedsRecoveryItem() && this.currentTurn == Turn.PLAYER) {
-				/**
-				 * Na fase do jogador se TO CRUZ decide usar um kit de vida para se curar...
-				 */
-				scenarioQUATRO();
-			} else {
-				System.out.println("THIS is not the case...");
-			}
-	}
-
-
-
-	/*private void scenarioTRES() {
-
-		System.out.println("ENEMIES are confronting TO CRUZ...");
-		enemiesConfronts(this.player);
-
-		System.out.println("SCENARIO 3 ENDED");
-	}*/
-
-	/*private void scenarioQUATRO() throws EmptyCollectionException {
-
-		System.out.println("TO CRUZ is using medic kit...");
-		System.out.println(this.player.useMediKit());
-		*//**
-		 * Nao poderá efetuar uma movimentação...
-		 *//*
-		System.out.println("[ SCENARIO 4 ENDED ]");
-	}*/
-
-	/*private void scenarioCINCO() throws EmptyCollectionException, ElementNotFoundException {
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
-
-		// PLAYER
-		// O confronto é prioritário para o Tó.
-		// O Tó Cruz deve lidar com os inimigos primeiro.
-		System.out.println("TO CRUZ is confronting enemies firstly...");
-		playerConfronts(enemies);
-
-		if (!checkEnemiesInPlayerRoom()) {
-			scenarioSEIS();
-		}
-
-		// ENEMY
-		// Os outros inimigos no edificio movem-se conforme as regras de
-		// movimentacao...
-		moveEnemiesNotInSameRoom();
-		System.out.println("SCENARIO 5 ENDED");
-
-		*//*
-			Where is my mind?
-			Where is my mind?
-			Where is my mind?
-			Way out in the water
-			See it swimming
-
-			With your feet on the air and your head on the ground
-			Try this trick and spin it, yeah
-		*//*
-	}*/
-
-	private void scenarioSEIS() throws ElementNotFoundException {
-		// TO CRUZ pode interagir com o alvo
-		// e conclui a missao com sucesso
-		// caso consiga sair do edificio com vida.
-		this.mission.setTargetSecured(true);
-
-		this.returningToExit = true;
-
-		// updateBestPath(true);
-
-		this.extractionPoint = bestExtractionPoint();
-
-		// movePlayer(true);
-
-		if (player.isAlive() && player.getPosition().equals(this.extractionPoint)) {
-			this.gameOver = true;
-		}
 	}
 
 	private Room findBestEntryPoint() throws ElementNotFoundException {
@@ -552,47 +378,26 @@ public class Simulation {
 					System.out.println("Enemy: " + enemyName + " is dead");
 					enemies.remove();
 					totalEnemiesInRoom--;
-
-				} else if (enemy.isAlive()) {
-					// O movimento dos inimigos ocorre sempre que Tó Cruz não
-					// elimina um inimigo ao entrar numa sala
-
-					// FODASSE AQUI OCCORRE
-					// moveEnemies()
-					// OU/E
-					// moveEnemiesNotSameRoom()
 				}
 			}
+
+			if (totalEnemiesInRoom <= ZERO) {
+				playerPosition.setEnemies(false);
+				break;
+			}
+
 		}
 
-		if (totalEnemiesInRoom <= ZERO) {
-			playerPosition.setEnemies(false);
-		}
+	}
 
-		/*// TO CRUZ resgata alvo só quando TODOS os inimigos no targetPosition forem
-		// eliminados
-		if (totalEnemiesInRoom <= ZERO && playerPosition.equals(targetPosition)) {
-			System.out.println("TO CRUZ eliminated all enemies in..." + targetPosition.getName() + "...");
-			System.out.println("AND heads on to the extraction point...");
+	private boolean playerNeedsRecoveryItem() {
 
-			// NO ENEMIES IN THE TARGET ROOM
-			playerPosition.setEnemies(false);
-			try {
-				scenarioSEIS();
-			} catch (ElementNotFoundException e) {
-				System.err.println(e.getMessage());
-			}
-			// MOVE TO EXTRACTION POINT, RIGHT ?
-			updateWeightsForEnemies();
-			try {
-				Room extractionPoint = bestExtractionPoint();
-				System.out.println("TO CRUZ has found a way to extraction point...");
-				// MOVE PLAYER ??
+		int playerCriticalHealth = 80;
 
-			} catch (ElementNotFoundException e) {
-				System.err.println(e.getMessage());
-			}
-		}*/
+		/**
+		 * Se TO CRUZ decide usar um kit...
+		 */
+		return this.player.getCurrentHealth() <= playerCriticalHealth && this.player.hasRecoveryItem();
 	}
 
 	private void moveEnemies() {
@@ -633,6 +438,27 @@ public class Simulation {
 			if (!enemyPosition.equals(playerPosition)) {
 				moveEnemy(enemyObj);
 			}
+		}
+	}
+
+	private void moveEnemy(Enemy enemy) {
+		Room enemyPosition = enemy.getPosition();
+		ArrayList<Room> possibleMoves = getPossibleMoves(enemyPosition);
+
+		if (!possibleMoves.isEmpty()) {
+
+			// For current Room
+			enemyPosition.setEnemies(false);
+
+			Random random = new Random();
+			int random_index = random.nextInt(possibleMoves.size());
+
+			Room next_room = possibleMoves.getElement(random_index);
+
+			// For next Room
+			enemy.setPosition(next_room);
+			next_room.setEnemies(true);
+
 		}
 	}
 
@@ -713,10 +539,8 @@ public class Simulation {
 
 				// Scenario 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
-				try {
+				if (playerNeedsRecoveryItem()) {
 					scenarioQUATRO();
-				} catch (EmptyCollectionException e) {
-					System.err.println(e.getMessage());
 				}
 
 				if (!player.isAlive()) {
@@ -725,16 +549,6 @@ public class Simulation {
 				}
 			}
 		}
-	}
-
-	private boolean playerNeedsRecoveryItem() {
-
-		int playerCriticalHealth = 80;
-
-		/**
-		 * Se TO CRUZ decide usar um kit...
-		 */
-		return this.player.getCurrentHealth() <= playerCriticalHealth && this.player.hasRecoveryItem();
 	}
 
 	private Room bestExtractionPoint() throws ElementNotFoundException {
@@ -830,63 +644,10 @@ public class Simulation {
 		Try this trick and spin it, yeah
 	*/
 
-	private void moveEnemy(Enemy enemy) {
-		Room enemyPosition = enemy.getPosition();
-		ArrayList<Room> possibleMoves = getPossibleMoves(enemyPosition);
-
-		if (!possibleMoves.isEmpty()) {
-
-			// For current Room
-			enemyPosition.setEnemies(false);
-
-			Random random = new Random();
-			int random_index = random.nextInt(possibleMoves.size());
-
-			Room next_room = possibleMoves.getElement(random_index);
-
-			// For next Room
-			enemy.setPosition(next_room);
-			next_room.setEnemies(true);
-
-		}
-	}
-
-	/*public void updateBestPath(boolean returning) throws ElementNotFoundException {
-		updateWeightsForEnemies();
-		System.out.println("Getting information intel for the best current path to the target..");
-
-		Room targetRoom = returning ? bestExtractionPoint() : mission.getTarget().getRoom();
-		Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(player.getPosition(), targetRoom);
-
-		System.out.println("\nBest path: ");
-		while (path.hasNext()) {
-			System.out.println("-> " + path.next().getName());
-
-		}
-	}*/
-
-	// TODO: Change method name. maybe "enemiesInSameRoom()" ?
-	private boolean checkEnemiesInPlayerRoom() {
-
-		Room playerPosition = this.player.getPosition();
-
-		Iterator<Enemy> enemyIterator = this.mission.getEnemies().iterator();
-
-		while (enemyIterator.hasNext()) {
-
-			Enemy enemy = enemyIterator.next();
-			Room enemyPosition = enemy.getPosition();
-
-			if (enemyPosition.equals(playerPosition)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	private void getBestPath() throws ElementNotFoundException {
-		this.updateWeightsForEnemies();
 		Room targetRoom;
+
+		this.updateWeightsForEnemies();
 
 		if (returningToExit) {
 			targetRoom = bestExtractionPoint();
@@ -921,169 +682,4 @@ public class Simulation {
 		}
 		System.out.println();
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/*private void playerUnderAttackBy(Enemy enemy) {
-		final int ZERO = 0;
-
-		String playerName = this.player.getName();
-		int playerHealth = this.player.getCurrentHealth();
-
-		String enemyName = enemy.getName();
-		int enemyAttack = enemy.getFirePower();
-
-		System.out.println("Enemy " + enemyName + " is attacking " + playerName);
-		this.player.setCurrentHealth(playerHealth - enemyAttack);
-
-		System.out.println("Enemy deal " + enemyAttack + " damage " + playerName + " current HP is " + playerHealth);
-
-		if (playerHealth <= ZERO) {
-			this.gameOver = true;
-		}
-	}*/
-
-
-	/*private void displayMap() {
-		System.out.println("\n==== Building Map =====");
-
-		for (Room room : mission.getBattlefield().getVertices()) {
-			System.out.println(room.getName());
-
-			if (room.equals(player.getPosition())) {
-				System.out.println(" Your position");
-			} else if (room.equals(mission.getTarget().getRoom())) {
-				System.out.println(" Your target");
-			}
-
-			boolean hasEnemies = false;
-
-			for (Enemy enemy : mission.getEnemies()) {
-				if (enemy.getPosition().equals(room)) {
-					hasEnemies = true;
-					break;
-				}
-			}
-
-			if (hasEnemies) {
-				System.out.println(" Enemies in the room");
-			}
-
-			System.out.println(" -> ");
-			for (Room connectedRoom : mission.getBattlefield().getConnectedVertices(room)) {
-				System.out.println(connectedRoom.getName() + " ");
-			}
-
-			System.out.println();
-
-		}
-
-		System.out.println("============================================");
-	}*/
-
-	/*private void displayBestPath(Room targetRoom) throws ElementNotFoundException {
-		System.out.println("\n==== Best Path =====");
-
-		Room currentRoom = player.getPosition();
-		Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(currentRoom, targetRoom);
-
-		double totalDamage = 0.0;
-		System.out.println("Path: ");
-		while (path.hasNext()) {
-			Room room = path.next();
-			System.out.println(room.getName());
-
-			if (room.hasEnemies()) {
-				double roomDamage = calculateWeight(room);
-				totalDamage += roomDamage;
-				System.out.println(" [Damage: " + roomDamage + "]");
-			}
-
-			if (path.hasNext()) {
-				System.out.println(" ->");
-			}
-		}
-
-		System.out.println("Total Expected Damage: " + totalDamage);
-		System.out.println("----------------------------------------");
-
-	}*/
-
 }
