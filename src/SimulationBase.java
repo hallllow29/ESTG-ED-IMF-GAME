@@ -109,7 +109,6 @@ public abstract class SimulationBase {
         displayPathToExit(player.getPosition(), targetRoom);
     }
 
-
     protected void moveEnemies() {
         ArrayList<Room> possible_moves;
 

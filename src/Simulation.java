@@ -15,6 +15,7 @@ public class Simulation {
 	private boolean gameOver;
 	private Room entryPoint;
 	private Room extractionPoint;
+	private boolean returningToExit;
 
 	public Simulation(Mission mission, Player player) {
 		this.mission = mission;
@@ -100,7 +101,6 @@ public class Simulation {
 		} else {
 			movePlayer(false);
 		}
-		scenariosCase(Turn.PLAYER);
 	}
 
 	public void enemyTurn() {
@@ -119,7 +119,7 @@ public class Simulation {
 		Room playerPosition = this.player.getPosition();
 		Room targetPosition = this.mission.getTarget().getRoom();
 
-		// TODO: Needs refactoring isto foi à trolha for testing
+		this.getBestPath();
 		Iterator<Room> path = null;
 		if (toExtraction) {
 			// Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(playerPosition,bestExtractionPoint());
@@ -338,12 +338,9 @@ public class Simulation {
 	}
 
 	public void scenarioDOIS() throws EmptyCollectionException, ElementNotFoundException {
-		/**
-		 * Cenário 2:
-		 * Na fase do jogador, o Tó Cruz entra na sala e não encontra inimigo.
-		 * Segue-se a fase dos inimigos, na qual estes se movem aleatoriamente.
-		 * o Fim do turno: O turno termina e o próximo começa permitindo que o jogador escolha uma nova ação.
-		 */
+
+
+		// ENEMY
 		System.out.println("BUT the enemies are somewhere...");
 		/**
 		 * Segue-se a fase dos inimigos...
@@ -417,6 +414,8 @@ public class Simulation {
 		// e conclui a missao com sucesso
 		// caso consiga sair do edificio com vida.
 		this.mission.setTargetSecured(true);
+
+		this.returningToExit = true;
 
 		// updateBestPath(true);
 
@@ -633,7 +632,7 @@ public class Simulation {
 			if (enemyPosition.equals(playerPosition)) {
 
 				player.takesDamageFrom(enemyAttack);
-				System.out.println(enemyName + " is attacking " + playerName + "...");
+				System.out.println(enemyName + " is attacking " + playerName + " with " + enemy.getFirePower() + " damage...");
 
 				// Scenario 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
@@ -735,6 +734,8 @@ public class Simulation {
 				}
 			}
 			weight += totalDamage;
+		} else {
+			return weight;
 		}
 		return weight;
 	}
@@ -802,6 +803,33 @@ public class Simulation {
 			}
 		}
 		return false;
+	}
+
+
+	private void getBestPath() throws ElementNotFoundException {
+		this.updateWeightsForEnemies();
+		Room targetRoom;
+
+		if (returningToExit) {
+			targetRoom = bestExtractionPoint();
+			System.out.println("Calculating best extraction point");
+		} else {
+			targetRoom = mission.getTarget().getRoom();
+			System.out.println("Calculating best path to target...");
+		}
+
+		System.out.println("Path to destiny: ");
+		this.displayPath(player.getPosition(), targetRoom);
+
+	}
+
+	private void displayPath(Room from_Room, Room to_Room) throws ElementNotFoundException {
+		Iterator<Room> bestPath = mission.getBattlefield().iteratorShortestPath(from_Room, to_Room);
+
+		while(bestPath.hasNext()) {
+			Room nextRoom = bestPath.next();
+			System.out.println("-> " + nextRoom.getName());
+		}
 	}
 
 

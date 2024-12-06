@@ -25,7 +25,6 @@ public class ManualSimulation extends SimulationBase implements GameMode {
 
     }
 
-
     @Override
     public void play() throws ElementNotFoundException, EmptyCollectionException {
         System.out.println("\n==== MANUAL SIMULATION ====");
