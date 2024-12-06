@@ -73,8 +73,8 @@ public class Main {
 
 			//manualSimulation.play();
 
-			//simulation.game();
-			automaticSimulation.play();
+			simulation.game();
+			// automaticSimulation.play();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();
 			//simulation.setBestPath();
