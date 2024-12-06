@@ -57,8 +57,7 @@ public abstract class Item implements Comparable<Item> {
 	public String toString() {
 		// return "Name: " + this.name +
 		// 		"\tPosition: " + this.position;
-		return "Name: " + this.name +
-		 		"\tRoom: " + this.position.getName();
+		return "Name: " + this.name + " " + this.position;
 
 
 	}

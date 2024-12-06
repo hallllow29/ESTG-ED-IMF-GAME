@@ -81,7 +81,7 @@ public class Player extends Character {
 		boolean backpackEmpty = this.back_pack.isBackPackEmpty();
 
 		if (backpackEmpty) {
-			throw new EmptyCollectionException("There are no medikits available to use!");
+			throw new EmptyCollectionException("There are no MediKits available to use!");
 		}
 
 		if (super.getCurrentHealth() >= 100 ) {
