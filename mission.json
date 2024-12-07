@@ -39,7 +39,7 @@
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
     "alvo": {"divisao": "Laboratório", "tipo": "quimico"},
     "itens":[
-    {"divisao": "WC", "pontos-recuperados": 20, "tipo":"kit de vida"},
-    {"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},
-    {"divisao": "Escada 2", "pontos-extra": 25, "tipo":"colete"} ]
+    {"divisao": "Corredor 1", "pontos-recuperados": 20, "tipo":"kit de vida"},
+    {"divisao": "Corredor 1", "pontos-recuperados": 15, "tipo":"kit de vida"},
+    {"divisao": "Corredor 1", "pontos-extra": 0, "tipo":"colete"} ]
     }

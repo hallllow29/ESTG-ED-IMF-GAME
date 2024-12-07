@@ -113,42 +113,25 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		LinearNode<T> remove = currentNode;
 		T removedElement = remove.getElement();
 
-		// O  O  O  0
-		// F  o  o  R
-		// c  n  o  R
-		// x  F  n  R
-		if (this.front == currentNode) {
+		if (previousNode == null) {
 			this.front = currentNode.getNext();
-
-
-
-			// Para o ultimo...
-
 			if (this.front == null) {
 				this.rear = null;
 			}
-
-		}
-
-		// HALELUIA!!
-		if (previousNode != null) {
-			previousNode.setNext(currentNode.getNext());
-		} else if (this.rear == currentNode) {
-
-			this.rear = previousNode;
-
-			if (previousNode != null) {
-				previousNode.setNext(null);
+		} else {
+			if (currentNode.getNext() != null) {
+				previousNode.setNext(currentNode.getNext());
+				this.rear = currentNode.getNext();
+			} else {
+				this.rear = previousNode;
 			}
 		}
-
 		currentNode = null;
 
 		this.size--;
 		this.modCount++;
 		return removedElement;
 	}
-
 
 	/**
 	 * Returns the first element in the LinkedList.
@@ -350,7 +333,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @param <T> the type of element held in this node
 	 */
-	public static class LinearNode<T> {
+	public static class LinearNode <T> {
 
 		private T element;
 		private LinearNode<T> next;
@@ -410,7 +393,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		}
 	}
 
-	public class LinkedListIterator<E> implements Iterator<T> {
+	private class LinkedListIterator <E> implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
 		private LinearNode<T> previousNode;
@@ -438,7 +421,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		@Override
 		public boolean hasNext() {
 			checkForCurrentModification();
-			return currentNode != null;
+			return this.currentNode != null;
 		}
 
 		/**
@@ -457,13 +440,9 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
+			T element = currentNode.getElement();
 			this.previousNode = currentNode;
-			T element = previousNode.getElement();
-			if (currentNode.getNext() != null) {
-				this.currentNode = currentNode.getNext();
-			} else {
-				this.currentNode = null;
-			}
+			this.currentNode = currentNode.getNext();
 			this.okToRemove = true;
 			return element;
 		}
