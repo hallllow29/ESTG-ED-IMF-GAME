@@ -1,10 +1,12 @@
 import entities.*;
 import lib.ArrayList;
 import lib.ArrayUnorderedList;
+import lib.LinkedList;
 import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
+import javax.swing.*;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -20,7 +22,7 @@ public class Simulation {
 	private int currentScenario;
 	private boolean missionAccomplished;
 	private Room nextObjective;
-
+	private LinkedList<Enemy> enemies;
 	public Simulation(Mission mission, Player player) {
 		this.mission = mission;
 		this.player = player;
@@ -28,6 +30,8 @@ public class Simulation {
 		this.currentTurn = Turn.PLAYER;
 		this.missionAccomplished = false;
 		this.nextObjective = this.mission.getTarget().getRoom();
+		this.enemies = new LinkedList<>();
+		this.enemies = this.mission.getEnemies();
 	}
 
 	public boolean isGameOver() {
@@ -61,6 +65,12 @@ public class Simulation {
 		System.out.println("GAME OVER!");
 
 
+		Iterator<Enemy> enemies = this.enemies.iterator();
+
+		while (enemies.hasNext()) {
+			System.out.println(enemies.next());
+		}
+
 		/*
 			Look at me
 			I Just can't believe
@@ -90,7 +100,7 @@ public class Simulation {
 			System.out.println("BUT the enemies are somewhere...");
 		}
 		// "o jogo se me sequência de ações"
-		scenariosSitiuations(Turn.PLAYER);
+		scenariosSitiuations(this.currentTurn);
 		scenariosCase(this.currentScenario);
 	}
 
@@ -100,9 +110,13 @@ public class Simulation {
 
 		moveEnemies();
 		System.out.println("Enemies are moving...");
+		Iterator<Enemy> enemies = this.enemies.iterator();
 
+		while (enemies.hasNext()) {
+			System.out.println(enemies.next());
+		}
 		// "o jogo se me sequência de ações"
-		scenariosSitiuations(Turn.ENEMY);
+		scenariosSitiuations(this.currentTurn);
 		scenariosCase(this.currentScenario);
 	}
 
@@ -173,7 +187,6 @@ public class Simulation {
 
 	private void scenarioUM() {
 		Room playerPosition = this.player.getPosition();
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
 		boolean enemiesRemained = playerPosition.hasEnemies();
 
 		System.out.println("[<< SCENARIO 1 START>> ]");
@@ -183,7 +196,7 @@ public class Simulation {
 		System.out.println("TO CRUZ makes contact with ENEMIES...");
 		System.out.println("AND has priority of attack over ENEMIES...");
 
-		playerConfronts(enemies);
+		playerConfronts();
 
 		System.out.println("==== ENEMY TURN ====");
 
@@ -207,7 +220,7 @@ public class Simulation {
 		System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
 		System.out.println("AND the room TO CRUZ entered is clear...");
 
-		if (!this.mission.getEnemies().isEmpty()) {
+		if (!this.enemies.isEmpty()) {
 			System.out.println("BUT the enemies are somewhere...");
 		}
 
@@ -251,7 +264,7 @@ public class Simulation {
 
 	private void scenarioCINCO() {
 		Room playerPosition = this.player.getPosition();
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+		Iterator<Enemy> enemies = this.enemies.iterator();
 
 		System.out.println("[<< SCENARIO 5 START >>]");
 
@@ -260,7 +273,7 @@ public class Simulation {
 		System.out.println("AND in that room there is the TARGET...");
 		System.out.println("TO CRUZ makes contact with ENEMIES...");
 		System.out.println("AND has priority of attack over ENEMIES...");
-		playerConfronts(enemies);
+		playerConfronts();
 
 		if (!playerPosition.hasEnemies()) {
 			System.out.println("TO CRUZ eliminated all ENEMIES in..." + player.getName() + "...");
@@ -352,7 +365,8 @@ public class Simulation {
 		return bestEntryPoint;
 	}
 
-	private void playerConfronts(Iterator<Enemy> enemies) {
+	private void playerConfronts() {
+		Iterator<Enemy> enemies =  this.enemies.iterator();
 		final int ZERO = 0;
 		String playerName = this.player.getName();
 		Room playerPosition = this.player.getPosition();
@@ -381,11 +395,10 @@ public class Simulation {
 				}
 			}
 
-			if (totalEnemiesInRoom <= ZERO) {
-				playerPosition.setEnemies(false);
-				break;
-			}
 
+		}
+		if (totalEnemiesInRoom <= ZERO) {
+			playerPosition.setEnemies(false);
 		}
 
 	}
@@ -409,7 +422,7 @@ public class Simulation {
 
 		Random random = new Random();
 
-		for (Enemy enemyObj : this.mission.getEnemies()) {
+		for (Enemy enemyObj : this.enemies) {
 
 			possible_moves = getPossibleMoves(enemyObj.getPosition());
 
@@ -417,7 +430,7 @@ public class Simulation {
 
 				// For current Room
 				Room enemyPosition = enemyObj.getPosition();
-				enemyPosition.setEnemies(false);
+
 
 				int random_index = random.nextInt(possible_moves.size());
 				Room next_room = possible_moves.getElement(random_index);
@@ -431,7 +444,7 @@ public class Simulation {
 
 	private void moveEnemiesNotInSameRoom() {
 		Room playerPosition = this.player.getPosition();
-		for (Enemy enemyObj : this.mission.getEnemies()) {
+		for (Enemy enemyObj : this.enemies) {
 
 			Room enemyPosition = enemyObj.getPosition();
 
@@ -457,7 +470,7 @@ public class Simulation {
 
 			// For next Room
 			enemy.setPosition(next_room);
-			next_room.setEnemies(true);
+
 
 		}
 	}
@@ -521,11 +534,13 @@ public class Simulation {
 	}
 
 	private void enemiesConfronts(Player player) {
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+		Iterator<Enemy> enemies = this.enemies.iterator();
 		String playerName = player.getName();
 		Room playerPosition = player.getPosition();
 
 		while (enemies.hasNext()) {
+
+
 
 			Enemy enemy = enemies.next();
 			String enemyName = enemy.getName();
@@ -545,9 +560,9 @@ public class Simulation {
 
 				if (!player.isAlive()) {
 					this.gameOver = true;
-					break;
 				}
 			}
+
 		}
 	}
 
@@ -582,7 +597,7 @@ public class Simulation {
 
 			if (room.hasEnemies()) {
 
-				for (Enemy enemy : mission.getEnemies()) {
+				for (Enemy enemy : enemies) {
 					if (enemy.getPosition().equals(room)) {
 
 						totalDamage += enemy.getFirePower();
@@ -621,7 +636,7 @@ public class Simulation {
 
 		if (room.hasEnemies()) {
 			int totalDamage = 0;
-			for (Enemy enemy : mission.getEnemies()) {
+			for (Enemy enemy : this.enemies) {
 				if (enemy.getPosition().equals(room)) {
 					totalDamage += enemy.getFirePower();
 				}

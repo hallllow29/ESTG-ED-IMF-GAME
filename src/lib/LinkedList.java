@@ -113,11 +113,35 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		LinearNode<T> remove = currentNode;
 		T removedElement = remove.getElement();
 
-		if (previousNode == null) {
-			this.front = currentNode.getNext();  // Removing front item
-		} else {
-			previousNode.setNext(currentNode.getNext());
+		// O  O  O  0
+		// F  o  o  R
+		// c  n  o  R
+		// x  F  n  R
+		if (this.front == currentNode) {
+			this.front = currentNode.getNext();
+
+
+
+			// Para o ultimo...
+
+			if (this.front == null) {
+				this.rear = null;
+			}
+
 		}
+
+		// HALELUIA!!
+		if (previousNode != null) {
+			previousNode.setNext(currentNode.getNext());
+		} else if (this.rear == currentNode) {
+
+			this.rear = previousNode;
+
+			if (previousNode != null) {
+				previousNode.setNext(null);
+			}
+		}
+
 		currentNode = null;
 
 		this.size--;
@@ -386,9 +410,10 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		}
 	}
 
-	private class LinkedListIterator<E> implements Iterator<T> {
+	public class LinkedListIterator<E> implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
+		private LinearNode<T> previousNode;
 		private int expectedModCount;
 		private boolean okToRemove;
 
@@ -399,6 +424,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		 */
 		public LinkedListIterator() {
 			this.currentNode = getFront();
+			this.previousNode = null;
 			this.expectedModCount = getModCount();
 			this.okToRemove = false;
 		}
@@ -412,7 +438,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		@Override
 		public boolean hasNext() {
 			checkForCurrentModification();
-			return this.currentNode != null;
+			return currentNode != null;
 		}
 
 		/**
@@ -431,8 +457,13 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 			if (!hasNext()) {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
-			T element = currentNode.getElement();
-			this.currentNode = currentNode.getNext();
+			this.previousNode = currentNode;
+			T element = previousNode.getElement();
+			if (currentNode.getNext() != null) {
+				this.currentNode = currentNode.getNext();
+			} else {
+				this.currentNode = null;
+			}
 			this.okToRemove = true;
 			return element;
 		}
@@ -444,7 +475,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 			}
 
 			try {
-				LinkedList.this.remove(this.currentNode.getElement());
+				LinkedList.this.remove(this.previousNode.getElement());
 			} catch (EmptyCollectionException | ElementNotFoundException e) {
 				System.err.println(e.getCause());
 			}
