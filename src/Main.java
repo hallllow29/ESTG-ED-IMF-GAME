@@ -6,6 +6,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -61,7 +62,7 @@ public class Main {
 
 			BackPack mochila = new BackPack();
 
-			Player toCruz = new Player("Tó cruz", 100, mochila);
+			Player toCruz = new Player("Tó cruz", 1000, mochila);
 
 			Main.setSimulation(new Simulation(getMission(), toCruz));
 
@@ -71,7 +72,7 @@ public class Main {
 			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
 			ManualSimulation manualSimulation = new ManualSimulation(mission, toCruz);
 
-			//manualSimulation.play();
+			// manualSimulation.play();
 
 			simulation.game();
 			// automaticSimulation.play();
@@ -100,9 +101,22 @@ public class Main {
 
 			 */
 
+			Iterator<Enemy> enemies = mission.getEnemies().iterator();
+		int counter = 0;
+			while (enemies.hasNext() && counter != 3) {
+			System.out.println(enemies.next());
+			enemies.remove();
+			counter++;
+		}
+
+			Iterator<Enemy> enemyIterator = mission.getEnemies().iterator();
 
 
-
+			while (enemies.hasNext()) {
+				System.out.println("ENTRA");
+				System.out.println(enemies.next());
+				enemies.remove();
+			}
 
 
 

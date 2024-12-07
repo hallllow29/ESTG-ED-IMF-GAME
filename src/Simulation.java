@@ -1,6 +1,7 @@
 import entities.*;
 import lib.ArrayList;
 import lib.ArrayUnorderedList;
+import lib.LinkedList;
 import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
@@ -60,6 +61,15 @@ public class Simulation {
 		System.out.println("...OR WASN'T IT...");
 		System.out.println("GAME OVER!");
 
+		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+
+		while (enemies.hasNext()) {
+			System.out.println(enemies.next());
+		}
+
+		System.out.println(player.getCurrentHealth());
+
+
 
 		/*
 			Look at me
@@ -78,28 +88,38 @@ public class Simulation {
 	}
 
 	public void playerTurn() throws ElementNotFoundException {
+		boolean hasEnemies = this.player.getPosition().hasEnemies();
+		Room playerPosition = this.player.getPosition();
 
-		if (!this.missionAccomplished && this.player.isAlive()) {
+		if (!this.missionAccomplished && this.player.isAlive() && !hasEnemies) {
 			movePlayer(false);
-		} else if (this.player.isAlive() && this.mission.isTargetSecured()) {
+		} else if (this.player.isAlive() && this.mission.isTargetSecured() && !hasEnemies) {
 			movePlayer(true);
 		}
 
-		System.out.println("TO CRUZ is moving...");
-		if (!this.mission.getEnemies().isEmpty()) {
-			System.out.println("BUT the enemies are somewhere...");
+		if (!playerPosition.equals(this.extractionPoint)) {
+
+			System.out.println("TO CRUZ is moving...");
+			if (!this.mission.getEnemies().isEmpty()) {
+				System.out.println("BUT the enemies are somewhere...");
+			}
+			// "o jogo se me sequência de ações"
+			scenariosSitiuations(Turn.PLAYER);
+			scenariosCase(this.currentScenario);
 		}
-		// "o jogo se me sequência de ações"
-		scenariosSitiuations(Turn.PLAYER);
-		scenariosCase(this.currentScenario);
 	}
 
 	public void enemyTurn() throws EmptyCollectionException, ElementNotFoundException {
 
 		// System.out.println("==== ENEMY TURN ====");
 
-		moveEnemies();
 		System.out.println("Enemies are moving...");
+
+		Iterator<Enemy> enemies = mission.getEnemies().iterator();
+
+		while (enemies.hasNext()) {
+			System.out.println(enemies.next());
+		}
 
 		// "o jogo se me sequência de ações"
 		scenariosSitiuations(Turn.ENEMY);
@@ -120,12 +140,18 @@ public class Simulation {
 
 		if (hasEnemies && atTarget) {
 			this.currentScenario = 5;
-		} else if (hasEnemies) {
+		} else if (hasEnemies && !atTarget) {
 
 			/**
 			 * DESPOLETADO
 			 */
-			this.currentScenario = (this.currentTurn == Turn.PLAYER) ? 1 : 3;
+			// this.currentScenario = (this.currentTurn == Turn.PLAYER) ? 1 : 3;
+
+			if (this.currentTurn == Turn.ENEMY) {
+				this.currentScenario = 1;
+			} else if (this.currentTurn == Turn.PLAYER) {
+				this.currentScenario = 3;
+			}
 
 		} else if (!atTarget) {
 			this.currentScenario = 2;
@@ -155,6 +181,7 @@ public class Simulation {
 				break;
 			case 3:
 				scenarioTRES();
+				this.currentTurn = Turn.PLAYER;
 				break;
 			case 4:
 				scenarioQUATRO();
@@ -173,7 +200,7 @@ public class Simulation {
 
 	private void scenarioUM() {
 		Room playerPosition = this.player.getPosition();
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+		Iterator<Enemy> enemies = mission.getEnemies().iterator();
 		boolean enemiesRemained = playerPosition.hasEnemies();
 
 		System.out.println("[<< SCENARIO 1 START>> ]");
@@ -183,8 +210,11 @@ public class Simulation {
 		System.out.println("TO CRUZ makes contact with ENEMIES...");
 		System.out.println("AND has priority of attack over ENEMIES...");
 
-		playerConfronts(enemies);
-
+		try {
+			playerConfronts(enemies);
+		} catch (EmptyCollectionException | ElementNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 		System.out.println("==== ENEMY TURN ====");
 
 		if (!enemiesRemained) {
@@ -210,6 +240,10 @@ public class Simulation {
 		if (!this.mission.getEnemies().isEmpty()) {
 			System.out.println("BUT the enemies are somewhere...");
 		}
+		if (playerPosition.hasItems()) {
+			System.out.println("AND checks if he needs to use the item immediately...");
+			gatherItems(playerPosition);
+		}
 
 		System.out.println("==== ENEMY TURN ====");
 		System.out.println("Enemies are moving...");
@@ -220,6 +254,7 @@ public class Simulation {
 
 	private void scenarioTRES() {
 		Room playerPosition = this.player.getPosition();
+		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
 
 		System.out.print("[<< SCENARIO 3 START >>]");
 
@@ -229,8 +264,14 @@ public class Simulation {
 		System.out.println("AND have priority of attack over TO CRUZ...");
 
 		enemiesConfronts(this.player);
-
-		System.out.println("SCENARIO 3 ENDED");
+		if (playerPosition.hasEnemies()) {
+			try {
+				playerConfronts(enemies);
+			} catch (EmptyCollectionException | ElementNotFoundException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		System.out.println("[<< SCENARIO 3 ENDED >>]");
 	}
 
 	private void scenarioQUATRO() {
@@ -251,7 +292,7 @@ public class Simulation {
 
 	private void scenarioCINCO() {
 		Room playerPosition = this.player.getPosition();
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+		Iterator<Enemy> enemies = mission.getEnemies().iterator();
 
 		System.out.println("[<< SCENARIO 5 START >>]");
 
@@ -260,7 +301,11 @@ public class Simulation {
 		System.out.println("AND in that room there is the TARGET...");
 		System.out.println("TO CRUZ makes contact with ENEMIES...");
 		System.out.println("AND has priority of attack over ENEMIES...");
-		playerConfronts(enemies);
+		try {
+			playerConfronts(enemies);
+		} catch (EmptyCollectionException | ElementNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
 
 		if (!playerPosition.hasEnemies()) {
 			System.out.println("TO CRUZ eliminated all ENEMIES in..." + player.getName() + "...");
@@ -352,15 +397,51 @@ public class Simulation {
 		return bestEntryPoint;
 	}
 
-	private void playerConfronts(Iterator<Enemy> enemies) {
+	private void playerConfronts(Iterator<Enemy> enemies) throws EmptyCollectionException, ElementNotFoundException {
 		final int ZERO = 0;
+		ArrayUnorderedList<Enemy> enemiesDefeated = new ArrayUnorderedList<>();
 		String playerName = this.player.getName();
 		Room playerPosition = this.player.getPosition();
 		Room targetPosition = this.mission.getTarget().getRoom();
 		int playerAttack = this.player.getFirePower();
 		int totalEnemiesInRoom = 0;
+		LinkedList<Enemy> enemiesToRemove = new LinkedList<>();
 
-		while (enemies.hasNext()) {
+		for (Enemy enemy : mission.getEnemies()) {
+			if (enemy.getPosition().equals(playerPosition)) {
+				System.out.println();
+				System.out.println(player.getName() + " attack " + enemy.getName() + " dealing " + playerAttack + " damage");
+				enemy.takesDamageFrom(playerAttack);
+			}
+
+			if (!enemy.isAlive()) {
+				System.out.println(enemy.getName() + " defeated");
+				enemiesDefeated.addToRear(enemy);
+			}
+
+		}
+
+		for (Enemy defeated : enemiesDefeated) {
+			mission.getEnemies().remove(defeated);
+			defeated.setPosition(null);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/*while (enemies.hasNext()) {
 
 			Enemy enemy = enemies.next();
 			String enemyName = enemy.getName();
@@ -378,16 +459,30 @@ public class Simulation {
 					System.out.println("Enemy: " + enemyName + " is dead");
 					enemies.remove();
 					totalEnemiesInRoom--;
+				} else {
+					totalEnemiesInRoom++;
 				}
 			}
 
-			if (totalEnemiesInRoom <= ZERO) {
-				playerPosition.setEnemies(false);
-				break;
-			}
+		}*/
 
-		}
+		// boolean stillHasEnemies = false;
+		// Iterator<Enemy> checkEnemies = this.mission.getEnemies().iterator();
+		//
+		// while (checkEnemies.hasNext()) {
+		// 	Enemy survivedEnemy = checkEnemies.next();
+		//
+		// 	if (survivedEnemy.getPosition().equals(playerPosition)) {
+		// 		stillHasEnemies = true;
+		// 		break;
+		// 	}
+		// }
+		//
+		// playerPosition.setEnemies(stillHasEnemies);
 
+		// if (totalEnemiesInRoom <= ZERO) {
+		// 	playerPosition.setEnemies(false);
+		// }
 	}
 
 	private boolean playerNeedsRecoveryItem() {
@@ -521,11 +616,56 @@ public class Simulation {
 	}
 
 	private void enemiesConfronts(Player player) {
-		Iterator<Enemy> enemies = this.mission.getEnemies().iterator();
+		ArrayUnorderedList<Enemy> enemiesDefeated = new ArrayUnorderedList<>();
 		String playerName = player.getName();
 		Room playerPosition = player.getPosition();
 
-		while (enemies.hasNext()) {
+		for (Enemy enemy : mission.getEnemies()) {
+			if (enemy.getPosition().equals(playerPosition)) {
+				System.out.println(enemy.getName() + " attack " + player.getName() + " dealing " + enemy.getFirePower() + " damage");
+				player.takesDamageFrom(enemy.getFirePower());
+			}
+
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		/*while (enemies.hasNext()) {
+
 
 			Enemy enemy = enemies.next();
 			String enemyName = enemy.getName();
@@ -535,20 +675,24 @@ public class Simulation {
 			if (enemyPosition.equals(playerPosition)) {
 
 				player.takesDamageFrom(enemyAttack);
-				System.out.println(enemyName + " is attacking " + playerName + " with " + enemy.getFirePower() + " damage...");
+				System.out.println("\n\n\n\n");
+				System.out.println(enemyName + " is attacking " + playerName + " with " + enemy.getFirePower() + " damage.........................................................................");
+				System.out.println("\n\n\n\n");
 
 				// Scenario 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
 				if (playerNeedsRecoveryItem()) {
 					scenarioQUATRO();
 				}
-
 				if (!player.isAlive()) {
 					this.gameOver = true;
-					break;
+					Room purgatory = new Room("");
+					this.player.setPosition(purgatory);
+					System.out.println("HE DIED DAMN IT!!!");
 				}
 			}
-		}
+		}*/
+
 	}
 
 	private Room bestExtractionPoint() throws ElementNotFoundException {

@@ -114,9 +114,17 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		T removedElement = remove.getElement();
 
 		if (previousNode == null) {
-			this.front = currentNode.getNext();  // Removing front item
+			this.front = currentNode.getNext();
+			if (this.front == null) {
+				this.rear = null;
+			}
 		} else {
-			previousNode.setNext(currentNode.getNext());
+			if (currentNode.getNext() != null) {
+				previousNode.setNext(currentNode.getNext());
+				this.rear = currentNode.getNext();
+			} else {
+				this.rear = previousNode;
+			}
 		}
 		currentNode = null;
 
@@ -124,7 +132,6 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		this.modCount++;
 		return removedElement;
 	}
-
 
 	/**
 	 * Returns the first element in the LinkedList.
@@ -326,7 +333,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @param <T> the type of element held in this node
 	 */
-	public static class LinearNode<T> {
+	public static class LinearNode <T> {
 
 		private T element;
 		private LinearNode<T> next;
@@ -386,9 +393,10 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		}
 	}
 
-	private class LinkedListIterator<E> implements Iterator<T> {
+	private class LinkedListIterator <E> implements Iterator<T> {
 
 		private LinearNode<T> currentNode;
+		private LinearNode<T> previousNode;
 		private int expectedModCount;
 		private boolean okToRemove;
 
@@ -399,6 +407,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 		 */
 		public LinkedListIterator() {
 			this.currentNode = getFront();
+			this.previousNode = null;
 			this.expectedModCount = getModCount();
 			this.okToRemove = false;
 		}
@@ -432,6 +441,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 				throw new NoSuchElementException("No more elements in the iteration.");
 			}
 			T element = currentNode.getElement();
+			this.previousNode = currentNode;
 			this.currentNode = currentNode.getNext();
 			this.okToRemove = true;
 			return element;
@@ -444,7 +454,7 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 			}
 
 			try {
-				LinkedList.this.remove(this.currentNode.getElement());
+				LinkedList.this.remove(this.previousNode.getElement());
 			} catch (EmptyCollectionException | ElementNotFoundException e) {
 				System.err.println(e.getCause());
 			}
