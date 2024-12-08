@@ -68,12 +68,13 @@ public class Main {
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
 				simulation.scnario2(roomobj);
 			} */
-			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
-			ManualSimulation manualSimulation = new ManualSimulation(mission, toCruz);
+			ModeManager modeManager = new ModeManager();
+
+			modeManager.startGame();
 
 			//manualSimulation.play();
 
-			simulation.game();
+			//simulation.game();
 			// automaticSimulation.play();
 			//simulation.playerTurn();
 			//simulation.enemyTurn();

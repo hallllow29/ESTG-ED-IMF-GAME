@@ -44,6 +44,36 @@ public class Simulation {
 		this.gameOver = false;
 	}
 
+	public void renderManualSimulation(Room target) {
+		setNextObjective(target);
+		this.missionAccomplished = false;
+		this.currentTurn = Turn.PLAYER;
+		this.gameOver = false;
+	}
+
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+	public ScenarioNr getCurrentScenario() {
+		return this.currentScenario;
+	}
+
+	public LinkedList<Enemy> getEnemies() {
+		return this.enemies;
+	}
+	public Player getPlayer() {
+		return this.player;
+	}
+
+	public Mission getMission() {
+		return this.mission;
+	}
+
+	public Room getNextObjective() {
+		return this.nextObjective;
+	}
+
 	public void setEntryPoint(Room entryPoint) {
 		this.entryPoint = entryPoint;
 	}
@@ -64,7 +94,7 @@ public class Simulation {
 		return player.isAlive() && mission.isTargetSecured();
 	}
 
-	public void game() throws ElementNotFoundException {
+	public void game() throws ElementNotFoundException, EmptyCollectionException {
 
 		renderSimulation(this.player, this.mission.getTarget());
 
@@ -122,7 +152,7 @@ public class Simulation {
 		return this.currentTurn;
 	}
 
-	public void playerTurn() throws ElementNotFoundException {
+	public void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
 		Room playerPosition = player.getPosition();
 
 		// if (firstStage()) {
@@ -150,7 +180,7 @@ public class Simulation {
 		scenariosCase(this.currentScenario);
 	}
 
-	public void enemyTurn() throws ElementNotFoundException {
+	public void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
 
 		if (player.getPosition().hasEnemies()) {
 			moveEnemiesNotInSameRoom();
@@ -202,7 +232,7 @@ public class Simulation {
 		this.currentScenario = nextScenario;
 	}
 
-	public void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException {
+	public void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException, EmptyCollectionException {
 
 		switch (nextScenario) {
 			case TWO:
@@ -415,7 +445,7 @@ public class Simulation {
 		System.out.print(scenarioCINCOend);
 	}
 
-	private void scenarioSEIS() throws ElementNotFoundException {
+	private void scenarioSEIS() throws ElementNotFoundException, EmptyCollectionException {
 		Room playerPosition = this.player.getPosition();
 
 		System.out.println("[<< SCENARIO 6 START >>]");
@@ -440,7 +470,7 @@ public class Simulation {
 
 	}
 
-	private void movePlayer() throws ElementNotFoundException {
+	protected void movePlayer() throws ElementNotFoundException, EmptyCollectionException {
 		String movePlayerOutput = "";
 		Room playerPosition = this.player.getPosition();
 		Room nextObjective = this.nextObjective;
@@ -473,7 +503,7 @@ public class Simulation {
 		return playerPosition.equals(targetPosition);
 	}
 
-	private boolean isMissionAccomplished() {
+	protected boolean isMissionAccomplished() {
 		Room playerPosition = player.getPosition();
 		return player.isAlive() && mission.isTargetSecured() && playerPosition.equals(this.nextObjective);
 	}
@@ -708,7 +738,7 @@ public class Simulation {
 		return bestExtractionPoint;
 	}
 
-	private double calculatePathDamage(Iterator<Room> path) {
+	protected double calculatePathDamage(Iterator<Room> path) {
 		double totalDamage = 0;
 		int playerHealth = player.getCurrentHealth();
 		int playerMaxHealth = 100;
@@ -807,7 +837,7 @@ public class Simulation {
 		System.out.println(bestPathOutput);
 	}
 
-	private void displayPath(Room fromPosition, Room toPosition) throws ElementNotFoundException {
+	protected void displayPath(Room fromPosition, Room toPosition) throws ElementNotFoundException {
 		Iterator<Room> bestPath = this.battlefield.iteratorShortestPath(fromPosition, toPosition);
 
 		Room nextRoom = bestPath.next();
