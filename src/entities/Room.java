@@ -4,32 +4,60 @@ package entities;
 public class Room implements Comparable<Room> {
 
 	private final String name;
-	private boolean enemies_in_room;
-	private boolean item_in_room;
+	private boolean enemiesInRoom;
+	private boolean itemsInRoom;
+	private int totalEnemies;
+	private int totalItems;
 
     public Room(String name) {
 		this.name = name;
-
+		this.totalEnemies = 0;
+		this.totalItems = 0;
     }
+
 
 	public String getName()  {
 		return this.name;
 	}
 
-	public void setEnemies(boolean enemies_in_room) {
-		this.enemies_in_room = enemies_in_room;
+	public void setEnemies(boolean enemiesInRoom) {
+		this.enemiesInRoom = enemiesInRoom;
 	}
 
-	public void setItemInRoom(boolean item_in_room) {
-		this.item_in_room = item_in_room;
+	public void setItemsInRoom(boolean itemsInRoom) {
+		this.itemsInRoom = itemsInRoom;
+	}
+
+	public void addEnemy() {
+		this.totalEnemies++;
+	}
+
+	public void removeEnemy(){
+		this.totalEnemies--;
+	}
+
+	public void addItem() {
+		this.totalItems++;
+	}
+
+	public void removeItem() {
+		this.totalItems--;
+	}
+
+	public int getTotalEnemies() {
+		return this.totalEnemies;
+	}
+
+	public int getTotalItems() {
+		return this.totalItems;
 	}
 
 	public boolean hasItems() {
-		return this.item_in_room;
+		return this.itemsInRoom;
 	}
 
 	public boolean hasEnemies() {
-		return enemies_in_room;
+		return enemiesInRoom;
 	}
 
 	@Override
@@ -38,7 +66,7 @@ public class Room implements Comparable<Room> {
 	}
 
 	public String toString() {
-		return "Room name: " + this.name;
+		return this.name;
 	}
 
 

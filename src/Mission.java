@@ -80,7 +80,7 @@ public class Mission {
 	}
 
 	public void removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
-
+		this.enemies.remove(enemy);
 	}
 
 	public void removeItem(Item item) throws EmptyCollectionException, ElementNotFoundException {

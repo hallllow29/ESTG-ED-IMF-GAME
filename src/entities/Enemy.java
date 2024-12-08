@@ -41,6 +41,6 @@ public class Enemy extends entities.Character implements Comparable<Enemy> {
 	 */
 	@Override
 	public String toString(){
-		return "Name: " + super.getName() + "\tFire Power: " + super.getFirePower() + "\t" + this.getPosition();
+		return "Name: " + super.getName() + " Fire Power: " + super.getFirePower() + " Position: " + this.getPosition();
 	}
 }

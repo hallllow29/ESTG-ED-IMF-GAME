@@ -87,7 +87,7 @@ public abstract class SimulationBase {
                     }
 
                     item.setPosition(null);
-                    currentRoom.setItemInRoom(false);
+                    currentRoom.setItemsInRoom(false);
                     //itemIterator.remove();
                 }
             }

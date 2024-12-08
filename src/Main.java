@@ -6,7 +6,6 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -62,7 +61,7 @@ public class Main {
 
 			BackPack mochila = new BackPack();
 
-			Player toCruz = new Player("Tó cruz", 1000, mochila);
+			Player toCruz = new Player("TO CRUZ", 10, mochila);
 
 			Main.setSimulation(new Simulation(getMission(), toCruz));
 
@@ -72,7 +71,7 @@ public class Main {
 			AutomaticSimulation automaticSimulation = new AutomaticSimulation(mission, toCruz);
 			ManualSimulation manualSimulation = new ManualSimulation(mission, toCruz);
 
-			// manualSimulation.play();
+			//manualSimulation.play();
 
 			simulation.game();
 			// automaticSimulation.play();
@@ -101,22 +100,9 @@ public class Main {
 
 			 */
 
-			Iterator<Enemy> enemies = mission.getEnemies().iterator();
-		int counter = 0;
-			while (enemies.hasNext() && counter != 3) {
-			System.out.println(enemies.next());
-			enemies.remove();
-			counter++;
-		}
-
-			Iterator<Enemy> enemyIterator = mission.getEnemies().iterator();
 
 
-			while (enemies.hasNext()) {
-				System.out.println("ENTRA");
-				System.out.println(enemies.next());
-				enemies.remove();
-			}
+
 
 
 
@@ -204,11 +190,12 @@ public class Main {
 	public static int options(String menu) {
 		Scanner input = new Scanner(System.in);
 		int option = -1;
-		System.out.println("---------------------");
-		System.out.println(menu);
-		System.out.println("\n[9] GO BACK");
-		System.out.println("[0] EXIT");
 
+		String output = "---------------------"+
+			"\n" + menu +
+			"\n[9] GO BACK" +
+			"\n[0] EXIT";
+		System.out.println(output);
 		try {
 			option = input.nextInt();
 		} catch (InputMismatchException e) {
@@ -268,38 +255,55 @@ public class Main {
 	}
 
 	private static void displayMissionDetails(Network<Room> graph) {
-		System.out.println("==== MISSAO ====");
+		String result = ("\n\t=========  MISSAO  =========");
 		System.out.println(getMission());
 	}
 
 	private static void displayRoomDetails(Network<Room> graph) {
-		System.out.println("==== DIVISOES ====");
+		String result = ("\n\t========= DIVISOES =========");
+
 		for (Room room : graph.getVertices()) {
-			System.out.println(room);
+			result += "\nRoom: " + room.getName();
 		}
+		System.out.println(result);
 	}
 
 	private static void displayAdjacentRoomDetails(Network<Room> graph) {
-		System.out.println("\n===== Conexões =====");
-		for (Room roomObj : graph.getVertices()) {
-			for (Room connectedRoom : graph.getConnectedVertices(roomObj)) {
-				System.out.println(roomObj.getName() + " está conectado a " + connectedRoom.getName());
+		// System.out.println("\n\t========= CONEXOES =========");
+
+		String result = ("\n\t========= CONEXOES =========");
+
+		for (Room room : graph.getVertices()) {
+			for (Room connectedRoom : graph.getConnectedVertices(room)) {
+				// System.out.printf("%-20s <-----> %-15s\n",
+				// 	room.getName(), connectedRoom.getName());
+
+				result += "\n["+room.getName() + "] <-----> [" + connectedRoom.getName()+ "]";
 			}
 		}
+		System.out.println(result);
 	}
 
 	private static void displayEnemyIntel(Mission mission) {
-		System.out.println("\n==== INIMIGOS ====");
-		for (Enemy enemyObj : mission.getEnemies()) {
-			System.out.println(enemyObj);
+		String result = ("\n\t========= INIMIGOS =========");
+		for (Enemy enemy : mission.getEnemies()) {
+			// System.out.printf("Name: %-10s Fire Power: %-4s Position: %s\n",
+			// 	enemy.getName(), enemy.getFirePower(), enemy.getPosition());
+			result += "\nName: " + enemy.getName() +
+				"\tFire Power: " + enemy.getFirePower() +
+				" Position: " + enemy.getPosition();
 		}
+		System.out.println(result);
 	}
 
 	private static void displayItems(Mission mission) {
-		System.out.println("\n==== ITEMS ====");
-		for (Item itemObj : mission.getItems()) {
-			System.out.println(itemObj);
+		String result = ("\n\t=========  ITEMS  =========");
+		for (Item item : mission.getItems()) {
+			result += "\nItem: " + item.getName() +
+				"\tValue: " + item.getItemValue() +
+				"\tPosition: " + item.getPosition();
 		}
+		System.out.println(result);
 	}
 
 	private static void displayEntryExitPoints(Mission mission) {

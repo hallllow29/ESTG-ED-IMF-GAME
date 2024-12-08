@@ -156,8 +156,9 @@ public class JsonSimpleRead {
             Room room =  graph.getRoom(enemy_location);
             if (room != null) {
                 Enemy enemy_in_mission = new Enemy(enemy_name, enemy_power, room);
-                room.setEnemies(true);
                 mission.setEnemy(enemy_in_mission);
+                room.addEnemy();
+                room.setEnemies(true);
             } else {
                 System.err.println("Room " + enemy_location + " not found for the enemy");
             }
@@ -200,7 +201,8 @@ public class JsonSimpleRead {
             if (room != null) {
                Item item = defineItem(room, item_points, item_type);
                mission.setItem(item);
-               room.setItemInRoom(true);
+               room.addItem();
+               room.setItemsInRoom(true);
             } else {
                 System.err.println("Room " + item_location + " not found for the item " + item_type);
             }
