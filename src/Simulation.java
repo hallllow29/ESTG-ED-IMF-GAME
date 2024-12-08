@@ -16,7 +16,7 @@ public class Simulation {
 	private final Player player;
 	private boolean gameOver;
 	private Room entryPoint;
-	private Room extractionPoint;
+	// private Room extractionPoint;
 	private boolean returningToExit;
 	private Turn currentTurn;
 	private ScenarioNr currentScenario;
@@ -64,9 +64,11 @@ public class Simulation {
 		return player.isAlive() && mission.isTargetSecured();
 	}
 
-	public void game() throws ElementNotFoundException, EmptyCollectionException {
+	public void game() throws ElementNotFoundException {
 
 		renderSimulation(this.player, this.mission.getTarget());
+
+		System.out.println("TO CRUZ starts mission in " + entryPoint.getName());
 
 		while (!isGameOver()) {
 
@@ -129,14 +131,19 @@ public class Simulation {
 		// 	movePlayer(true);
 		// }
 
-		movePlayer();
+		// FUCK .....
+		if (!playerPosition.hasEnemies()) {
+			movePlayer();
+			System.out.println("TO CRUZ is moving...");
+			System.out.println("\nTO CRUZ leaves " + playerPosition.getName() + "...");
 
-		System.out.println("TO CRUZ is moving...");
+		} else {
+			playerConfronts();
+		}
 
 		if (!enemies.isEmpty()) {
 			System.out.println("BUT the enemies are somewhere...");
 		}
-		System.out.println("\nTO CRUZ leaves " + playerPosition.getName() + "...");
 
 		// "o jogo se me sequência de ações"
 		scenariosSituations();
@@ -232,112 +239,110 @@ public class Simulation {
 
 	private void scenarioUM() {
 		Room playerPosition = player.getPosition();
-		boolean enemiesRemained = playerPosition.hasEnemies();
-		String scenarioUMstart = "";
+		boolean enemiesRemained;
 
-		scenarioUMstart +=
-			"\nTO CRUZ enters in " + playerPosition.getName() + "..." +
-				"\n\n[<< SCENARIO 1 START >>]" +
-				"\nTO CRUZ makes contact with ENEMIES..." +
-				"\nAND has priority of attack over ENEMIES..." +
-				"\n===== PLAYER  TURN =====";
+		String scenarioUMstart =
+			"\nTO CRUZ is in " + playerPosition.getName() + "..." +
+				"\n|========== [<< SCENARIO 1 START >>] ==========" +
+				"\n|\tTO CRUZ makes contact with ENEMIES...     " +
+				"\n|\tAND has priority of attack over ENEMIES..." +
+				"\n|"+
+				"\n|\t-------------- PLAYER  TURN --------------";
 		System.out.println(scenarioUMstart);
 
 		playerConfronts();
 
+		enemiesRemained = playerPosition.hasEnemies();
+		String scenarioUMend = "";
 
 		if (enemiesRemained) {
-			System.out.println("=====  ENEMY TURN  =====");
-			System.out.println("ENEMIES in " + playerPosition.getName() + " survived the attack...");
-			System.out.println("ENEMIES not in " + playerPosition.getName() + " are moving...");
+			scenarioUMend +=
+				"\n|\t-------------- ENEMY  TURN  --------------" +
+					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
+					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving...";
 
 			if (!this.enemies.isEmpty()) {
-				System.out.println("BUT the enemies are somewhere...");
+				scenarioUMend += "\n BUT the enemies are somewhere...";
 			}
-
 			setNextTurn(Turn.ENEMY);
+
 		} else {
-			System.out.println("TO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...");
+			scenarioUMend +=
+				"\nTO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...";
 
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
-				gatherItems(playerPosition);
+				scenarioUMend += gatherItems(playerPosition);
 			}
 
 			setNextTurn(Turn.PLAYER);
 		}
-		System.out.println("[<< SCENARIO 1 END >>]");
+		scenarioUMend += "\n[<< SCENARIO 1 END >>]";
+		System.out.println(scenarioUMend);
 
 	}
 
 	private void scenarioDOIS() {
 		Room playerPosition = this.player.getPosition();
 
-		System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
-		System.out.println("\n[<< SCENARIO 2 START >>]");
-		System.out.println("AND the room TO CRUZ entered is clear...");
-		System.out.println("===== PLAYER  TURN =====");
+		String scenarioDOISstart =
+			"\nTO CRUZ in in " + playerPosition.getName() + "..." +
+				"\n[<< SCENARIO 2 START >>]" +
+				"\nAND the room TO CRUZ entered is clear..." +
+				"\n===== PLAYER  TURN =====";
+		System.out.println(scenarioDOISstart);
 
 		// RECOLHE ITEMS...
+		String scenarioDOISend = "";
 		if (playerPosition.hasItems()) {
-			gatherItems(playerPosition);
-
+			scenarioDOISend += gatherItems(playerPosition);
 			// PODE USAR ITEMS???---
 		}
 
 		if (!this.enemies.isEmpty()) {
-			System.out.println("BUT the enemies are somewhere...");
+			scenarioDOISend += "\nBUT the enemies are somewhere...";
 		}
-		System.out.println("=====  ENEMY TURN  =====");
-		System.out.println("[<< SCENARIO 2 ENDED >>]");
+
+		scenarioDOISend +=
+			"\n=====  ENEMY TURN  =====" +
+				"\n[<< SCENARIO 2 ENDED >>]";
+
+		System.out.println(scenarioDOISend);
 	}
 
 	private void scenarioTRES() {
 		Room playerPosition = player.getPosition();
 
-		System.out.println("ENEMIES enter in " + playerPosition.getName() + "...");
-		System.out.print("\n[<< SCENARIO 3 START >>]");
-		System.out.println("ENEMIES make contact with TO CRUZ...");
-		System.out.println("AND have priority of attack over TO CRUZ...");
-		System.out.println("==== ENEMY TURN ====");
+		String scenarioTRESstart =
+			"\nENEMIES enter in " + playerPosition.getName() + "..." +
+				"\n[<< SCENARIO 3 START >>]" +
+				"\nENEMIES make contact with TO CRUZ..." +
+				"\nAND have priority of attack over TO CRUZ..." +
+				"\n=====  ENEMY TURN  =====";
+		System.out.println(scenarioTRESstart);
 
 		// Trigger para o scenario 4 se o to cruz precisar de items...
 		enemiesConfronts(player);
 
+		while (player.isAlive() && playerPosition.hasEnemies()) {
 
+			playerConfronts();
 
+			System.out.println("\n=====  ENEMY TURN  =====" +
+				"\nENEMIES in " + playerPosition.getName() + " survived the attack..." +
+				"\nENEMIES not in " + playerPosition.getName() + " are moving...");
+			moveEnemiesNotInSameRoom();
+			enemiesConfronts(player);
+			System.out.println("\n===== PLAYER  TURN =====");
+		}
 
-		/*if (enemiesRemained) {
-			System.out.println("=====  ENEMY TURN  =====");
-			System.out.println("ENEMIES in " + playerPosition.getName() + " survived the attack...");
-			System.out.println("ENEMIES not in " + playerPosition.getName() + " are moving...");
-
-			if (!this.enemies.isEmpty()) {
-				System.out.println("BUT the enemies are somewhere...");
-			}
-
-			setNextTurn(Turn.ENEMY);
-		} else {
+		if (!playerPosition.hasEnemies()) {
 			System.out.println("TO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...");
-
-			// RECOLHE ITEMS.
-			if (playerPosition.hasItems()) {
-				gatherItems(playerPosition);
-			}
-
 			setNextTurn(Turn.PLAYER);
-		}*/
-
-
-
-
-
-
-
-
-
-
-
+		} else if (!player.isAlive()) {
+			System.out.println("HE DIED DAMN IT!!!!!");
+			this.gameOver = true;
+		}
 
 		System.out.println("SCENARIO 3 ENDED");
 	}
@@ -347,9 +352,9 @@ public class Simulation {
 		String scenarioQUATROstart = "";
 
 		scenarioQUATROstart += "\n[<< SCENARIO 4 START >>]" +
-		"\nTO CRUZ seems to be injured..." +
-		"\n===== PLAYER  TURN =====" +
-		"\nTO CRUZ halts and is checking BackPack...";
+			"\nTO CRUZ seems to be injured..." +
+			"\n===== PLAYER  TURN =====" +
+			"\nTO CRUZ halts and is checking BackPack...";
 
 		System.out.println(scenarioQUATROstart);
 
@@ -368,7 +373,7 @@ public class Simulation {
 
 		String scenarioCINCOstart = "";
 		scenarioCINCOstart +=
-			"\nTO CRUZ enters in " + playerPosition.getName() + "..." +
+			"\nTO CRUZ in in " + playerPosition.getName() + "..." +
 				"\n[<< SCENARIO 5 START >>]" +
 				"\nTO CRUZ makes contact with ENEMIES...\n" +
 				"\nAND in that room there is the TARGET...\n" +
@@ -387,8 +392,8 @@ public class Simulation {
 
 		scenarioCINCOend +=
 			"\n=====  ENEMY TURN  =====" +
-			"\nENEMIES are moving..." +
-			"\n[<< SCENARIO 5 END >>]";
+				"\nENEMIES are moving..." +
+				"\n[<< SCENARIO 5 END >>]";
 		System.out.println(scenarioCINCOend);
 	}
 
@@ -398,7 +403,7 @@ public class Simulation {
 		System.out.println("[<< SCENARIO 6 START >>]");
 
 		System.out.println("==== PLAYER TURN ====");
-		System.out.println("TO CRUZ enters in " + playerPosition.getName() + "...");
+		System.out.println("TO CRUZ in in " + playerPosition.getName() + "...");
 		System.out.println("AND in that room there is the TARGET...");
 		System.out.println("LOOK AT THAT, it is clear...");
 		if (playerPosition.hasItems()) {
@@ -491,13 +496,12 @@ public class Simulation {
 
 				enemy.takesDamageFrom(playerAttack);
 
-				playerConfrontsOutput += playerName +
+				playerConfrontsOutput += "\n\t" + playerName +
 					" is attacking " + enemy.getName() + "...";
 
 				if (!enemy.isAlive()) {
-					playerConfrontsOutput += "ENEMY " + enemy.getName() +
-						" suffered " + playerAttack +
-						"AND is now DEAD";
+					playerConfrontsOutput += "\n\tENEMY " + enemy.getName() + " suffered " + playerAttack +
+						"\nAND is now DEAD\n";
 					enemies.remove();
 					enemyPosition.removeEnemy();
 				}
@@ -594,7 +598,7 @@ public class Simulation {
 		return possibleMoves;
 	}
 
-	private void gatherItems(Room room) {
+	private String gatherItems(Room room) {
 		final int NONE = 0;
 		String gatherItemsOutput = "";
 		Room playerPosition = player.getPosition();
@@ -634,7 +638,7 @@ public class Simulation {
 			playerPosition.setItemsInRoom(false);
 		}
 
-		System.out.println(gatherItemsOutput);
+		return gatherItemsOutput;
 	}
 
 	private void enemiesConfronts(Player player) {
@@ -652,9 +656,11 @@ public class Simulation {
 			if (enemyPosition.equals(playerPosition)) {
 
 				player.takesDamageFrom(enemyAttack);
-				enemiesConfronts += "\n" + enemy.getName() +
-					" is attacking " + playerName +
-					" with " + enemyAttack + " damage...";
+
+				enemiesConfronts =
+					"\n" + enemy.getName() +
+						" is attacking " + playerName +
+						" with " + enemyAttack + " damage...";
 
 				// ScenarioNr 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
@@ -663,11 +669,11 @@ public class Simulation {
 					return;
 				}
 
-				if (!player.isAlive()) {
+				/*if (!player.isAlive()) {
 					this.gameOver = true;
 					Room purgatory = new Room("");
 					// setNextObjective(purgatory);
-				}
+				}*/
 			}
 
 		}

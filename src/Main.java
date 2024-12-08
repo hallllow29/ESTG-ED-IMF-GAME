@@ -61,7 +61,7 @@ public class Main {
 
 			BackPack mochila = new BackPack();
 
-			Player toCruz = new Player("TO CRUZ", 10, mochila);
+			Player toCruz = new Player("TO CRUZ", 50, mochila);
 
 			Main.setSimulation(new Simulation(getMission(), toCruz));
 
