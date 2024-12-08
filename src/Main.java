@@ -63,7 +63,6 @@ public class Main {
 
 			Player toCruz = new Player("TO CRUZ", 50, mochila);
 
-			Main.setSimulation(new Simulation(getMission(), toCruz));
 
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
 				simulation.scnario2(roomobj);

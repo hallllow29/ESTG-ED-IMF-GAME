@@ -1,3 +1,4 @@
+import entities.Enemy;
 import entities.Player;
 import entities.Room;
 import entities.Turn;
@@ -12,26 +13,23 @@ public class AutomaticMode extends Simulation {
         super(mission, player);
     }
 
-    /*public void game() throws ElementNotFoundException, EmptyCollectionException {
+    public void game() throws ElementNotFoundException, EmptyCollectionException {
 
-        this.setEntryPoint(findBestEntryPoint());
-        this.getPlayer().setPosition(this.getEntryPoint());
-        this.setCurrentTurn(Turn.PLAYER);
+        renderSimulation(this.getPlayer(), this.getMission().getTarget());
 
-        while (isGameOver()) {
+        System.out.println("TO CRUZ starts mission in " + getEntryPoint().getName());
+
+        while (!isGameOver()) {
 
             if (this.getCurrentTurn() == Turn.PLAYER) {
-
                 playerTurn();
-
-                // currentTurn = Turn.ENEMY;
-
-            } else if (this.getCurrentTurn() == Turn.ENEMY) {
-
-                enemyTurn();
-
-                this.setCurrentTurn(Turn.PLAYER);
             }
+
+            if (isMissionAccomplished()) {
+                this.setGameOver(true);
+            }
+
+            enemyTurn();
 
         }
 
@@ -43,6 +41,11 @@ public class AutomaticMode extends Simulation {
         System.out.println("...OR WASN'T IT...");
         System.out.println("GAME OVER!");
 
+        Iterator<Enemy> enemies = this.getEnemies().iterator();
+
+        while (enemies.hasNext()) {
+            System.out.println(enemies.next());
+        }
 
 		/*
 			Look at me
@@ -60,33 +63,34 @@ public class AutomaticMode extends Simulation {
 		 */
     }
 
-    /*protected void movePlayer(boolean toExtraction) throws ElementNotFoundException {
+
+    @Override
+    protected void movePlayer() throws ElementNotFoundException {
+        String movePlayerOutput = "";
         Room playerPosition = this.getPlayer().getPosition();
-        Room targetPosition = this.getMission().getTarget().getRoom();
+        Room nextObjective = this.getNextObjective();
+        Iterator<Room> path;
 
         this.getBestPath();
-        Iterator<Room> path = null;
-        if (toExtraction) {
-            // Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(playerPosition,bestExtractionPoint());
-            path = this.getMission().getBattlefield().iteratorShortestPath(playerPosition, this.getExtractionPoint());
 
-        } else {
-            // Iterator<Room> path = mission.getBattlefield().iteratorShortestPath(playerPosition, targetPosition);
-            path = this.getMission().getBattlefield().iteratorShortestPath(playerPosition, targetPosition);
-        }
+        path = this.getBattlefield().iteratorShortestPath(playerPosition, nextObjective);
+
         path.next();
 
         if (path.hasNext()) {
 
-            Room toRoom = path.next();
-            System.out.println("TO CRUZ plans to go from\t" + playerPosition.getName() + "\tto\t" + toRoom.getName() + "...");
-            this.getPlayer().setPosition(toRoom);
+            Room nextPosition = path.next();
+
+            movePlayerOutput += getPlayer() + "plans to go from [" +
+                    playerPosition.getName() + "] -----> [" + nextPosition.getName() + "]";
+            this.getPlayer().setPosition(nextPosition);
 
         } else {
-            if (this.getPlayer().isAlive() && this.getMission().isTargetSecured() && this.getPlayer().getPosition().equals(this.getEntryPoint())) {
-                isGameOver();
+            if (isMissionAccomplished()) {
+                this.setGameOver(true);
             }
         }
 
+        System.out.println(movePlayerOutput);
     }
-}*/
+}

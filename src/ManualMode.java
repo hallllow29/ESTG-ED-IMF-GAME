@@ -190,10 +190,8 @@ public class ManualMode extends Simulation {
             displayPath(getPlayer().getPosition(), toPosition);
         }
 
-
         System.out.println("==== SSS Sophisticated Spy System ====");
     }
-
 
     private Room calculateClosestPathToMedicKit() throws EmptyCollectionException, ElementNotFoundException {
         Room currentRoom = getPlayer().getPosition();
@@ -213,8 +211,6 @@ public class ManualMode extends Simulation {
                     destinationRoom = bestRoom;
                 }
             }
-
-
         }
 
         return destinationRoom;

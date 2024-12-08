@@ -9,7 +9,7 @@ import lib.exceptions.EmptyCollectionException;
 import java.util.Iterator;
 import java.util.Random;
 
-public class Simulation {
+public abstract class  Simulation {
 
 	private final Mission mission;
 	private Network<Room> battlefield;
@@ -35,6 +35,10 @@ public class Simulation {
 		this.enemies = this.mission.getEnemies();
 	}
 
+	protected abstract void movePlayer() throws ElementNotFoundException, EmptyCollectionException;
+
+	public abstract void game() throws ElementNotFoundException, EmptyCollectionException;
+
 	public void renderSimulation(Player player, Target target) throws ElementNotFoundException {
 		setNextObjective(target.getRoom());
 		setEntryPoint(findBestEntryPoint());
@@ -49,6 +53,10 @@ public class Simulation {
 		this.missionAccomplished = false;
 		this.currentTurn = Turn.PLAYER;
 		this.gameOver = false;
+	}
+
+	public Network<Room> getBattlefield() {
+		return this.battlefield;
 	}
 
 	public void setGameOver(boolean gameOver) {
@@ -82,77 +90,31 @@ public class Simulation {
 		this.nextObjective = nextObjective;
 	}
 
-	public boolean isGameOver() {
+	protected boolean isGameOver() {
 		return this.gameOver;
 	}
 
-	public boolean firstStage() {
+	protected boolean firstStage() {
 		return player.isAlive() && !missionAccomplished;
 	}
 
-	public boolean finalStage() {
+	protected boolean finalStage() {
 		return player.isAlive() && mission.isTargetSecured();
 	}
 
-	public void game() throws ElementNotFoundException, EmptyCollectionException {
-
-		renderSimulation(this.player, this.mission.getTarget());
-
-		System.out.println("TO CRUZ starts mission in " + entryPoint.getName());
-
-		while (!isGameOver()) {
-
-			if (this.currentTurn == Turn.PLAYER) {
-				playerTurn();
-			}
-
-			if (isMissionAccomplished()) {
-				this.gameOver = true;
-			}
-
-			enemyTurn();
-
-		}
-
-		// I wish i could add some sleep for few ms, but it would
-		// have a negative impact in performance or avaliation....
-		System.out.println("TO CRUZ DIED !!!");
-		System.out.println("JUST KIDDING...");
-		System.out.println("IT WAS A SIMULATION...");
-		System.out.println("...OR WASN'T IT...");
-		System.out.println("GAME OVER!");
-
-		Iterator<Enemy> enemies = this.enemies.iterator();
-
-		while (enemies.hasNext()) {
-			System.out.println(enemies.next());
-		}
-
-		/*
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-			I just wanna dream
-		 */
-	}
-
-	public void setNextTurn(Turn nextTurn) {
+	protected void setNextTurn(Turn nextTurn) {
 		this.currentTurn = nextTurn;
 	}
 
-	public Turn getCurrentTurn() {
+	protected Room getEntryPoint() {
+		return this.entryPoint;
+	}
+
+	protected Turn getCurrentTurn() {
 		return this.currentTurn;
 	}
 
-	public void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
+	protected void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
 		Room playerPosition = player.getPosition();
 
 		// if (firstStage()) {
@@ -180,7 +142,7 @@ public class Simulation {
 		scenariosCase(this.currentScenario);
 	}
 
-	public void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
+	protected void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
 
 		if (player.getPosition().hasEnemies()) {
 			moveEnemiesNotInSameRoom();
@@ -201,13 +163,13 @@ public class Simulation {
 		scenariosCase(this.currentScenario);
 	}
 
-	void scenariosSituations() {
+	protected void scenariosSituations() {
 		Room playerPosition = player.getPosition();
 		boolean playerPositionHasEnemies = playerPosition.hasEnemies();
 		roomSituation(playerPosition, playerPositionHasEnemies);
 	}
 
-	void roomSituation(Room playerPosition, Boolean hasEnemies) {
+	protected void roomSituation(Room playerPosition, Boolean hasEnemies) {
 
 		boolean atTarget = isAtTarget(playerPosition, this.nextObjective);
 
@@ -228,11 +190,11 @@ public class Simulation {
 		}
 	}
 
-	public void setNextScenario(ScenarioNr nextScenario) {
+	protected void setNextScenario(ScenarioNr nextScenario) {
 		this.currentScenario = nextScenario;
 	}
 
-	public void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException, EmptyCollectionException {
+	protected void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException, EmptyCollectionException {
 
 		switch (nextScenario) {
 			case TWO:
@@ -470,35 +432,6 @@ public class Simulation {
 
 	}
 
-	protected void movePlayer() throws ElementNotFoundException, EmptyCollectionException {
-		String movePlayerOutput = "";
-		Room playerPosition = this.player.getPosition();
-		Room nextObjective = this.nextObjective;
-		Iterator<Room> path;
-
-		this.getBestPath();
-
-		path = this.battlefield.iteratorShortestPath(playerPosition, nextObjective);
-
-		path.next();
-
-		if (path.hasNext()) {
-
-			Room nextPosition = path.next();
-
-			movePlayerOutput += player.getName() + "plans to go from [" +
-				playerPosition.getName() + "] -----> [" + nextPosition.getName() + "]";
-			this.player.setPosition(nextPosition);
-
-		} else {
-			if (isMissionAccomplished()) {
-				this.gameOver = true;
-			}
-		}
-
-		System.out.println(movePlayerOutput);
-	}
-
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
 		return playerPosition.equals(targetPosition);
 	}
@@ -508,7 +441,7 @@ public class Simulation {
 		return player.isAlive() && mission.isTargetSecured() && playerPosition.equals(this.nextObjective);
 	}
 
-	public Room findBestEntryPoint() throws ElementNotFoundException {
+	protected Room findBestEntryPoint() throws ElementNotFoundException {
 		Network<Room> battlefield = mission.getBattlefield();
 		Iterator<Room> entryPoints = mission.getEntryExitPoints().iterator();
 		double minimalDamage = Double.MAX_VALUE;
@@ -805,18 +738,7 @@ public class Simulation {
 		return weight;
 	}
 
-	/*
-		Where is my mind?
-		Where is my mind?
-		Where is my mind?
-		Way out in the water
-		See it swimming
-
-		With your feet on the air and your head on the ground
-		Try this trick and spin it, yeah
-	*/
-
-	private void getBestPath() throws ElementNotFoundException {
+	protected void getBestPath() throws ElementNotFoundException {
 		Room playerPosition = this.player.getPosition();
 		String bestPathOutput = "";
 
