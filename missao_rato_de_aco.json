@@ -1,0 +1,163 @@
+{
+    "cod-missao": "rato de a\u00e7o",
+    "versao": 1,
+    "edificio": [
+        "Heliporto",
+        "Escada A",
+        "Armaz\u00e9m Central",
+        "Dormit\u00f3rios",
+        "Laborat\u00f3rio 2",
+        "Escrit\u00f3rio Alpha",
+        "Escada B",
+        "Sala de Controle",
+        "WC Principal",
+        "Corredor Oeste",
+        "Seguran\u00e7a",
+        "Hall de Entrada",
+        "Escada C",
+        "Sala de Reuni\u00f5es",
+        "Escrit\u00f3rio Beta",
+        "Escada de Emerg\u00eancia",
+        "Cofre",
+        "Escada D",
+        "Garagem Subterr\u00e2nea"
+    ],
+    "ligacoes": [
+        [
+            "Garagem Subterr\u00e2nea",
+            "Escada D"
+        ],
+        [
+            "Garagem Subterr\u00e2nea",
+            "Escada de Emerg\u00eancia"
+        ],
+        [
+            "Escrit\u00f3rio Alpha",
+            "Escada de Emerg\u00eancia"
+        ],
+        [
+            "Laborat\u00f3rio 2",
+            "Escada B"
+        ],
+        [
+            "Laborat\u00f3rio 2",
+            "Escada A"
+        ],
+        [
+            "Corredor Oeste",
+            "Escada B"
+        ],
+        [
+            "Corredor Oeste",
+            "Escrit\u00f3rio Alpha"
+        ],
+        [
+            "Corredor Oeste",
+            "Sala de Controle"
+        ],
+        [
+            "Corredor Oeste",
+            "Escada C"
+        ],
+        [
+            "Hall de Entrada",
+            "Escada C"
+        ],
+        [
+            "Hall de Entrada",
+            "Seguran\u00e7a"
+        ],
+        [
+            "Corredor Oeste",
+            "Seguran\u00e7a"
+        ],
+        [
+            "Cofre",
+            "Escada D"
+        ],
+        [
+            "Dormit\u00f3rios",
+            "Escada A"
+        ],
+        [
+            "Armaz\u00e9m Central",
+            "Escada A"
+        ],
+        [
+            "Sala de Controle",
+            "Escada B"
+        ],
+        [
+            "Sala de Reuni\u00f5es",
+            "Escada C"
+        ],
+        [
+            "Heliporto",
+            "Escada A"
+        ]
+    ],
+    "inimigos": [
+        {
+            "nome": "inimigo1",
+            "poder": 10,
+            "divisao": "Heliporto"
+        },
+        {
+            "nome": "inimigo2",
+            "poder": 20,
+            "divisao": "Heliporto"
+        },
+        {
+            "nome": "inimigo3",
+            "poder": 30,
+            "divisao": "Laborat\u00f3rio 2"
+        },
+        {
+            "nome": "inimigo4",
+            "poder": 25,
+            "divisao": "Seguran\u00e7a"
+        },
+        {
+            "nome": "inimigo5",
+            "poder": 15,
+            "divisao": "Corredor Oeste"
+        },
+        {
+            "nome": "inimigo6",
+            "poder": 40,
+            "divisao": "Sala de Controle"
+        },
+        {
+            "nome": "inimigo7",
+            "poder": 50,
+            "divisao": "Cofre"
+        }
+    ],
+    "entradas-saidas": [
+        "Escada de Emerg\u00eancia",
+        "Garagem Subterr\u00e2nea",
+        "Heliporto",
+        "Hall de Entrada"
+    ],
+    "alvo": {
+        "divisao": "Cofre",
+        "tipo": "documentos"
+    },
+    "itens": [
+        {
+            "divisao": "WC Principal",
+            "pontos-recuperados": 30,
+            "tipo": "kit de vida"
+        },
+        {
+            "divisao": "Escrit\u00f3rio Alpha",
+            "pontos-recuperados": 20,
+            "tipo": "kit de vida"
+        },
+        {
+            "divisao": "Escada D",
+            "pontos-extra": 40,
+            "tipo": "colete"
+        }
+    ]
+}
