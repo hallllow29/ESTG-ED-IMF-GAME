@@ -381,7 +381,6 @@ public abstract class Simulation {
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
 			scenarioTRESend += "\n|\t"+ player.getName() + " eliminated all ENEMIES..." + "\n\tin " + playerPosition.getName() + "...";
-			setNextTurn(Turn.PLAYER);
 
 		} else if (!player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
@@ -457,7 +456,7 @@ public abstract class Simulation {
 		System.out.println(scenarioCINCOend);
 	}
 
-	private void scenarioSEIS() throws ElementNotFoundException, EmptyCollectionException {
+	private void scenarioSEIS() throws ElementNotFoundException {
 		Room playerPosition = this.player.getPosition();
 		String scenarioSEISstart =
 			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
@@ -705,7 +704,7 @@ public abstract class Simulation {
 				player.takesDamageFrom(enemyAttack);
 
 				enemiesConfronts =
-					"\n|\t" + enemy.getName() + " is attacking " + playerName +
+					"\n|\t" + enemy.getName() + " is attacking " + playerName + "..." +
 						"\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
 				// ScenarioNr 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
