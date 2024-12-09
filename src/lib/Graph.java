@@ -1,8 +1,8 @@
 package lib;
-import entities.Room;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.GraphADT;
+import lib.stacks.LinkedStack;
 
 import java.util.Iterator;
 

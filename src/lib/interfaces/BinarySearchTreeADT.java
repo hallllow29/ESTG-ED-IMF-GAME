@@ -9,11 +9,11 @@ public interface BinarySearchTreeADT<T> extends BinaryTreeADT<T> {
 
 	T removeElement(T target) throws ElementNotFoundException;
 
-	void removeAllOccurences(T targetElement) throws EmptyCollectionException, ElementNotFoundException;
+	void removeAllOccurrences(T targetElement) throws EmptyCollectionException, ElementNotFoundException;
 
 	T removeMin() throws EmptyCollectionException, ElementNotFoundException;
 
-	T removeMox() throws EmptyCollectionException, ElementNotFoundException;
+	T removeMax() throws EmptyCollectionException, ElementNotFoundException;
 
 	T findMin() throws EmptyCollectionException;
 

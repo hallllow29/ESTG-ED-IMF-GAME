@@ -1,5 +1,6 @@
-package lib;
+package lib.stacks;
 
+import lib.Node;
 import lib.exceptions.EmptyCollectionException;
 
 import lib.interfaces.StackADT;

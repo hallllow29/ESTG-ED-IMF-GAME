@@ -96,6 +96,11 @@ public class ArrayBinaryTree<T> implements BinaryTreeADT<T> {
     }
 
     @Override
+    public BinaryTreeNode<T> getRoot() {
+        return null;
+    }
+
+    @Override
     public T getRootElement() {
         return this.tree[0];
     }

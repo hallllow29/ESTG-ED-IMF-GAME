@@ -3,6 +3,7 @@ package lib;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.NetworkADT;
+import lib.stacks.LinkedStack;
 
 import java.util.Iterator;
 
