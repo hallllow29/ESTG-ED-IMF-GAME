@@ -1,5 +1,8 @@
-package lib;
+package lib.graphs;
 
+import lib.lists.ArrayUnorderedList;
+import lib.trees.LinkedHeap;
+import lib.queues.LinkedQueue;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.NetworkADT;

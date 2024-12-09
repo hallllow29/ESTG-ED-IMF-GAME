@@ -1,4 +1,4 @@
-package lib;
+package lib.trees;
 
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.HeapADT;

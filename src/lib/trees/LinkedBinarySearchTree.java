@@ -1,5 +1,6 @@
-package lib;
+package lib.trees;
 
+import lib.BinaryTreeNode;
 import lib.interfaces.BinarySearchTreeADT;
 
 import lib.exceptions.EmptyCollectionException;

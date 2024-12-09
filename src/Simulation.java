@@ -1,7 +1,11 @@
 import entities.*;
-import lib.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.graphs.CustomNetwork;
+import lib.graphs.Network;
+import lib.lists.ArrayList;
+import lib.lists.ArrayUnorderedList;
+import lib.lists.LinkedList;
 
 import java.util.Iterator;
 import java.util.Random;

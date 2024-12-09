@@ -1,7 +1,7 @@
 import entities.*;
-import lib.CustomNetwork;
-import lib.LinkedList;
-import lib.Network;
+import lib.graphs.CustomNetwork;
+import lib.lists.LinkedList;
+import lib.graphs.Network;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.parser.ParseException;
 

@@ -1,5 +1,6 @@
-package lib;
+package lib.lists;
 
+import lib.DoubleNode;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.UnorderedListADT;
 

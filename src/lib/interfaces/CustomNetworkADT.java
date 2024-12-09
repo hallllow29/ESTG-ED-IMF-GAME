@@ -1,7 +1,7 @@
 package lib.interfaces;
 
 import entities.Room;
-import lib.ArrayUnorderedList;
+import lib.lists.ArrayUnorderedList;
 
 public interface CustomNetworkADT<T> {
 

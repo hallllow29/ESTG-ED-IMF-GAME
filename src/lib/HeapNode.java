@@ -1,14 +1,5 @@
 package lib;
 
-import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.TreeVisitor;
-import lib.exceptions.ElementNotFoundException;
-import lib.exceptions.EmptyCollectionException;
-import lib.interfaces.BinaryTreeADT;
-
-import java.util.Iterator;
-
 public class HeapNode<T> extends BinaryTreeNode<T> {
 
     protected HeapNode<T> parent;

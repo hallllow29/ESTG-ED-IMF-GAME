@@ -1,6 +1,7 @@
-package lib;
+package lib.graphs;
 
 import entities.Room;
+import lib.lists.ArrayUnorderedList;
 import lib.interfaces.CustomNetworkADT;
 
 public class CustomNetwork<T> extends Network<T> implements CustomNetworkADT<T> {

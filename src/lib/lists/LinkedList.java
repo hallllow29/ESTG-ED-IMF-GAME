@@ -6,7 +6,7 @@
  * @date 2024/11/02
  **/
 
-package lib;
+package lib.lists;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;

@@ -1,5 +1,5 @@
 import entities.Player;
-import lib.ArrayUnorderedList;
+import lib.lists.ArrayUnorderedList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

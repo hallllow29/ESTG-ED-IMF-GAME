@@ -1,12 +1,6 @@
-package lib;
+package lib.lists;
 
-import lib.exceptions.ElementNotFoundException;
-import lib.exceptions.EmptyCollectionException;
-import lib.interfaces.IteratorADT;
 import lib.interfaces.OrderedListADT;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class ArrayOrderedList<T> extends ArrayList<T> implements OrderedListADT<T> {
 

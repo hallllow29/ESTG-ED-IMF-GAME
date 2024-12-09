@@ -1,6 +1,6 @@
 import entities.*;
-import lib.ArrayUnorderedList;
-import lib.CircularDoubleLinkedList;
+import lib.lists.ArrayUnorderedList;
+import lib.lists.CircularDoubleLinkedList;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 

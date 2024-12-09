@@ -1,4 +1,6 @@
-package lib;
+package lib.lists;
+
+import lib.DoubleNode;
 
 import java.util.ArrayList;
 import java.util.List;

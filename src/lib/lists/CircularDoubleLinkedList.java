@@ -6,9 +6,8 @@
  * @date 2024/11/01
  **/
 
-package lib;
+package lib.lists;
 
-import lib.interfaces.IteratorADT;
 import lib.interfaces.ListADT;
 import java.util.Iterator;
 

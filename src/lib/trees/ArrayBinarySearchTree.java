@@ -1,8 +1,9 @@
-package lib;
+package lib.trees;
 
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.BinarySearchTreeADT;
+import lib.lists.ArrayUnorderedList;
 
 import java.util.Iterator;
 import java.util.logging.Level;
