@@ -30,7 +30,7 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
             else
                 next_parent.setRight(node);
 
-            node.parent = next_parent;
+            ((HeapNode<T>) node).setParent(next_parent);
         }
         lastNode = node;
         super.setCount(super.getCount() + 1);
@@ -41,17 +41,17 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
     private HeapNode<T> getNextParentAdd() {
         HeapNode<T> result = lastNode;
 
-        while ((result != getRoot() && (result.parent.getLeft() != result))) {
-            result = result.parent;
+        while ((result != getRoot() && (((HeapNode<T>) result).getParent().getLeft() != result))) {
+            result = result.getParent();
 
         }
 
         if (result != super.getRoot())
-            if (result.parent.getRight() == null)
-                result = result.parent;
+            if (result.getParent().getRight() == null)
+                result = result.getParent();
             else
             {
-                result = (HeapNode<T>)result.parent.getRight();
+                result = (HeapNode<T>) result.getParent().getRight();
                 while (result.getLeft() != null)
                     result = (HeapNode<T>)result.getLeft();
             }
@@ -69,10 +69,10 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
         temp = next.getElement();
 
         while ((next != super.getRoot()) && (((Comparable)temp).compareTo
-                (next.parent.getElement()) < 0))
+                (next.getParent().getElement()) < 0))
         {
-            next.setElement(next.parent.getElement());
-            next = next.parent;
+            next.setElement(next.getParent().getElement());
+            next = next.getParent();
         }
         next.setElement(temp);
     }
@@ -90,10 +90,10 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
             this.lastNode = null;
         } else {
             HeapNode<T> next_last = getNewLastNode();
-            if (this.lastNode.parent.getLeft() == this.lastNode) {
-                this.lastNode.parent.setLeft(null);
+            if (this.lastNode.getParent().getLeft() == this.lastNode) {
+                this.lastNode.getParent().setLeft(null);
             } else {
-                this.lastNode.parent.setRight(null);
+                this.lastNode.getParent().setRight(null);
             }
 
             getRoot().setElement(this.lastNode.getElement());
@@ -164,11 +164,11 @@ public class LinkedHeap<T> extends LinkedBinaryTree<T> implements HeapADT<T> {
     {
         HeapNode<T> result = lastNode;
 
-        while ((result != super.getRoot()) && (result.parent.getLeft() == result))
-            result = result.parent;
+        while ((result != super.getRoot()) && (result.getParent().getLeft() == result))
+            result = result.getParent();
 
         if (result != super.getRoot())
-            result = (HeapNode<T>) result.parent.getLeft();
+            result = (HeapNode<T>) result.getParent().getLeft();
 
         while ( (result).getRight() != null)
             result = (HeapNode<T>) result.getRight();
