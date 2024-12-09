@@ -30,11 +30,24 @@
     ["Heliporto", "Escada 6"]
     ],
     "inimigos": [
-    {"nome": "badguy1", "poder": 5, "divisao": "Heliporto"},
-    {"nome": "badguy2", "poder": 10, "divisao": "Heliporto"},
-    {"nome": "badguy3", "poder": 15, "divisao": "Camaratas"},
-    {"nome": "badguy4", "poder": 20, "divisao": "Segurança"},
-    {"nome": "badguy5", "poder": 25, "divisao": "Corredor 1"}
+    {"nome": "badguy1", "poder": 5, "divisao": "Laboratório"},
+    {"nome": "badguy2", "poder": 10, "divisao": "Laboratório"},
+    {"nome": "badguy3", "poder": 15, "divisao": "Laboratório"},
+    {"nome": "badguy4", "poder": 20, "divisao": "Laboratório"},
+    {"nome": "badguy5", "poder": 25, "divisao": "Laboratório"},
+
+        {"nome": "badguy6", "poder": 50, "divisao": "Laboratório"},
+        {"nome": "badguy7", "poder": 50, "divisao": "Laboratório"},
+        {"nome": "badguy8", "poder": 1, "divisao": "Escada 5"},
+        {"nome": "badguy9", "poder": 30, "divisao": "Escada 5"},
+        {"nome": "badguy10", "poder": 23, "divisao": "Laboratório"},
+        {"nome": "badguy11", "poder": 50, "divisao": "Camaratas"},
+        {"nome": "badguy12", "poder": 40, "divisao": "Escada 5"},
+        {"nome": "badguy13", "poder": 35, "divisao": "Camaratas"},
+        {"nome": "badguy14", "poder": 30, "divisao": "Escada 5"},
+        {"nome": "badguy15", "poder": 35, "divisao": "Laboratório"},
+        {"nome": "badguy16", "poder": 30, "divisao": "Laboratório"},
+        {"nome": "badguy17", "poder": 30, "divisao": "Laboratório"}
     ],
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
     "alvo": {"divisao": "Laboratório", "tipo": "quimico"},

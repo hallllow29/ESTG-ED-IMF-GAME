@@ -111,15 +111,8 @@ public abstract class Simulation {
 	protected void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
 		Room playerPosition = player.getPosition();
 
-		// if (firstStage()) {
-		// 	movePlayer(false);
-		// } else if (finalStage()) {
-		// 	movePlayer(true);
-		// }
-
-		// FUCK .....
 		String playerTurnOutput = "";
-		if (!playerPosition.hasEnemies()) {
+		if (!playerPosition.hasEnemies() || this.currentScenario == ScenarioNr.TWO) {
 			playerTurnOutput +=
 				"\n" + player.getName() + " is moving..." +
 					"\n" + player.getName() + " leaves " + playerPosition.getName() + "...";
@@ -129,7 +122,7 @@ public abstract class Simulation {
 			playerConfronts();
 		}
 
-		System.out.print(playerTurnOutput);
+		System.out.println(playerTurnOutput);
 
 		// "o jogo se me sequência de ações"
 		scenariosSituations();
@@ -137,15 +130,11 @@ public abstract class Simulation {
 	}
 
 	protected void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
-
-		String enemyTurnOutput = "\nEnemies are moving...";
-		// System.out.print(enemyTurnOutput);
-		// if (player.getPosition().hasEnemies()) {
-		// 	moveEnemiesNotInSameRoom();
-		// } else {
-		// 	moveEnemies();
-		// }
-
+		if (this.currentScenario == ScenarioNr.TWO) {
+			movePlayer();
+			setNextTurn(Turn.ENEMY);
+			// NAO FAZ SENTIDO, mas é que eu entendo!
+		}
 		scenariosSituations();
 		scenariosCase(this.currentScenario);
 	}
@@ -186,7 +175,7 @@ public abstract class Simulation {
 		switch (nextScenario) {
 			case TWO:
 				scenarioDOIS();
-				setNextTurn(Turn.PLAYER);
+				setNextTurn(Turn.ENEMY);
 				break;
 			case ONE:
 				scenarioUM();
@@ -261,11 +250,11 @@ public abstract class Simulation {
 		scenarioUMend +=
 			"\n|" +
 				"\n|========== [<< SCENARIO 1  END  >>] ==========";
-		System.out.print(scenarioUMend);
+		System.out.println(scenarioUMend);
 	}
 
 	private void scenarioDOIS() {
-		Room playerPosition = this.player.getPosition();
+		Room playerPosition = player.getPosition();
 
 		String scenarioDOISstart =
 			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
@@ -291,6 +280,8 @@ public abstract class Simulation {
 		if (!this.enemies.isEmpty()) {
 			scenarioDOISend += "\n|\tBUT the enemies are somewhere..." +
 				"\n|\tEnemies are moving...";
+
+			moveEnemies();
 
 		} else {
 			scenarioDOISend += "\n|\tBUT there are no enemies left...";
@@ -342,7 +333,7 @@ public abstract class Simulation {
 		scenarioTRESend +=
 			"\n|" +
 				"\n|========== [<< SCENARIO 3  END  >>] ==========";
-		System.out.print(scenarioTRESend);
+		System.out.println(scenarioTRESend);
 	}
 
 	private void scenarioQUATRO() {
@@ -366,7 +357,7 @@ public abstract class Simulation {
 		scenarioQUATROend +=
 			"\n|" +
 				"\n|========== [<< SCENARIO 4  END  >>] ==========";
-		System.out.print(scenarioQUATROend);
+		System.out.println(scenarioQUATROend);
 	}
 
 	private void scenarioCINCO() {
@@ -414,6 +405,7 @@ public abstract class Simulation {
 				"\n|========== [<< SCENARIO 6 START >>] ==========" +
 				"\n|\tAND in that room there is the TARGET..." +
 				"\n|\tLOOK AT THAT, it is clear..." +
+				"\n|" +
 				"\n|\t-------------- PLAYER  TURN --------------";
 		System.out.print(scenarioSEISstart);
 
@@ -428,8 +420,7 @@ public abstract class Simulation {
 		setNextObjective(extractionPoint);
 
 		scenarioSEISend +=
-			"\n|" +
-				"\n|\tTARGET is now secured..." +
+			"\n|\tTARGET is now secured..." +
 				"\n|\tWELL DONE " + player.getName() + " return to " + this.nextObjective.getName() + "..." +
 				"\n|" +
 				"\n|========== [<< SCENARIO 6  END  >>] ==========";
@@ -490,7 +481,7 @@ public abstract class Simulation {
 				if (!enemy.isAlive()) {
 					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
 						" suffered " + playerAttack + " of attack..." +
-						"\n|\tAND is now DEAD";
+						"\n|\tAND is now DEAD!!!\n" + "\n|";
 					enemies.remove();
 					enemyPosition.removeEnemy();
 				}
@@ -539,9 +530,7 @@ public abstract class Simulation {
 
 		if (!possibleMoves.isEmpty()) {
 
-			System.out.println("\nENEMY " + enemy.getName() + " leaves " + enemyPosition.getName() + "...");
 			enemyPosition.removeEnemy();
-
 			if (enemyPosition.getTotalEnemies() <= NONE) {
 				enemyPosition.setEnemies(false);
 			}
@@ -551,7 +540,6 @@ public abstract class Simulation {
 
 			Room nextPosition = possibleMoves.getElement(random_index);
 
-			System.out.println("AND enters in " + nextPosition.getName() + "...");
 			enemy.setPosition(nextPosition);
 			nextPosition.addEnemy();
 			nextPosition.setEnemies(true);
@@ -760,7 +748,6 @@ public abstract class Simulation {
 			bestPathOutput += "\nPath to OBJECTIVE";
 		}
 
-
 		System.out.println(bestPathOutput);
 
 		this.displayPath(playerPosition, this.nextObjective);
@@ -772,21 +759,20 @@ public abstract class Simulation {
 
 		Room nextRoom = bestPath.next();
 		StringBuilder displayPathOutput = new StringBuilder();
-		displayPathOutput.append(String.format("\n%-25s <-- %-20s", nextRoom.getName(), player.getName()));
-
+		displayPathOutput.append(String.format("\n%-25s <--- %-20s", nextRoom.getName(), player.getName()));
 
 		while (bestPath.hasNext()) {
 			nextRoom = bestPath.next();
 			if (!nextRoom.equals(this.nextObjective)) {
-				displayPathOutput.append("\n|\t").append(nextRoom.getName());
+				displayPathOutput.append("\n  |\t").append(nextRoom.getName());
 
 			} else if (!nextRoom.equals(this.nextObjective) && !nextRoom.equals(this.closestItem.getName())) {
-				displayPathOutput.append(String.format("\n%-25s <-- %-20s", this.closestItem, "ITEM"));
+				displayPathOutput.append(String.format("\n%-26s <--- %-20s", this.closestItem, "ITEM"));
 
 			} else if (returningToExit) {
-				displayPathOutput.append(String.format("\n|\n%-25s <-- %-20s", this.nextObjective.getName(), "EXTRACTION POINT"));
+				displayPathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "EXTRACTION POINT"));
 			} else {
-				displayPathOutput.append(String.format("\n|\n%-25s <-- %-20s", this.nextObjective.getName(), "OBJECTIVE"));
+				displayPathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "OBJECTIVE"));
 			}
 		}
 		System.out.println(displayPathOutput);

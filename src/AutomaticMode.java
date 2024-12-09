@@ -1,7 +1,4 @@
-import entities.Enemy;
-import entities.Player;
-import entities.Room;
-import entities.Turn;
+import entities.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -17,7 +14,7 @@ public class AutomaticMode extends Simulation {
 
         renderSimulation(this.getPlayer(), this.getMission().getTarget());
 
-        System.out.println("TO CRUZ starts mission in " + getEntryPoint().getName());
+        System.out.println("TO CRUZ starts mission in " + "\n\t[" + getEntryPoint().getName() + "]");
 
         while (!isGameOver()) {
 
@@ -29,7 +26,9 @@ public class AutomaticMode extends Simulation {
                 this.setGameOver(true);
             }
 
-            enemyTurn();
+
+                enemyTurn();
+
 
         }
 
@@ -66,7 +65,7 @@ public class AutomaticMode extends Simulation {
 
     @Override
     protected void movePlayer() throws ElementNotFoundException {
-        String movePlayerOutput = "";
+        StringBuilder movePlayerOutput = new StringBuilder();
         Room playerPosition = this.getPlayer().getPosition();
         Room nextObjective = this.getNextObjective();
         Iterator<Room> path;
@@ -81,8 +80,8 @@ public class AutomaticMode extends Simulation {
 
             Room nextPosition = path.next();
 
-            movePlayerOutput += "\n" + this.getPlayer().getName() + " plans to go from [" +
-                    playerPosition.getName() + "] -----> [" + nextPosition.getName() + "]";
+            movePlayerOutput.append("\n" + this.getPlayer().getName() + " plans to move from...").append
+                (String.format("\n\t[%s] ---> [%s]", playerPosition.getName(), nextPosition.getName()));
             this.getPlayer().setPosition(nextPosition);
 
         } else {
