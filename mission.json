@@ -32,9 +32,9 @@
     "inimigos": [
     {"nome": "badguy1", "poder": 5, "divisao": "Laboratório"},
     {"nome": "badguy2", "poder": 10, "divisao": "Laboratório"},
-    {"nome": "badguy3", "poder": 15, "divisao": "Laboratório"},
+    {"nome": "badguy3", "poder": 15, "divisao": "Corredor 1"},
     {"nome": "badguy4", "poder": 20, "divisao": "Laboratório"},
-    {"nome": "badguy5", "poder": 25, "divisao": "Laboratório"}
+    {"nome": "badguy5", "poder": 25, "divisao": "Hall"}
     ],
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
     "alvo": {"divisao": "Laboratório", "tipo": "quimico"},

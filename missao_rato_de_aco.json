@@ -4,43 +4,43 @@
     "edificio": [
         "Heliporto",
         "Escada A",
-        "Armaz\u00e9m Central",
-        "Dormit\u00f3rios",
-        "Laborat\u00f3rio 2",
-        "Escrit\u00f3rio Alpha",
+        "Armazém Central",
+        "Dormitórios",
+        "Laboratório 2",
+        "Escritório Alpha",
         "Escada B",
-        "Sala de Controle",
+        "Sala de Controlo",
         "WC Principal",
         "Corredor Oeste",
-        "Seguran\u00e7a",
+        "Segurança",
         "Hall de Entrada",
         "Escada C",
-        "Sala de Reuni\u00f5es",
-        "Escrit\u00f3rio Beta",
-        "Escada de Emerg\u00eancia",
+        "Sala de Reuniões",
+        "Escritório Beta",
+        "Escada de Emergência",
         "Cofre",
         "Escada D",
-        "Garagem Subterr\u00e2nea"
+        "Garagem Subterrânea"
     ],
     "ligacoes": [
         [
-            "Garagem Subterr\u00e2nea",
+            "Garagem Subterrânea",
             "Escada D"
         ],
         [
-            "Garagem Subterr\u00e2nea",
+            "Garagem Subterrânea",
+            "Escada de Emergência"
+        ],
+        [
+            "Escritório Alpha",
             "Escada de Emerg\u00eancia"
         ],
         [
-            "Escrit\u00f3rio Alpha",
-            "Escada de Emerg\u00eancia"
-        ],
-        [
-            "Laborat\u00f3rio 2",
+            "Laboratório 2",
             "Escada B"
         ],
         [
-            "Laborat\u00f3rio 2",
+            "Laboratório 2",
             "Escada A"
         ],
         [
@@ -49,11 +49,11 @@
         ],
         [
             "Corredor Oeste",
-            "Escrit\u00f3rio Alpha"
+            "Escritório Alpha"
         ],
         [
             "Corredor Oeste",
-            "Sala de Controle"
+            "Sala de Controlo"
         ],
         [
             "Corredor Oeste",
@@ -65,30 +65,30 @@
         ],
         [
             "Hall de Entrada",
-            "Seguran\u00e7a"
+            "Segurança"
         ],
         [
             "Corredor Oeste",
-            "Seguran\u00e7a"
+            "Segurança"
         ],
         [
             "Cofre",
             "Escada D"
         ],
         [
-            "Dormit\u00f3rios",
+            "Dormitórios",
             "Escada A"
         ],
         [
-            "Armaz\u00e9m Central",
+            "Armazém Central",
             "Escada A"
         ],
         [
-            "Sala de Controle",
+            "Sala de Controlo",
             "Escada B"
         ],
         [
-            "Sala de Reuni\u00f5es",
+            "Sala de Reuniões",
             "Escada C"
         ],
         [
@@ -110,12 +110,12 @@
         {
             "nome": "inimigo3",
             "poder": 30,
-            "divisao": "Laborat\u00f3rio 2"
+            "divisao": "Laboratório 2"
         },
         {
             "nome": "inimigo4",
             "poder": 25,
-            "divisao": "Seguran\u00e7a"
+            "divisao": "Segurança"
         },
         {
             "nome": "inimigo5",
@@ -125,7 +125,7 @@
         {
             "nome": "inimigo6",
             "poder": 40,
-            "divisao": "Sala de Controle"
+            "divisao": "Sala de Controlo"
         },
         {
             "nome": "inimigo7",
@@ -134,8 +134,8 @@
         }
     ],
     "entradas-saidas": [
-        "Escada de Emerg\u00eancia",
-        "Garagem Subterr\u00e2nea",
+        "Escada de Emergência",
+        "Garagem Subterrânea",
         "Heliporto",
         "Hall de Entrada"
     ],
@@ -150,7 +150,7 @@
             "tipo": "kit de vida"
         },
         {
-            "divisao": "Escrit\u00f3rio Alpha",
+            "divisao": "Escritório Alpha",
             "pontos-recuperados": 20,
             "tipo": "kit de vida"
         },

@@ -21,7 +21,7 @@ public class SaveToJsonFile {
 
         JSONObject mission = new JSONObject();
         mission.put("code", report.getMission().getCode());
-        mission.put("target", report.getMission().getTarget());
+        mission.put("target", report.getMission().getTarget().getRoom().getName());
         mission.put("entryPoint", report.getEntryPoint());
         mission.put("missionStatus", report.getMissionStatus());
         jsonReport.put("mission", mission);

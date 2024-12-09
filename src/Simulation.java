@@ -25,7 +25,7 @@ public abstract class Simulation {
 	private Room nextObjective;
 	private LinkedList<Enemy> enemies;
 	private Room closestItem;
-	private Report report;
+	private final Report report;
 
 	public Simulation(Mission mission, Player player, Report report) {
 		this.mission = mission;
@@ -256,9 +256,9 @@ public abstract class Simulation {
 		boolean enemiesRemained;
 
 		String scenarioUMstart =
-			"\nTO CRUZ is in " + playerPosition.getName() + "..." +
+			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
 				"\n|========== [<< SCENARIO 1 START >>] ==========" +
-				"\n|\tTO CRUZ makes contact with ENEMIES..." +
+				"\n|\t"+ player.getName() + " makes contact with ENEMIES..." +
 				"\n|\tAND has priority of attack over ENEMIES..." +
 				"\n|" +
 				"\n|\t-------------- PLAYER  TURN --------------";
@@ -284,7 +284,7 @@ public abstract class Simulation {
 
 		} else {
 			scenarioUMend +=
-				"\n|\tTO CRUZ eliminated all ENEMIES in " + playerPosition.getName() + "...";
+				"\n|\t" + player.getName() + "eliminated all ENEMIES in " + playerPosition.getName() + "...";
 
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
@@ -380,7 +380,7 @@ public abstract class Simulation {
 
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
-			scenarioTRESend += "\n|\tTO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...";
+			scenarioTRESend += "\n|\t"+ player.getName() + " eliminated all ENEMIES..." + "\n\tin " + playerPosition.getName() + "...";
 			setNextTurn(Turn.PLAYER);
 
 		} else if (!player.isAlive()) {
@@ -390,6 +390,7 @@ public abstract class Simulation {
 		}
 
 		scenarioTRESend +=
+			"\n|" +
 			"\n|========== [<< SCENARIO 3  END  >>] ==========";
 		System.out.println(scenarioTRESend);
 	}
@@ -398,7 +399,7 @@ public abstract class Simulation {
 
 		String scenarioQUATROstart =
 			"\n|========== [<< SCENARIO 4 START >>] ==========" +
-				"\n|\tTO CRUZ seems to be injured..." +
+				"\n|\t" + player.getName() + " seems to be injured..." +
 				"\n|" +
 				"\n|\t-------------- PLAYER  TURN --------------" +
 				"\n|\t" + player.getName() + " halts and is checking BackPack...";
@@ -425,7 +426,7 @@ public abstract class Simulation {
 		String scenarioCINCOstart =
 			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
 				"\n|========== [<< SCENARIO 5 START >>] ==========" +
-				"\n|\tTO CRUZ makes contact with ENEMIES..." +
+				"\n|\t" + player.getName() + " makes contact with ENEMIES..." +
 				"\n|\tAND has priority of attack over ENEMIES..." +
 				"\n|\tAND in that room there is the TARGET..." +
 				"\n|" +
@@ -473,7 +474,13 @@ public abstract class Simulation {
 		}
 
 		if (isMissionAccomplished()) {
+			scenarioSEISend +=
+			"\n|\tTARGET is in EXTRACTION POINT..." +
+				"\n|\tWELL DONE " + player.getName() + " return to base..." +
+				"\n|" +
+				"\n|========== [<< SCENARIO 6  END  >>] ==========";
 			this.setGameOver(true);
+			System.out.println(scenarioSEISend);
 			return;
 		} else {
 
