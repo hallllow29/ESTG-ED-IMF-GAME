@@ -76,7 +76,27 @@ public abstract class Simulation {
 			this.getReport().addEnemy(enemy.getName());
 		}
 	}
-	protected abstract void playerTurn() throws ElementNotFoundException, EmptyCollectionException;
+
+	protected void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
+		Room playerPosition = this.getPlayer().getPosition();
+
+		String playerTurnOutput = "";
+		if (!playerPosition.hasEnemies() || this.getCurrentScenario() == ScenarioNr.TWO) {
+			playerTurnOutput +=
+					"\n" + this.getPlayer().getName() + " is moving..." +
+							"\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
+
+			movePlayer();
+		} else {
+			playerConfronts();
+		}
+
+		System.out.println(playerTurnOutput);
+
+		// "o jogo se me sequência de ações"
+		scenariosSituations();
+		scenariosCase(this.getCurrentScenario());
+	}
 
 	public boolean isReturningToExit() {
 		return this.returningToExit;
