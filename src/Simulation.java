@@ -16,7 +16,7 @@ public abstract class Simulation {
 	private final Player player;
 	private boolean gameOver;
 	private Room entryPoint;
-	// private Room extractionPoint;
+	private Room extractionPoint;
 	private boolean returningToExit;
 	private Turn currentTurn;
 	private ScenarioNr currentScenario;
@@ -189,6 +189,7 @@ public abstract class Simulation {
 				break;
 			case THREE:
 				scenarioTRES();
+				setNextTurn(Turn.PLAYER);
 				break;
 			case FOUR:
 				scenarioQUATRO();
@@ -300,7 +301,7 @@ public abstract class Simulation {
 			"\nENEMIES enter in " + playerPosition.getName() + "..." +
 				"\n|========== [<< SCENARIO 3 START >>] ==========" +
 				"\n|\tENEMIES make contact with " + player.getName() + "..." +
-				"\n|\tAND have priority of attack over "+ player.getName() + "..." +
+				"\n|\tAND have priority of attack over " + player.getName() + "..." +
 				"\n|" +
 				"\n|  --------------  ENEMY TURN  --------------";
 		System.out.print(scenarioTRESstart);
@@ -309,35 +310,42 @@ public abstract class Simulation {
 		enemiesConfronts(player);
 
 		String scenarioTRESend = "";
-		while (player.isAlive() && playerPosition.hasEnemies()) {
+		while (playerPosition.hasEnemies() && player.isAlive()) {
 
-			if (this.currentScenario != ScenarioNr.FOUR) {
+			if (this.currentScenario != ScenarioNr.FOUR &&
+				this.currentScenario == ScenarioNr.THREE && player.isAlive()) {
 				String scenarioTRESendSpecial =
-					"\n|\t-------------- PLAYER  TURN --------------" +
-					"\n|";
+					"\n|\t-------------- PLAYER  TURN --------------";
 				System.out.print(scenarioTRESendSpecial);
 				playerConfronts();
 			}
 
-			scenarioTRESend += "\n|  --------------  ENEMY TURN  --------------" +
-				"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
-				"\n|\tENEMIES not in " + playerPosition.getName() + " are moving...";
+			setNextScenario(ScenarioNr.THREE);
+			scenarioTRESend =
+				"\n|" +
+					"\n|  --------------  ENEMY TURN  --------------" +
+					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
+					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving..." +
+					"\n|";
+			System.out.print(scenarioTRESend);
 			moveEnemiesNotInSameRoom();
 			enemiesConfronts(player);
+			playerPosition = player.getPosition();
 		}
 
-		if (!playerPosition.hasEnemies()) {
+		if (!playerPosition.hasEnemies() && player.isAlive()) {
+			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
 			scenarioTRESend += "\n|\tTO CRUZ eliminated all ENEMIES in..." + playerPosition.getName() + "...";
 			setNextTurn(Turn.PLAYER);
 
 		} else if (!player.isAlive()) {
+			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
 			scenarioTRESend += "\n|\t" + player.getName() + " DIED DAMN IT!!!!!";
 			this.gameOver = true;
 		}
 
 		scenarioTRESend +=
-			"\n|" +
-				"\n|========== [<< SCENARIO 3  END  >>] ==========";
+			"\n|========== [<< SCENARIO 3  END  >>] ==========";
 		System.out.println(scenarioTRESend);
 	}
 
@@ -348,7 +356,7 @@ public abstract class Simulation {
 				"\n|\tTO CRUZ seems to be injured..." +
 				"\n|" +
 				"\n|\t-------------- PLAYER  TURN --------------" +
-				"\n\tTO CRUZ halts and is checking BackPack...";
+				"\n|\t" + player.getName() + " halts and is checking BackPack...";
 		System.out.print(scenarioQUATROstart);
 
 		String scenarioQUATROend = "";
@@ -362,7 +370,7 @@ public abstract class Simulation {
 		scenarioQUATROend +=
 			"\n|" +
 				"\n|========== [<< SCENARIO 4  END  >>] ==========";
-		System.out.println(scenarioQUATROend);
+		System.out.print(scenarioQUATROend);
 	}
 
 	private void scenarioCINCO() {
@@ -418,11 +426,19 @@ public abstract class Simulation {
 		if (playerPosition.hasItems()) {
 			scenarioSEISend += gatherItems(playerPosition);
 		}
-		boolean secured = true;
-		this.mission.setTargetSecured(secured);
-		this.returningToExit = true;
-		Room extractionPoint = bestExtractionPoint(player.getPosition());
-		setNextObjective(extractionPoint);
+
+		if (isMissionAccomplished()) {
+			this.setGameOver(true);
+			return;
+		} else {
+
+			boolean secured = true;
+			this.mission.setTargetSecured(secured);
+			this.returningToExit = true;
+			Room extractionPoint = bestExtractionPoint(player.getPosition());
+			this.extractionPoint = extractionPoint;
+			setNextObjective(extractionPoint);
+		}
 
 		scenarioSEISend +=
 			"\n|\tTARGET is now secured..." +
@@ -431,7 +447,7 @@ public abstract class Simulation {
 				"\n|========== [<< SCENARIO 6  END  >>] ==========";
 		System.out.println(scenarioSEISend);
 
-		movePlayer();
+		// movePlayer();
 
 	}
 
@@ -481,14 +497,18 @@ public abstract class Simulation {
 				enemy.takesDamageFrom(playerAttack);
 
 				playerConfrontsOutput +=
-					"\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
+					"\n|\t" +
+						"\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
 
 				if (!enemy.isAlive()) {
 					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
 						" suffered " + playerAttack + " of attack..." +
-						"\n|\tAND is now DEAD!!!\n" + "\n|";
+						"\n|\tAND is now DEAD!!!";
 					enemies.remove();
 					enemyPosition.removeEnemy();
+				} else {
+					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
+						" endured " + playerAttack + " of attack...";
 				}
 			}
 

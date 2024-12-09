@@ -34,7 +34,7 @@ public class AutomaticMode extends Simulation {
 
         // I wish i could add some sleep for few ms, but it would
         // have a negative impact in performance or avaliation....
-        System.out.println("TO CRUZ DIED !!!");
+        System.out.println("TO CRUZ FUCKING DID IT !!!");
         System.out.println("JUST KIDDING...");
         System.out.println("IT WAS A SIMULATION...");
         System.out.println("...OR WASN'T IT...");
