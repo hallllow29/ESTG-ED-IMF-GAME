@@ -806,7 +806,7 @@ public abstract class Simulation {
 	}
 
 	protected void addRoomToReport(String roomName) {
-		if (!isReturningToExit()) {
+		if (!this.mission.isTargetSecured()) {
 			getReport().addRoom(roomName);
 		} else {
 			getReport().addRoomToExtraction(roomName);

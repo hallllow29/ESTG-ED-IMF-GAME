@@ -87,7 +87,7 @@ public class ModeManager {
 
         autoMode.game();
 
-        SaveToJsonFile.saveJsonFile(report, "report.json");
+        SaveToJsonFile.saveJsonFile(report);
     }
 
     private void runManualSimulation(Player player) throws EmptyCollectionException, ElementNotFoundException {
@@ -96,6 +96,6 @@ public class ModeManager {
 
         manualMode.game();
 
-        SaveToJsonFile.saveJsonFile(report, "report.json");
+        SaveToJsonFile.saveJsonFile(report);
     }
 }

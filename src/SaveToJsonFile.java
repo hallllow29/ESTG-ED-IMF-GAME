@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class SaveToJsonFile {
 
-    public static void saveJsonFile(Report report, String filePath) {
+    public static void saveJsonFile(Report report) {
 
         JSONObject jsonReport = new JSONObject();
         jsonReport.put("simulationId" , report.getSimulationId());
@@ -34,7 +34,7 @@ public class SaveToJsonFile {
 
         JSONArray pathToExtraction = new JSONArray();
         for (String room : report.getTrajectoryToExtraction()) {
-            pathToTargetArray.add(room);
+            pathToExtraction.add(room);
         }
 
         jsonReport.put("trajectoryToExtraction", pathToExtraction);
@@ -45,9 +45,9 @@ public class SaveToJsonFile {
         }
         jsonReport.put("enemiesSurvived", enemiesArray);
 
-        try (FileWriter file = new FileWriter(filePath)) {
+        try (FileWriter file = new FileWriter(report.getPlayer().getName() + ".json")) {
             file.write(jsonReport.toJSONString());
-            System.out.println("Report saved in: " + filePath);
+            System.out.println("Report saved in: " + report.getPlayer().getName() + ".json");
         } catch (IOException e) {
             System.out.println("Error saving report");
         }
