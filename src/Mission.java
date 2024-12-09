@@ -79,6 +79,10 @@ public class Mission {
 		return this.targetSecured;
 	}
 
+	public String getCode() {
+		return this.code;
+	}
+
 	public void removeEnemy(Enemy enemy) throws EmptyCollectionException, ElementNotFoundException {
 		this.enemies.remove(enemy);
 	}

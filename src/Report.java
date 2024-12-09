@@ -11,11 +11,11 @@ public class Report {
     private String timestamp;
     private String type;
     private Player player;
-    private MissionImpl mission;
+    private Mission mission;
     private ArrayOrderedList<String> trajectory;
-    private ArrayUnorderedList<String> enemiesSurvived;
+    private final ArrayUnorderedList<String> enemiesSurvived;
 
-    public Report(String type, Player player, MissionImpl mission) {
+    public Report(String type, Player player, Mission mission) {
         this.simulationId = UUID.randomUUID().toString();
         this.timestamp = getCurrentTimestamp();
         this.player = player;
@@ -49,11 +49,11 @@ public class Report {
         this.player = player;
     }
 
-    public MissionImpl getMission() {
+    public Mission getMission() {
         return mission;
     }
 
-    public void setMission(MissionImpl mission) {
+    public void setMission(Mission mission) {
         this.mission = mission;
     }
 

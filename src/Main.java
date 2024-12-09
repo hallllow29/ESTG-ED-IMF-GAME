@@ -71,7 +71,7 @@ public class Main {
 
 			modeManager.startGame();
 
-			//manualSimulation.play();
+			// manualSimulation.play();
 
 			//simulation.game();
 			// automaticSimulation.play();

@@ -81,7 +81,7 @@ public class AutomaticMode extends Simulation {
 
             Room nextPosition = path.next();
 
-            movePlayerOutput += getPlayer() + "plans to go from [" +
+            movePlayerOutput += "\n" + this.getPlayer().getName() + " plans to go from [" +
                     playerPosition.getName() + "] -----> [" + nextPosition.getName() + "]";
             this.getPlayer().setPosition(nextPosition);
 
@@ -90,7 +90,6 @@ public class AutomaticMode extends Simulation {
                 this.setGameOver(true);
             }
         }
-
-        System.out.println(movePlayerOutput);
+        System.out.print(movePlayerOutput);
     }
 }
