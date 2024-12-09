@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class ManualMode extends Simulation {
 
-    public ManualMode(Mission mission, Player player) {
-        super(mission, player);
+    public ManualMode(Mission missionImpl, Player player, Report report) {
+        super(missionImpl, player, report);
     }
 
     @Override
@@ -22,52 +22,14 @@ public class ManualMode extends Simulation {
         super.setEntryPoint(entryRoom);
         super.getPlayer().setPosition(entryRoom);
 
-        while (!isGameOver()) {
+        getReport().addRoom(getPlayer().getPosition().getName());
+        getReport().setEntryPoint(getPlayer().getPosition().getName());
 
-            if (this.getCurrentTurn() == Turn.PLAYER) {
-                playerTurn();
-            }
-
-            if (isMissionAccomplished()) {
-                this.setGameOver(true);
-            }
-
-            enemyTurn();
-
-        }
-
-        // I wish i could add some sleep for few ms, but it would
-        // have a negative impact in performance or avaliation....
-        System.out.println("TO CRUZ DIED !!!");
-        System.out.println("JUST KIDDING...");
-        System.out.println("IT WAS A SIMULATION...");
-        System.out.println("...OR WASN'T IT...");
-        System.out.println("GAME OVER!");
-
-        Iterator<Enemy> enemies = this.getEnemies().iterator();
-
-        while (enemies.hasNext()) {
-            System.out.println(enemies.next());
-        }
-
-		/*
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-			I just wanna dream
-		 */
+        super.gameFlow();
     }
 
     @Override
-    protected void movePlayer() throws ElementNotFoundException, EmptyCollectionException {
+    public void movePlayer() throws ElementNotFoundException, EmptyCollectionException {
         Room currentRoom = getPlayer().getPosition();
 
         if (!isMissionAccomplished()) {
@@ -77,6 +39,8 @@ public class ManualMode extends Simulation {
 
             super.getPlayer().setPosition(nextRoom);
 
+            super.addRoomToReport(nextRoom.getName());
+
         } else {
             setGameOver(true);
         }
@@ -85,6 +49,7 @@ public class ManualMode extends Simulation {
     @Override
     public void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
         Room playerPosition = getPlayer().getPosition();
+
 
         if (!getEnemies().isEmpty()) {
             System.out.println("But enemies are somewhere....");
@@ -103,24 +68,30 @@ public class ManualMode extends Simulation {
         System.out.println("==== IMF - Possible Moves ====");
         int choice = -1;
         Scanner scanner = new Scanner(System.in);
-        Room selectedRoom = null;
+        Room selectedRoom = currenRoom;
+        int counter = 0;
 
         ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(currenRoom);
 
         for (int i = 0; i < possibleMoves.size(); i++) {
             System.out.println("[" + i + "] " + possibleMoves.getElement(i));
+            counter++;
         }
+
+        System.out.println("[" + counter + "] Stay" );
 
         while (true) {
             System.out.println("==== IMF - Choose your next move ====");
             if (scanner.hasNextInt()) {
                 choice = scanner.nextInt();
-                if (choice >= 0 && choice <= possibleMoves.size()) {
+                if (choice >= 0 && choice < counter) {
                     selectedRoom = possibleMoves.getElement(choice);
+                    break;
+                } else if (choice == counter) {
+                    System.out.println("==== You choose to stay ====");
                     break;
                 } else {
                     System.out.println("==== Invalid option ====");
-
                 }
             } else {
                 System.out.println("==== Please select a valid option ====");

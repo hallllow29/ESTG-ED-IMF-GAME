@@ -1,5 +1,6 @@
 import entities.BackPack;
 import entities.Player;
+import lib.CustomNetwork;
 import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
@@ -10,10 +11,10 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class ModeManager {
-    private Mission mission;
+    private Mission missionImpl;
 
     public ModeManager() {
-        this.mission = null;
+        this.missionImpl = null;
     }
 
     public Player createPlayer() {
@@ -41,10 +42,10 @@ public class ModeManager {
 
         switch (choice) {
             case 1:
-                this.mission = JsonSimpleRead.loadMissionFromJson("mission.json", new Network<>());
+                this.missionImpl = JsonSimpleRead.loadMissionFromJson("mission.json", new CustomNetwork<>());
                 break;
             case 2:
-                this.mission = JsonSimpleRead.loadMissionFromJson("missao_rato_de_aco.json", new Network<>());
+                this.missionImpl = JsonSimpleRead.loadMissionFromJson("missao_rato_de_aco.json", new CustomNetwork<>());
                 break;
             case 9 :
                 return;
@@ -80,16 +81,21 @@ public class ModeManager {
         }
     }
 
-
     private void runAutomaticSimulation(Player player) throws ElementNotFoundException, EmptyCollectionException {
-        AutomaticMode autoMode = new AutomaticMode(mission, player);
+        Report report = new Report("Automatic", player, missionImpl);
+        AutomaticMode autoMode = new AutomaticMode(missionImpl, player, report);
 
         autoMode.game();
+
+        SaveToJsonFile.saveJsonFile(report);
     }
 
     private void runManualSimulation(Player player) throws EmptyCollectionException, ElementNotFoundException {
-        ManualMode manualMode = new ManualMode(mission, player);
+        Report report = new Report("Manual", player, missionImpl);
+        ManualMode manualMode = new ManualMode(missionImpl, player, report);
 
         manualMode.game();
+
+        SaveToJsonFile.saveJsonFile(report);
     }
 }

@@ -2,14 +2,12 @@ import entities.Enemy;
 import entities.Item;
 import entities.Room;
 import entities.Target;
-import lib.Graph;
+import lib.CustomNetwork;
 import lib.LinkedList;
 import lib.Network;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
-
-import java.util.Iterator;
 
 public class Mission {
 
@@ -19,12 +17,12 @@ public class Mission {
 	private Room entryPoint;
 	private boolean targetSecured;
 
-	private final Network<Room> battlefield;
+	private final CustomNetwork<Room> battlefield;
 	private final LinkedList<Enemy> enemies;
 	private final LinkedList<Item> items;
 	private final LinkedList<Room> entry_exit_points;
 
-	public Mission(String code, int version, Network<Room> battlefield) {
+	public Mission(String code, int version, CustomNetwork<Room> battlefield) {
 		this.code = code;
 		this.version = version;
 		this.battlefield = battlefield;
@@ -67,7 +65,7 @@ public class Mission {
 		return this.entry_exit_points;
 	}
 
-	public Network<Room> getBattlefield() {
+	public CustomNetwork<Room> getBattlefield() {
 		return this.battlefield;
 	}
 

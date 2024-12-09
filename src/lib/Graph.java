@@ -310,49 +310,4 @@ public class Graph <T> implements GraphADT<T>  {
 		return -1;
 	}
 
-	/**
-	 * Retrieves a Room object from the graph based on its name.
-	 *
-	 * @param name the name of the room to be retrieved
-	 * @return the Room object with the specified name if it exists in the graph, or null
-	 * if no such room is found
-	 */
-	public Room getRoom(String name) {
-		for (T vertex : vertices) {
-			if (((Room) vertex).getName().equals(name)) {
-				return (Room) vertex;
-			}
-		}
-		return null;
-	}
-
-	public ArrayUnorderedList<T> getVertices() {
-		ArrayUnorderedList<T> verticesList = new ArrayUnorderedList<>();
-		// Object vertex;
-
-		for (int i = 0; i < numVertices; i++) {
-			// vertex = this.vertices[i];
-
-			verticesList.addToRear(this.vertices[i]);
-		}
-
-		return verticesList;
-	}
-
-	public ArrayUnorderedList<T> getConnectedVertices(T vertex) {
-		int index = getVertexIndex(vertex);
-
-		if (index == -1) {
-			throw new IllegalArgumentException("Graph");
-		}
-		ArrayUnorderedList<T> connectedVertices = new ArrayUnorderedList<>();
-
-		for (int i = 0; i < this.numVertices; i++) {
-			if (this.adjMatrix[index][i]) {
-				connectedVertices.addToRear(vertices[i]);
-			}
-		}
-
-		return connectedVertices;
-	}
 }

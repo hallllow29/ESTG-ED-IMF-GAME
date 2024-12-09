@@ -1,4 +1,5 @@
 import entities.*;
+import lib.CustomNetwork;
 import lib.LinkedList;
 import lib.Network;
 import lib.exceptions.NotElementComparableException;
@@ -13,9 +14,9 @@ import java.util.Scanner;
  */
 public class Main {
 
-	private static Mission mission;
-	private static Simulation simulation;
-	private static Network<Room> graph;
+	private static Mission missionImpl;
+	private static Simulation simulationImpl;
+	private static CustomNetwork<Room> graph;
 	private static LinkedList<Enemy> enemies;
 
 	/**
@@ -25,8 +26,8 @@ public class Main {
 		try {
 			// INIT GRAPH
 			System.out.println("Carregando ");
-			Network<Room> graph = initGraph();
-			Mission mission = Main.getMission();
+			CustomNetwork<Room> graph = initGraph();
+			Mission missionImpl = Main.getMission();
 			setGraph(graph);
 
 			displayMissionDetails(graph);
@@ -35,17 +36,17 @@ public class Main {
 
 			displayAdjacentRoomDetails(graph);
 
-			displayEnemyIntel(mission);
+			displayEnemyIntel(missionImpl);
 
-			displayItems(mission);
+			displayItems(missionImpl);
 
-			displayEntryExitPoints(mission);
+			displayEntryExitPoints(missionImpl);
 
 			//simulationMenu();
 
-			displayTarget(mission);
+			displayTarget(missionImpl);
 
-			LinkedList<Room> entry_points_selection = mission.getEntryExitPoints();
+			LinkedList<Room> entry_points_selection = missionImpl.getEntryExitPoints();
 
 			//Iterator<Room> entry_points = entry_points_selection.iterator();
 			Room coco  = null;
@@ -148,23 +149,23 @@ public class Main {
 		}
 	}
 
-	public static void setMission(Mission mission) {
-		Main.mission = mission;
+	public static void setMission(Mission missionImpl) {
+		Main.missionImpl = missionImpl;
 	}
 
 	public static Mission getMission() {
-		return Main.mission;
+		return Main.missionImpl;
 	}
 
-	public static void setSimulation(Simulation simulation) {
-		Main.simulation = simulation;
+	public static void setSimulation(Simulation simulationImpl) {
+		Main.simulationImpl = simulationImpl;
 	}
 
 	public static Simulation getSimulation() {
-		return Main.simulation;
+		return Main.simulationImpl;
 	}
 
-	public static void setGraph(Network<Room> graph) {
+	public static void setGraph(CustomNetwork<Room> graph) {
 		Main.graph = graph;
 	}
 
@@ -247,10 +248,10 @@ public class Main {
 		}
 	} */
 
-	private static Network<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
-		Network<Room> network = new Network<>();
-		Mission mission = JsonSimpleRead.loadMissionFromJson("mission.json", network);
-		setMission(mission);
+	private static CustomNetwork<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
+		CustomNetwork<Room> network = new CustomNetwork<>();
+		Mission missionImpl = JsonSimpleRead.loadMissionFromJson("mission.json", network);
+		setMission(missionImpl);
 		return network;
 	}
 
@@ -259,7 +260,7 @@ public class Main {
 		System.out.println(getMission());
 	}
 
-	private static void displayRoomDetails(Network<Room> graph) {
+	private static void displayRoomDetails(CustomNetwork<Room> graph) {
 		String result = ("\n\t========= DIVISOES =========");
 
 		for (Room room : graph.getVertices()) {
@@ -268,7 +269,7 @@ public class Main {
 		System.out.println(result);
 	}
 
-	private static void displayAdjacentRoomDetails(Network<Room> graph) {
+	private static void displayAdjacentRoomDetails(CustomNetwork<Room> graph) {
 		// System.out.println("\n\t========= CONEXOES =========");
 
 		String result = ("\n\t========= CONEXOES =========");
@@ -284,9 +285,9 @@ public class Main {
 		System.out.println(result);
 	}
 
-	private static void displayEnemyIntel(Mission mission) {
+	private static void displayEnemyIntel(Mission missionImpl) {
 		String result = ("\n\t========= INIMIGOS =========");
-		for (Enemy enemy : mission.getEnemies()) {
+		for (Enemy enemy : missionImpl.getEnemies()) {
 			// System.out.printf("Name: %-10s Fire Power: %-4s Position: %s\n",
 			// 	enemy.getName(), enemy.getFirePower(), enemy.getPosition());
 			result += "\nName: " + enemy.getName() +
@@ -296,9 +297,9 @@ public class Main {
 		System.out.println(result);
 	}
 
-	private static void displayItems(Mission mission) {
+	private static void displayItems(Mission missionImpl) {
 		String result = ("\n\t=========  ITEMS  =========");
-		for (Item item : mission.getItems()) {
+		for (Item item : missionImpl.getItems()) {
 			result += "\nItem: " + item.getName() +
 				"\tValue: " + item.getItemValue() +
 				"\tPosition: " + item.getPosition();
@@ -306,16 +307,16 @@ public class Main {
 		System.out.println(result);
 	}
 
-	private static void displayEntryExitPoints(Mission mission) {
+	private static void displayEntryExitPoints(Mission missionImpl) {
 		System.out.println("\n===== Pontos de Entrada/Saída =====");
-		for (Room roomObj : mission.getEntryExitPoints()) {
+		for (Room roomObj : missionImpl.getEntryExitPoints()) {
 			System.out.println(roomObj.getName());
 		}
 	}
 
-	private static void displayTarget(Mission mission) {
+	private static void displayTarget(Mission missionImpl) {
 		System.out.println("\n==== TARGET ====");
-		System.out.println(mission.getTarget());
+		System.out.println(missionImpl.getTarget());
 	}
 
 	public static int interactiveSelection(String entry_point_string) {

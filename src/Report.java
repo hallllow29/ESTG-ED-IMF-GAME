@@ -1,5 +1,4 @@
 import entities.Player;
-import lib.ArrayOrderedList;
 import lib.ArrayUnorderedList;
 
 import java.time.LocalDateTime;
@@ -7,12 +6,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public class Report {
+
     private String simulationId;
     private String timestamp;
     private String type;
+    private String missionStatus;
     private Player player;
     private Mission mission;
-    private ArrayOrderedList<String> trajectory;
+    private String entryPoint;
+    private ArrayUnorderedList<String> trajectoryToTarget;
+    private ArrayUnorderedList<String> trajectoryToExtraction;
     private final ArrayUnorderedList<String> enemiesSurvived;
 
     public Report(String type, Player player, Mission mission) {
@@ -21,8 +24,19 @@ public class Report {
         this.player = player;
         this.mission = mission;
         this.type = type;
-        this.trajectory = new ArrayOrderedList<>();
+        this.trajectoryToTarget = new ArrayUnorderedList<>();
         this.enemiesSurvived = new ArrayUnorderedList<>();
+        this.trajectoryToExtraction = new ArrayUnorderedList<>();
+        this.entryPoint = null;
+        this.missionStatus = null;
+    }
+
+    public String getEntryPoint() {
+        return this.entryPoint;
+    }
+
+    public void setEntryPoint(String roomName) {
+        this.entryPoint = roomName;
     }
 
     public String getTimestamp() {
@@ -53,28 +67,32 @@ public class Report {
         return mission;
     }
 
+    public String getMissionStatus() {
+        return this.missionStatus;
+    }
+
+    public void setMissionStatus(String status) {
+        this.missionStatus = status;
+    }
+
     public void setMission(Mission mission) {
         this.mission = mission;
     }
 
-    public ArrayOrderedList<String> getTrajectory() {
-        return trajectory;
-    }
-
-    public void setTrajectory(ArrayOrderedList<String> trajectory) {
-        this.trajectory = trajectory;
+    public ArrayUnorderedList<String> getTrajectoryToTarget() {
+        return trajectoryToTarget;
     }
 
     public String getSimulationId() {
         return simulationId;
     }
 
-    public void setSimulationId(String simulationId) {
-        this.simulationId = simulationId;
+    public void addRoom(String roomName) {
+        this.trajectoryToTarget.addToRear(roomName);
     }
 
-    public void addRoom(String roomName) {
-        this.trajectory.add(roomName);
+    public void addRoomToExtraction(String roomName) {
+        this.trajectoryToExtraction.addToRear(roomName);
     }
 
     public void addEnemy(String enemyName) {
@@ -83,6 +101,10 @@ public class Report {
 
     public ArrayUnorderedList<String> getEnemiesSurvived() {
         return this.enemiesSurvived;
+    }
+
+    public ArrayUnorderedList<String> getTrajectoryToExtraction() {
+        return this.trajectoryToExtraction;
     }
 
     private String getCurrentTimestamp() {
