@@ -299,8 +299,8 @@ public abstract class Simulation {
 		String scenarioTRESstart =
 			"\nENEMIES enter in " + playerPosition.getName() + "..." +
 				"\n|========== [<< SCENARIO 3 START >>] ==========" +
-				"\n\tENEMIES make contact with TO CRUZ..." +
-				"\n\tAND have priority of attack over TO CRUZ..." +
+				"\n|\tENEMIES make contact with " + player.getName() + "..." +
+				"\n|\tAND have priority of attack over "+ player.getName() + "..." +
 				"\n|" +
 				"\n|  --------------  ENEMY TURN  --------------";
 		System.out.print(scenarioTRESstart);
@@ -311,14 +311,19 @@ public abstract class Simulation {
 		String scenarioTRESend = "";
 		while (player.isAlive() && playerPosition.hasEnemies()) {
 
-			playerConfronts();
+			if (this.currentScenario != ScenarioNr.FOUR) {
+				String scenarioTRESendSpecial =
+					"\n|\t-------------- PLAYER  TURN --------------" +
+					"\n|";
+				System.out.print(scenarioTRESendSpecial);
+				playerConfronts();
+			}
 
 			scenarioTRESend += "\n|  --------------  ENEMY TURN  --------------" +
 				"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
 				"\n|\tENEMIES not in " + playerPosition.getName() + " are moving...";
 			moveEnemiesNotInSameRoom();
 			enemiesConfronts(player);
-			scenarioTRESend += "\n|\t-------------- PLAYER  TURN --------------";
 		}
 
 		if (!playerPosition.hasEnemies()) {
@@ -629,11 +634,12 @@ public abstract class Simulation {
 
 				enemiesConfronts =
 					"\n|\t" + enemy.getName() + " is attacking " + playerName +
-						" with " + enemyAttack + " damage...";
-
+						"\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
 				// ScenarioNr 4: O Tó Cruz utiliza kits de vida DURANTE
 				// o combate consumindo a sua fase de jogador...
+				System.out.print(enemiesConfronts);
 				if (playerNeedsRecoveryItem()) {
+					setNextScenario(ScenarioNr.FOUR);
 					scenarioQUATRO();
 					return;
 				}
@@ -642,7 +648,6 @@ public abstract class Simulation {
 
 		}
 
-		System.out.println(enemiesConfronts);
 	}
 
 	private Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {

@@ -81,7 +81,7 @@ public class AutomaticMode extends Simulation {
             Room nextPosition = path.next();
 
             movePlayerOutput.append("\n" + this.getPlayer().getName() + " plans to move from...").append
-                (String.format("\n\t[%s] ---> [%s]", playerPosition.getName(), nextPosition.getName()));
+                (String.format("\n\t[%s] ---> [%s]\n", playerPosition.getName(), nextPosition.getName()));
             this.getPlayer().setPosition(nextPosition);
 
         } else {
