@@ -1,16 +1,16 @@
 package entities;
 
-import lib.stacks.LinkedStack;
+import lib.stacks.ArrayStack;
 import lib.exceptions.EmptyCollectionException;
 
 public class BackPack {
 
 
-    private final LinkedStack<MediKit> back_pack;
+    private final ArrayStack<MediKit> back_pack;
 
 
     public BackPack() {
-        this.back_pack = new LinkedStack<>();
+        this.back_pack = new ArrayStack<>();
     }
 
     public void addKit(MediKit kit) {
@@ -33,5 +33,8 @@ public class BackPack {
         return "BackPack:\n" + back_pack;
     }
 
+    public ArrayStack<MediKit> getListItems() {
+        return this.back_pack;
+    }
 
 }

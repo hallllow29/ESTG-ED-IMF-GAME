@@ -394,7 +394,7 @@ public abstract class Simulation {
 		System.out.println(scenarioTRESend);
 	}
 
-	private void scenarioQUATRO() {
+	protected void scenarioQUATRO() {
 
 		String scenarioQUATROstart =
 			"\n|========== [<< SCENARIO 4 START >>] ==========" +

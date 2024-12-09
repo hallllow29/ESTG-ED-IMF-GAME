@@ -1,8 +1,9 @@
 import entities.*;
-import lib.lists.ArrayUnorderedList;
-import lib.lists.CircularDoubleLinkedList;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.lists.ArrayUnorderedList;
+import lib.lists.CircularDoubleLinkedList;
+import lib.stacks.ArrayStack;
 
 import java.util.Iterator;
 import java.util.Scanner;
@@ -54,13 +55,19 @@ public class ManualMode extends Simulation {
         int counter = 0;
 
         ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(currenRoom);
+        ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
 
-        for (int i = 0; i < possibleMoves.size(); i++) {
-            System.out.println("[" + i + "] " + possibleMoves.getElement(i));
+        for (Room room : possibleMoves) {
+            System.out.println("[" + counter + "] " + possibleMoves.getElement(counter));
+            displayRooms.addToRear(room);
             counter++;
         }
 
-        System.out.println("[" + counter + "] Stay" );
+        int stayOption = counter;
+        System.out.println("[" + stayOption + "] Stay");
+
+        int useMedicKit = counter + 1;
+        System.out.println("[" + useMedicKit + "] Use MedicKit - HP " + getPlayer().getCurrentHealth() + "/100");
 
         while (true) {
             System.out.println("==== IMF - Choose your next move ====");
@@ -73,6 +80,14 @@ public class ManualMode extends Simulation {
                     System.out.println("==== You choose to stay ====");
                     selectedRoom = currenRoom;
                     break;
+                } else if (choice == useMedicKit) {
+                    if (getPlayer().getBack_pack().isBackPackEmpty()) {
+                        System.out.println("==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====");
+                    } else {
+                        useMedicKit();
+                        selectedRoom = currenRoom;
+                        break;
+                    }
                 } else {
                     System.out.println("==== Invalid option ====");
                 }
@@ -141,8 +156,19 @@ public class ManualMode extends Simulation {
             System.out.println("==== BEST PATH TO CLOSEST MEDIC KIT ====");
 
             Room toPosition = calculateClosestPathToMedicKit();
-            displayPath(getPlayer().getPosition(), toPosition);
+            if (toPosition != null) {
+                displayPath(getPlayer().getPosition(), toPosition);
+            } else {
+                System.out.println("There are no more medic kits available on the building!");
+            }
+
         }
+
+        System.out.println("Current Health: " + this.getPlayer().getCurrentHealth() + "/100");
+
+
+        System.out.println(displayMedicKits());
+
 
         System.out.println("==== SSS Sophisticated Spy System ====");
     }
@@ -168,5 +194,21 @@ public class ManualMode extends Simulation {
         }
 
         return destinationRoom;
+    }
+
+    private String displayMedicKits() {
+        System.out.println("==== BACK PACK  ====");
+        ArrayStack<MediKit> stack = super.getPlayer().getBack_pack().getListItems();
+
+        if (stack.isEmpty()) {
+            return "Back Pack is empty";
+        }
+
+        return stack.toString();
+
+    }
+
+    private void useMedicKit() {
+        super.scenarioQUATRO();
     }
 }

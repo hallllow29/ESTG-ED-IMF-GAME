@@ -52,11 +52,7 @@ public class ArrayStack<T> implements StackADT<T> {
 
     @Override
     public boolean isEmpty() {
-        if (this.stack.length == 0) {
-            return true;
-        }
-
-        return false;
+        return this.top == 0;
     }
 
     @Override

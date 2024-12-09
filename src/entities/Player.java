@@ -100,4 +100,8 @@ public class Player extends Character {
 		return !this.back_pack.isBackPackEmpty();
 	 }
 
+	 public BackPack  getBack_pack() {
+		return this.back_pack;
+	 }
+
 }
