@@ -6,65 +6,27 @@ import java.util.Iterator;
 
 public class AutomaticMode extends Simulation {
 
-    public AutomaticMode(Mission mission, Player player) {
-        super(mission, player);
+    public AutomaticMode(Mission missionImpl, Player player, Report report) {
+        super(missionImpl, player, report);
     }
 
+    @Override
     public void game() throws ElementNotFoundException, EmptyCollectionException {
 
-        renderSimulation(this.getPlayer(), this.getMission().getTarget());
+        renderAutomaticSimulation(this.getPlayer(), this.getMission().getTarget());
 
         System.out.println("TO CRUZ starts mission in " + "\n\t[" + getEntryPoint().getName() + "]");
 
-        while (!isGameOver()) {
+        this.getReport().addRoom(getPlayer().getPosition().getName());
+        this.getReport().setEntryPoint(getPlayer().getPosition().getName());
 
-            if (this.getCurrentTurn() == Turn.PLAYER) {
-                playerTurn();
-            }
+        super.gameFlow();
 
-            if (isMissionAccomplished()) {
-                this.setGameOver(true);
-            }
-
-
-                enemyTurn();
-
-
-        }
-
-        // I wish i could add some sleep for few ms, but it would
-        // have a negative impact in performance or avaliation....
-        System.out.println("TO CRUZ DIED !!!");
-        System.out.println("JUST KIDDING...");
-        System.out.println("IT WAS A SIMULATION...");
-        System.out.println("...OR WASN'T IT...");
-        System.out.println("GAME OVER!");
-
-        Iterator<Enemy> enemies = this.getEnemies().iterator();
-
-        while (enemies.hasNext()) {
-            System.out.println(enemies.next());
-        }
-
-		/*
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-
-			Look at me
-			I Just can't believe
-			What they've done to me
-			We could never get free
-			I just wanna be
-			I just wanna dream
-		 */
     }
 
 
     @Override
-    protected void movePlayer() throws ElementNotFoundException {
+    public void movePlayer() throws ElementNotFoundException {
         StringBuilder movePlayerOutput = new StringBuilder();
         Room playerPosition = this.getPlayer().getPosition();
         Room nextObjective = this.getNextObjective();
@@ -84,6 +46,8 @@ public class AutomaticMode extends Simulation {
                 (String.format("\n\t[%s] ---> [%s]\n", playerPosition.getName(), nextPosition.getName()));
             this.getPlayer().setPosition(nextPosition);
 
+            super.addRoomToReport(nextPosition.getName());
+
         } else {
             if (isMissionAccomplished()) {
                 this.setGameOver(true);
@@ -91,4 +55,26 @@ public class AutomaticMode extends Simulation {
         }
         System.out.print(movePlayerOutput);
     }
+
+    protected void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
+        Room playerPosition = this.getPlayer().getPosition();
+
+        String playerTurnOutput = "";
+        if (!playerPosition.hasEnemies() || this.getCurrentScenario() == ScenarioNr.TWO) {
+            playerTurnOutput +=
+                    "\n" + this.getPlayer().getName() + " is moving..." +
+                            "\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
+
+            movePlayer();
+        } else {
+            playerConfronts();
+        }
+
+        System.out.println(playerTurnOutput);
+
+        // "o jogo se me sequência de ações"
+        scenariosSituations();
+        scenariosCase(this.getCurrentScenario());
+    }
+
 }

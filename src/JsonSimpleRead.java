@@ -1,5 +1,6 @@
 import entities.*;
 
+import lib.CustomNetwork;
 import lib.Network;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.JSONArray;
@@ -14,10 +15,10 @@ import lib.Graph;
 
 public class JsonSimpleRead {
 
-    public static Mission loadMissionFromJson(String file_in_path, Network<Room> graph) throws IOException, ParseException, NotElementComparableException {
+    public static Mission loadMissionFromJson(String file_in_path, CustomNetwork<Room> graph) throws IOException, ParseException, NotElementComparableException {
 
         JSONObject jsonObject = parseJsonFile(file_in_path);
-        Mission mission = newMission(jsonObject, graph);
+        Mission missionImpl = newMission(jsonObject, graph);
 
         JSONArray blueprint = (JSONArray) jsonObject.get("edificio");
         addRoomsToGraph(blueprint, graph);
@@ -26,19 +27,19 @@ public class JsonSimpleRead {
         addConnectionsToGraph(connections, graph);
 
         JSONArray enemies = (JSONArray) jsonObject.get("inimigos");
-        addEnemiesToMission(enemies, graph, mission);
+        addEnemiesToMission(enemies, graph, missionImpl);
 
 
         JSONArray items = (JSONArray) jsonObject.get("itens");
-        addItemsToRooms(items, graph, mission);
+        addItemsToRooms(items, graph, missionImpl);
 
         JSONArray entries_exits = (JSONArray) jsonObject.get("entradas-saidas");
-        addEntryAndExitsPoints(entries_exits, graph, mission);
+        addEntryAndExitsPoints(entries_exits, graph, missionImpl);
 
         JSONObject targetJson = (JSONObject) jsonObject.get("alvo");
-        setMissionTarget(targetJson, graph, mission);
+        setMissionTarget(targetJson, graph, missionImpl);
 
-        return mission;
+        return missionImpl;
     }
 
     /**
@@ -61,7 +62,7 @@ public class JsonSimpleRead {
      * @param jsonObject the JSON object containing the mission data, expected to have keys "cod-missao" and "versao"
      * @return a new Mission instance initialized with the specified code and version
      */
-    private static Mission newMission(JSONObject jsonObject, Network<Room> network) {
+    private static Mission newMission(JSONObject jsonObject, CustomNetwork<Room> network) {
         String mission_code = (String) jsonObject.get("cod-missao");
         int mission_version = ((Long) jsonObject.get("versao")).intValue();
         return new Mission(mission_code, mission_version, network);
@@ -74,7 +75,7 @@ public class JsonSimpleRead {
      * @param building a JSONArray containing room names to be added as vertices in the graph
      * @param graph a Graph where each valid room name from the JSONArray is added as a vertex
      */
-    private static void addRoomsToGraph(JSONArray building, Network<Room> graph) {
+    private static void addRoomsToGraph(JSONArray building, CustomNetwork<Room> graph) {
         for (Object roomObj : building) {
 
             String room_name = (String) roomObj;
@@ -97,7 +98,7 @@ public class JsonSimpleRead {
      * @param connections a JSONArray where each element is a JSONArray containing two strings: the starting room and the destination room
      * @param graph a Graph to which connections from the JSONArray are added as directed edges
      */
-    private static void addConnectionsToGraph(JSONArray connections, Network<Room> graph) {
+    private static void addConnectionsToGraph(JSONArray connections, CustomNetwork<Room> graph) {
         for (Object connectionObj : connections) {
             JSONArray connectionArray = (JSONArray) connectionObj;
 
@@ -127,7 +128,7 @@ public class JsonSimpleRead {
      *                with information about the enemy's name, power, and location
      * @param graph a Graph<Room> used to find and add enemies to the appropriate rooms
      */
-    private static void addEnemiesToMission(JSONArray enemies, Graph<Room> graph, Mission mission) throws NotElementComparableException {
+    private static void addEnemiesToMission(JSONArray enemies, CustomNetwork<Room> graph, Mission missionImpl) throws NotElementComparableException {
         for (Object enemyObj : enemies) {
             JSONObject enemyJson = (JSONObject) enemyObj;
 
@@ -156,7 +157,7 @@ public class JsonSimpleRead {
             Room room =  graph.getRoom(enemy_location);
             if (room != null) {
                 Enemy enemy_in_mission = new Enemy(enemy_name, enemy_power, room);
-                mission.setEnemy(enemy_in_mission);
+                missionImpl.setEnemy(enemy_in_mission);
                 room.addEnemy();
                 room.setEnemies(true);
             } else {
@@ -176,7 +177,7 @@ public class JsonSimpleRead {
      *              with information about the item's location, type, and points
      * @param graph a Graph<Room> used to find and add items to the appropriate rooms
      */
-    private static void addItemsToRooms(JSONArray items, Network<Room> graph, Mission mission) throws NotElementComparableException {
+    private static void addItemsToRooms(JSONArray items, CustomNetwork<Room> graph, Mission missionImpl) throws NotElementComparableException {
         for (Object itemObj : items) {
             JSONObject itemJson = (JSONObject) itemObj;
 
@@ -200,7 +201,7 @@ public class JsonSimpleRead {
 
             if (room != null) {
                Item item = defineItem(room, item_points, item_type);
-               mission.setItem(item);
+               missionImpl.setItem(item);
                room.addItem();
                room.setItemsInRoom(true);
             } else {
@@ -243,15 +244,15 @@ public class JsonSimpleRead {
      *
      * @param entries_exits a JSONArray containing room names designated as entry and exit points
      * @param graph a Graph<Room> used to retrieve Room objects for the given room names
-     * @param mission a Mission object to which the entry and exit points are added
+     * @param missionImpl a Mission object to which the entry and exit points are added
      */
-    private static void addEntryAndExitsPoints(JSONArray entries_exits, Network<Room> graph, Mission mission) throws NotElementComparableException {
+    private static void addEntryAndExitsPoints(JSONArray entries_exits, CustomNetwork<Room> graph, Mission missionImpl) throws NotElementComparableException {
         for (Object entry_exit_obj : entries_exits) {
             String room_name = (String) entry_exit_obj;
             Room room = graph.getRoom(room_name);
 
             if (room != null) {
-                mission.setEntryExitPoint(room);
+                missionImpl.setEntryExitPoint(room);
             } else {
                 System.err.println("Room " + room_name + " not found as entry or exit point");
             }
@@ -266,9 +267,9 @@ public class JsonSimpleRead {
      *
      * @param targetJson a JSONObject containing the target data, expected to have keys "divisao" and "tipo"
      * @param graph a Graph<Room> used to locate the target room based on the specified room name
-     * @param mission the Mission object in which the target is to be set
+     * @param missionImpl the Mission object in which the target is to be set
      */
-    private static void setMissionTarget(JSONObject targetJson, Network<Room> graph, Mission mission) {
+    private static void setMissionTarget(JSONObject targetJson, CustomNetwork<Room> graph, Mission missionImpl) {
         String target_room = (String) targetJson.get("divisao");
         String target_type = (String) targetJson.get("tipo");
 
@@ -276,7 +277,7 @@ public class JsonSimpleRead {
 
         if (room != null) {
             Target target = new Target(room, target_type);
-            mission.setTarget(target);
+            missionImpl.setTarget(target);
         } else {
             System.err.println("Room " + target_room + "not found as target room");
         }

@@ -16,6 +16,9 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         this.vertices = (T[]) (new Object[DEFAULT_CAPACITY]);
     }
 
+    public double[][] getWeightMatrix() {
+        return this.weightMatrix;
+    }
     @Override
     public void addEdge(T vertex1, T vertex2, double weight) {
         int index1 = super.getVertexIndex(vertex1);
@@ -358,10 +361,4 @@ public class Network<T> extends Graph<T> implements NetworkADT<T> {
         return connectedVertices;
     }
 }
-
-    /*public String toString() {
-        if (super.numVertices == 0) {
-            return "Network";
-        }*/
-
 

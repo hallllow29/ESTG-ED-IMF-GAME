@@ -22,13 +22,22 @@ public class SaveToJsonFile {
         JSONObject mission = new JSONObject();
         mission.put("code", report.getMission().getCode());
         mission.put("target", report.getMission().getTarget());
+        mission.put("entryPoint", report.getEntryPoint());
+        mission.put("missionStatus", report.getMissionStatus());
         jsonReport.put("mission", mission);
 
-        JSONArray pathArray = new JSONArray();
-        for (String room : report.getTrajectory()) {
-            pathArray.add(room);
+        JSONArray pathToTargetArray = new JSONArray();
+        for (String room : report.getTrajectoryToTarget()) {
+            pathToTargetArray.add(room);
         }
-        jsonReport.put("trajetory", pathArray);
+        jsonReport.put("trajetoryToTarget", pathToTargetArray);
+
+        JSONArray pathToExtraction = new JSONArray();
+        for (String room : report.getTrajectoryToExtraction()) {
+            pathToTargetArray.add(room);
+        }
+
+        jsonReport.put("trajectoryToExtraction", pathToExtraction);
 
         JSONArray enemiesArray = new JSONArray();
         for (String enemy : report.getEnemiesSurvived()) {

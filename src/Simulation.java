@@ -1,8 +1,5 @@
 import entities.*;
-import lib.ArrayList;
-import lib.ArrayUnorderedList;
-import lib.LinkedList;
-import lib.Network;
+import lib.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -12,7 +9,7 @@ import java.util.Random;
 public abstract class Simulation {
 
 	private final Mission mission;
-	private Network<Room> battlefield;
+	private CustomNetwork<Room> battlefield;
 	private final Player player;
 	private boolean gameOver;
 	private Room entryPoint;
@@ -24,23 +21,64 @@ public abstract class Simulation {
 	private Room nextObjective;
 	private LinkedList<Enemy> enemies;
 	private Room closestItem;
+	private Report report;
 
-	public Simulation(Mission mission, Player player) {
+	public Simulation(Mission mission, Player player, Report report) {
 		this.mission = mission;
-		this.battlefield = new Network<>();
+		this.battlefield = new CustomNetwork<>();
 		this.battlefield = this.mission.getBattlefield();
 		this.player = player;
 		this.currentTurn = Turn.PLAYER;
 		this.missionAccomplished = false;
 		this.enemies = new LinkedList<>();
 		this.enemies = this.mission.getEnemies();
+		this.report = report;
 	}
 
 	protected abstract void movePlayer() throws ElementNotFoundException, EmptyCollectionException;
 
 	public abstract void game() throws ElementNotFoundException, EmptyCollectionException;
 
-	public void renderSimulation(Player player, Target target) throws ElementNotFoundException {
+	protected void gameFlow() throws EmptyCollectionException, ElementNotFoundException {
+		while (!isGameOver()) {
+
+			if (this.getCurrentTurn() == Turn.PLAYER) {
+				playerTurn();
+			}
+
+			if (isMissionAccomplished()) {
+				this.setGameOver(true);
+			}
+
+
+			enemyTurn();
+
+
+		}
+
+		addStatusToReport();
+
+		System.out.println("TO CRUZ DIED !!!");
+		System.out.println("JUST KIDDING...");
+		System.out.println("IT WAS A SIMULATION...");
+		System.out.println("...OR WASN'T IT...");
+		System.out.println("GAME OVER!");
+
+		Iterator<Enemy> enemies = this.getEnemies().iterator();
+
+		while (enemies.hasNext()) {
+			Enemy enemy = enemies.next();
+			System.out.println(enemy);
+			this.getReport().addEnemy(enemy.getName());
+		}
+	}
+	protected abstract void playerTurn() throws ElementNotFoundException, EmptyCollectionException;
+
+	public boolean isReturningToExit() {
+		return this.returningToExit;
+	}
+
+	public void renderAutomaticSimulation(Player player, Target target) throws ElementNotFoundException {
 		setNextObjective(target.getRoom());
 		setEntryPoint(findBestEntryPoint());
 		player.setPosition(entryPoint);
@@ -54,6 +92,10 @@ public abstract class Simulation {
 		this.missionAccomplished = false;
 		this.currentTurn = Turn.PLAYER;
 		this.gameOver = false;
+	}
+
+	public Report getReport() {
+		return this.report;
 	}
 
 	public Network<Room> getBattlefield() {
@@ -106,27 +148,6 @@ public abstract class Simulation {
 
 	protected Turn getCurrentTurn() {
 		return this.currentTurn;
-	}
-
-	protected void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
-		Room playerPosition = player.getPosition();
-
-		String playerTurnOutput = "";
-		if (!playerPosition.hasEnemies() || this.currentScenario == ScenarioNr.TWO) {
-			playerTurnOutput +=
-				"\n" + player.getName() + " is moving..." +
-					"\n" + player.getName() + " leaves " + playerPosition.getName() + "...";
-
-			movePlayer();
-		} else {
-			playerConfronts();
-		}
-
-		System.out.println(playerTurnOutput);
-
-		// "o jogo se me sequência de ações"
-		scenariosSituations();
-		scenariosCase(this.currentScenario);
 	}
 
 	protected void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
@@ -463,7 +484,7 @@ public abstract class Simulation {
 		return bestEntryPoint;
 	}
 
-	private void playerConfronts() {
+	protected void playerConfronts() {
 		String playerConfrontsOutput = "";
 		final int NONE = 0;
 		Iterator<Enemy> enemies = this.enemies.iterator();
@@ -782,6 +803,22 @@ public abstract class Simulation {
 		}
 		System.out.println(displayPathOutput);
 		// String print = displayPathOutput.toString();
+	}
+
+	protected void addRoomToReport(String roomName) {
+		if (!isReturningToExit()) {
+			getReport().addRoom(roomName);
+		} else {
+			getReport().addRoomToExtraction(roomName);
+		}
+	}
+
+	protected void addStatusToReport() {
+		if (player.isAlive() && isGameOver()) {
+			report.setMissionStatus("Mission Accomplished");
+		} else {
+			report.setMissionStatus("Mission Failed");
+		}
 	}
 
 }
