@@ -32,7 +32,7 @@ public class LinkedBinaryTree<T> implements BinaryTreeADT<T> {
 
 	@Override
 	public BinaryTreeNode<T> getRoot() {
-		return this.root;
+		return (BinaryTreeNode<T>) this.root;
 	}
 
 	public T getRootElement() {

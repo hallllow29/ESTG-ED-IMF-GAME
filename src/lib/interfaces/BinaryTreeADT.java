@@ -8,9 +8,9 @@ import java.util.Iterator;
 
 public interface BinaryTreeADT<T> {
 
-	T getRootElement();
-
 	BinaryTreeNode<T> getRoot();
+
+	T getRootElement();
 
 	boolean isEmpty();
 

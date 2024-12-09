@@ -1,6 +1,6 @@
 package entities;
 
-import lib.LinkedStack;
+import lib.stacks.LinkedStack;
 import lib.exceptions.EmptyCollectionException;
 
 public class BackPack {

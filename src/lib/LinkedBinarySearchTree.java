@@ -97,6 +97,11 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
         return result;
     }
 
+    @Override
+    public void removeAllOccurrences(T targetElement) throws EmptyCollectionException, ElementNotFoundException {
+
+    }
+
     protected BinaryTreeNode<T> replacement(BinaryTreeNode<T> node) {
         BinaryTreeNode<T> result = null;
 
@@ -172,7 +177,7 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
     }
 
     @Override
-    public T removeMox() throws EmptyCollectionException, ElementNotFoundException {
+    public T removeMax() throws EmptyCollectionException, ElementNotFoundException {
          if (super.isEmpty()) {
             throw new EmptyCollectionException("Binary Tree is empty");
         }
