@@ -1,6 +1,6 @@
 import entities.*;
-import lib.ArrayUnorderedList;
-import lib.CircularDoubleLinkedList;
+import lib.lists.ArrayUnorderedList;
+import lib.lists.CircularDoubleLinkedList;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 
@@ -46,29 +46,11 @@ public class ManualMode extends Simulation {
         }
     }
 
-    @Override
-    public void playerTurn() throws ElementNotFoundException, EmptyCollectionException {
-        Room playerPosition = getPlayer().getPosition();
-
-
-        if (!getEnemies().isEmpty()) {
-            System.out.println("But enemies are somewhere....");
-        }
-
-        System.out.println(getPlayer().getName() + "\n leaves " + playerPosition.getName() + "...");
-
-        super.scenariosSituations();
-        scenariosCase(getCurrentScenario());
-
-        movePlayer();
-
-    }
-
     private Room selectNextRoom(Room currenRoom) {
         System.out.println("==== IMF - Possible Moves ====");
         int choice = -1;
         Scanner scanner = new Scanner(System.in);
-        Room selectedRoom = currenRoom;
+        Room selectedRoom = null;
         int counter = 0;
 
         ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(currenRoom);
@@ -89,6 +71,7 @@ public class ManualMode extends Simulation {
                     break;
                 } else if (choice == counter) {
                     System.out.println("==== You choose to stay ====");
+                    selectedRoom = currenRoom;
                     break;
                 } else {
                     System.out.println("==== Invalid option ====");

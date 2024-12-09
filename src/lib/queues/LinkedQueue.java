@@ -1,6 +1,7 @@
 
-package lib;
+package lib.queues;
 
+import lib.Node;
 import lib.exceptions.EmptyCollectionException;
 public class LinkedQueue <T> {
 

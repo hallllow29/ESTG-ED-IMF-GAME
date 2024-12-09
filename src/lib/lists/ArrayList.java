@@ -1,4 +1,4 @@
-package lib;
+package lib.lists;
 
 
 import lib.exceptions.EmptyCollectionException;

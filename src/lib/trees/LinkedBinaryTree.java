@@ -1,8 +1,11 @@
-package lib;
+package lib.trees;
 
+import lib.BinaryTreeNode;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.BinaryTreeADT;
+import lib.lists.LinkedUnorderedList;
+import lib.queues.LinkedQueue;
 
 import java.util.Iterator;
 

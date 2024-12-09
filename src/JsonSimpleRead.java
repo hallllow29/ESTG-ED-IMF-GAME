@@ -1,7 +1,6 @@
 import entities.*;
 
-import lib.CustomNetwork;
-import lib.Network;
+import lib.graphs.CustomNetwork;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -9,8 +8,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import lib.Graph;
 
 
 public class JsonSimpleRead {

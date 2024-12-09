@@ -1,8 +1,9 @@
-package lib;/*
+package lib.lists;/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
+import lib.DoubleNode;
 import lib.exceptions.EmptyCollectionException;
 import lib.interfaces.OrderedListADT;
 

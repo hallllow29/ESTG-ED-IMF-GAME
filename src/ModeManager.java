@@ -1,7 +1,6 @@
 import entities.BackPack;
 import entities.Player;
-import lib.CustomNetwork;
-import lib.Network;
+import lib.graphs.CustomNetwork;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
