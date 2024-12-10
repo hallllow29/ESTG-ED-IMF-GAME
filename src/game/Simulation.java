@@ -688,40 +688,52 @@ public abstract class Simulation {
 	}
 
 	private void enemiesConfronts(Player player) {
-		String enemiesConfronts = "";
-		Iterator<Enemy> enemies = this.enemies.iterator();
-		String playerName = player.getName();
 		Room playerPosition = player.getPosition();
+		Room enemyPosition;
+		boolean playerWantsToRecover;
 
-		while (enemies.hasNext()) {
+		for (Enemy enemy : getEnemies()) {
 
-			Enemy enemy = enemies.next();
-			Room enemyPosition = enemy.getPosition();
-			int enemyAttack = enemy.getFirePower();
+			enemyPosition = enemy.getPosition();
 
 			if (enemyPosition.equals(playerPosition)) {
 
-				player.takesDamageFrom(enemyAttack);
+				enemyAttacksPlayer(enemy, player);
+				playerWantsToRecover = playerNeedsRecoveryItem();
 
-				enemiesConfronts =
-					"\n|\t" + enemy.getName() + " is attacking " + playerName + "..." +
-						"\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
-				// ScenarioNr 4: O Tó Cruz utiliza kits de vida DURANTE
-				// o combate consumindo a sua fase de jogador...
-				System.out.print(enemiesConfronts);
-				if (playerNeedsRecoveryItem()) {
-					setNextScenario(ScenarioNr.FOUR);
-					scenarioQUATRO();
+				if (playerWantsToRecover) {
+					playerDecidesToRecover();
 					return;
-				} if (!player.isAlive()) {
+				}
+
+				if (!player.isAlive()) {
 					setGameOver(true);
 					break;
 				}
-
 			}
 
 		}
 
+	}
+
+	private String takesDamageFromMessage(Player player, Enemy enemy, int enemyAttack) {
+		return "\n|\t" + enemy.getName() + " is attacking " + player.getName() + "..." +
+			"\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
+	}
+
+	private void playerDecidesToRecover() {
+		setNextScenario(ScenarioNr.FOUR);
+		scenarioQUATRO();
+	}
+
+	private void enemyAttacksPlayer(Enemy enemy, Player player) {
+		String takesDamageFromInfo = "";
+
+		player.takesDamageFrom(enemy.getFirePower());
+
+		takesDamageFromInfo = takesDamageFromMessage(player, enemy, enemy.getFirePower());
+
+		System.out.print(takesDamageFromInfo);
 	}
 
 	public Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {
@@ -780,20 +792,6 @@ public abstract class Simulation {
 
 		return totalDamage;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	protected void updateWeightsForEnemies() {
 		double newWeight = 0.0;
