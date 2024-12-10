@@ -199,6 +199,10 @@ public abstract class Simulation {
 		this.currentScenario = nextScenario;
 	}
 
+	protected void setMissionAccomplished(boolean missionAccomplished) {
+		this.missionAccomplished = missionAccomplished;
+	}
+
 	protected void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException, EmptyCollectionException {
 
 		switch (nextScenario) {
@@ -210,7 +214,8 @@ public abstract class Simulation {
 
 				// NAO SEI SE DEIXO AQUI, ou dentro do scenarioUM()...
 				if (!this.player.isAlive()) {
-					this.missionAccomplished = false; this.gameOver = true;
+					setMissionAccomplished(false);
+					setGameOver(true);
 				} break;
 			case THREE:
 				scenarioTRES(); setNextTurn(Turn.PLAYER); break;
@@ -395,25 +400,7 @@ public abstract class Simulation {
 
 	}
 
-	private void setReturningToExtraction(boolean returningToExtraction) {
-		this.returningToExtraction = returningToExtraction;
-	}
 
-	private String scenarioSEISstartMessage() {
-		return "\n|========== [<< SCENARIO 6 START >>] ==========" + "\n|\tAND in that room there is the TARGET..." + "\n|\tLOOK AT THAT, it is clear...";
-	}
-
-	private String scenarioSEISendMessage() {
-		return "\n|" + "\n|========== [<< SCENARIO 6  END  >>] ==========";
-	}
-
-	private String targetIsSecuredMessage() {
-		return "\n|\tTARGET is now secured..." + "\n|\tWELL DONE " + player.getName() + " return to " + this.nextObjective.getName() + "...";
-	}
-
-	private String targetInExtractionPointMessage() {
-		return "\n|\tTARGET is in EXTRACTION POINT..." + "\n|\tWELL DONE " + player.getName() + " is returning to base...";
-	}
 
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
 		return playerPosition.equals(targetPosition);
@@ -771,7 +758,7 @@ public abstract class Simulation {
 		if (player.isAlive() && isGameOver()) {
 			getReport().setMissionStatus("game.Mission Accomplished");
 		} else {
-			getReport().setMissionStatus("game.Mission Failed");
+			report.setMissionStatus("game.Mission Failed");
 		}
 	}
 
@@ -856,6 +843,26 @@ public abstract class Simulation {
 
 	private String enemiesSurvivedAttackMessage() {
 		return "\n|\tENEMIES in " + player.getPosition().getName() + " survived the attack..." + "\n|\tENEMIES not in " + player.getPosition().getName() + " are moving...";
+	}
+
+	private void setReturningToExtraction(boolean returningToExtraction) {
+		this.returningToExtraction = returningToExtraction;
+	}
+
+	private String scenarioSEISstartMessage() {
+		return "\n|========== [<< SCENARIO 6 START >>] ==========" + "\n|\tAND in that room there is the TARGET..." + "\n|\tLOOK AT THAT, it is clear...";
+	}
+
+	private String scenarioSEISendMessage() {
+		return "\n|" + "\n|========== [<< SCENARIO 6  END  >>] ==========";
+	}
+
+	private String targetIsSecuredMessage() {
+		return "\n|\tTARGET is now secured..." + "\n|\tWELL DONE " + player.getName() + " return to " + this.nextObjective.getName() + "...";
+	}
+
+	private String targetInExtractionPointMessage() {
+		return "\n|\tTARGET is in EXTRACTION POINT..." + "\n|\tWELL DONE " + player.getName() + " is returning to base...";
 	}
 
 }

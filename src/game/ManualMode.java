@@ -49,60 +49,137 @@ public class ManualMode extends Simulation {
         }
     }
 
-    private Room selectNextRoom(Room currenRoom) {
-        System.out.println("==== IMF - Possible Moves ====");
+    private Room selectNextRoom(Room playerPosition) {
+        String selectNextRoomInfo = "";
+
+        // Aqui podemos mexer na parte visual.
+        // Ai que nostalgia de LP man lembras-te? <3
+        final String POSSIBLE_MOVES         = "==== IMF - Possible Moves ====";
+        final String CHOOSE_NEXT_MOVE       = "==== IMF - Choose your next move ====";
+        final String CHOOSE_TO_STAY         = "==== You choose to stay ====";
+        final String NO_MEDICKITS_BACKPACK  = "==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====";
+        final String INVALID_OPTION         = "==== Invalid option ====";
+        final String SELECT_VALID_OPTION    = "==== Please select a valid option ====";
+        final String YOUR_NEXT_MOVE         = "==== IMF - Your next move is =====";
+
+        System.out.println(POSSIBLE_MOVES);
         int choice = -1;
         Scanner scanner = new Scanner(System.in);
         Room selectedRoom = null;
-        int counter = 0;
+        int lastSelection = 0;
 
-        ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(currenRoom);
+        ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(getPlayer().getPosition());
         ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
 
-        for (Room room : possibleMoves) {
-            System.out.println("[" + counter + "] " + possibleMoves.getElement(counter));
-            displayRooms.addToRear(room);
-            counter++;
-        }
+        // ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(playerPosition);
+        // ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
+        //
+        // for (Room room : possibleMoves) {
+        //     System.out.println("[" + possibleSelection + "] " + possibleMoves.getElement(possibleSelection));
+        //     displayRooms.addToRear(room);
+        //     possibleSelection++;
+        // }
 
-        int stayOption = counter;
-        System.out.println("[" + stayOption + "] Stay");
+        lastSelection = countPossiblePositions(possibleMoves, displayRooms);
 
-        int useMedicKit = counter + 1;
-        System.out.println("[" + useMedicKit + "] Use MedicKit - HP " + getPlayer().getCurrentHealth() + "/100");
+        int stayOption = lastSelection;
+        selectNextRoomInfo += optionNrMessage(stayOption,"Stay");
+
+        int medicKitOption = lastSelection + 1;
+        selectNextRoomInfo += optionNrMessage(medicKitOption,"Use MedicKit - HP" + currentHealthMessage());
+        System.out.println(selectNextRoomInfo);
 
         while (true) {
-            System.out.println("==== IMF - Choose your next move ====");
+
+            System.out.println(CHOOSE_NEXT_MOVE);
+
             if (scanner.hasNextInt()) {
+
                 choice = scanner.nextInt();
-                if (choice >= 0 && choice < counter) {
-                    selectedRoom = possibleMoves.getElement(choice);
+
+               if (choice >= 0 && choice < medicKitOption) {
+                    selectedRoom = decideNextMove(choice, lastSelection, possibleMoves);
                     break;
-                } else if (choice == counter) {
-                    System.out.println("==== You choose to stay ====");
-                    selectedRoom = currenRoom;
-                    break;
-                } else if (choice == useMedicKit) {
-                    if (getPlayer().getBack_pack().isBackPackEmpty()) {
-                        System.out.println("==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====");
-                    } else {
-                        useMedicKit();
-                        selectedRoom = currenRoom;
-                        break;
-                    }
-                } else {
-                    System.out.println("==== Invalid option ====");
-                }
+               }
+
             } else {
-                System.out.println("==== Please select a valid option ====");
+                System.out.println(SELECT_VALID_OPTION);
                 scanner.next();
             }
+
+
         }
 
-        System.out.println("==== IMF - Your next move is " + selectedRoom.getName());
+        System.out.println(YOUR_NEXT_MOVE);
+        System.out.println(selectedRoom.getName());
 
         return selectedRoom;
     }
+
+    private int countPossiblePositions(ArrayUnorderedList<Room> possibleMoves, ArrayUnorderedList<Room> displayRooms) {
+        int possiblePositions = 0;
+        String possiblePositionInfo = "";
+
+        for (Room room : possibleMoves) {
+            possiblePositionInfo += "[" + possiblePositions + "] " + possibleMoves.getElement(possiblePositions);
+            displayRooms.addToRear(room);
+            possiblePositions++;
+        }
+
+        System.out.println(possiblePositionInfo);
+
+        return possiblePositions;
+    }
+
+    private String optionNrMessage (int option, String selection) {
+        return "[" + option + "] " + selection;
+    }
+
+    private String currentHealthMessage() {
+        return getPlayer().getCurrentHealth() + "/100";
+    }
+
+    private Room decideNextMove (int choice, int lastSelection, ArrayUnorderedList<Room> possibleMoves ) {
+        Room selectedRoom = null;
+        int medicKitOption = lastSelection + 1;
+
+        final String CHOOSE_TO_STAY         = "==== You choose to stay ====";
+        final String NO_MEDICKITS_BACKPACK  = "==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====";
+        final String INVALID_OPTION         = "==== Invalid option ====";
+
+        if (choice >= 0 && choice < lastSelection) {
+            selectedRoom = possibleMoves.getElement(choice);
+
+        } else if (choice == lastSelection) {
+            System.out.println(CHOOSE_TO_STAY);
+            selectedRoom = getPlayer().getPosition();
+
+        } else if (choice == medicKitOption) {
+            if (getPlayer().getBack_pack().isBackPackEmpty()) {
+                System.out.println(NO_MEDICKITS_BACKPACK);
+
+            } else {
+                useMedicKit();
+                selectedRoom = getPlayer().getPosition();
+            }
+        } else {
+            System.out.println(INVALID_OPTION);
+        }
+        return selectedRoom;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private Room displayAllEntries() throws ElementNotFoundException {
         System.out.println("==== IMF - All possible entries ====");
