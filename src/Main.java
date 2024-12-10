@@ -18,10 +18,10 @@ import java.util.Scanner;
  */
 public class Main {
 
-	private static Mission missionImpl;
-	private static Simulation simulationImpl;
-	private static CustomNetwork<Room> graph;
-	private static LinkedList<Enemy> enemies;
+	//private static Mission missionImpl;
+	//private static Simulation simulationImpl;
+	//private static CustomNetwork<Room> graph;
+	//private static LinkedList<Enemy> enemies;
 
 	/**
 	 * @param args the command line arguments
@@ -29,31 +29,31 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			// INIT GRAPH
-			System.out.println("Carregando ");
-			CustomNetwork<Room> graph = initGraph();
-			Mission missionImpl = Main.getMission();
-			setGraph(graph);
+			//System.out.println("Carregando ");
+			//CustomNetwork<Room> graph = initGraph();
+			//Mission missionImpl = Main.getMission();
+			//setGraph(graph);
 
-			displayMissionDetails(graph);
+			//displayMissionDetails(graph);
 
-			displayRoomDetails(graph);
+			//displayRoomDetails(graph);
 
-			displayAdjacentRoomDetails(graph);
+			//displayAdjacentRoomDetails(graph);
 
-			displayEnemyIntel(missionImpl);
+			//displayEnemyIntel(missionImpl);
 
-			displayItems(missionImpl);
+			//displayItems(missionImpl);
 
-			displayEntryExitPoints(missionImpl);
+			//displayEntryExitPoints(missionImpl);
 
 			//simulationMenu();
 
-			displayTarget(missionImpl);
+			//displayTarget(missionImpl);
 
-			LinkedList<Room> entry_points_selection = missionImpl.getEntryExitPoints();
+			//LinkedList<Room> entry_points_selection = missionImpl.getEntryExitPoints();
 
 			//Iterator<Room> entry_points = entry_points_selection.iterator();
-			Room coco  = null;
+			//Room coco  = null;
 
 			/*for (Room room : mission.getBattlefield().getVertices()) {
 				if (room.getName().equals("Heliporto")) {
@@ -64,9 +64,9 @@ public class Main {
 
 			//Room entry_point = entry_points_selection.first();
 
-			BackPack mochila = new BackPack();
+			//BackPack mochila = new BackPack();
 
-			Player toCruz = new Player("TO CRUZ", 50, mochila);
+			//Player toCruz = new Player("TO CRUZ", 50, mochila);
 
 
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
@@ -153,7 +153,7 @@ public class Main {
 		}
 	}
 
-	public static void setMission(Mission missionImpl) {
+	/*public static void setMission(Mission missionImpl) {
 		Main.missionImpl = missionImpl;
 	}
 
@@ -192,7 +192,7 @@ public class Main {
 	 * @return the integer value representing the user's selected option, or -1 if the
 	 * input is invalid
 	 */
-	public static int options(String menu) {
+	/*public static int options(String menu) {
 		Scanner input = new Scanner(System.in);
 		int option = -1;
 
@@ -252,7 +252,7 @@ public class Main {
 		}
 	} */
 
-	private static CustomNetwork<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
+	/*private static CustomNetwork<Room> initGraph() throws IOException, ParseException, NotElementComparableException {
 		CustomNetwork<Room> network = new CustomNetwork<>();
 		Mission missionImpl = JsonSimpleRead.loadMissionFromJson("mission.json", network);
 		setMission(missionImpl);

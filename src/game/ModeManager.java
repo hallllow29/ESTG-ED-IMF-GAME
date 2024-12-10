@@ -1,11 +1,11 @@
 package game;
 
-import entities.BackPack;
-import entities.Player;
+import entities.*;
 import lib.graphs.CustomNetwork;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
+import lib.graphs.Network;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
@@ -31,33 +31,33 @@ public class ModeManager {
     }
 
     public void selectMission() throws NotElementComparableException, IOException, ParseException {
-        Scanner scanner = new Scanner(System.in);
         int choice;
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("==== IMF - game.Mission Select");
-        System.out.println("[1] Pata de coelho");
-        System.out.println("[2] Rato de Aço");
-        System.out.println("[9] Exit");
+            System.out.println("Please select a mission you want to do: ");
+            System.out.println("[1]-> Normal Mission");
+            System.out.println("[2]-> Rato de Aço");
 
-        choice = scanner.nextInt();
+            choice = scanner.nextInt();
 
-        switch (choice) {
-            case 1:
-                this.missionImpl = JsonSimpleRead.loadMissionFromJson("mission.json", new CustomNetwork<>());
-                break;
-            case 2:
-                this.missionImpl = JsonSimpleRead.loadMissionFromJson("missao_rato_de_aco.json", new CustomNetwork<>());
-                break;
-            case 9 :
-                return;
-            default:
-                System.out.println("Please select a valid option");
-                break;
-        }
+            switch (choice) {
+                case 1:
+                    this.missionImpl = JsonSimpleRead.loadMissionFromJson("mission.json", new CustomNetwork<>());
+                    break;
+                case 2:
+                    this.missionImpl = JsonSimpleRead.loadMissionFromJson("missao_rato_de_aco.json", new CustomNetwork<>());
+                    break;
+                default:
+                    System.out.println("Please select a valid option!");
+                    break;
+            }
+
     }
 
     public void startGame() throws NotElementComparableException, IOException, ParseException, ElementNotFoundException, EmptyCollectionException {
         Player newPlayer = createPlayer();
+        this.selectMission();
+
         System.out.println("==== IMF - game.Simulation Mode");
         System.out.println("[1] Automatic");
         System.out.println("[2] Manual");
@@ -67,11 +67,11 @@ public class ModeManager {
 
         switch (choice) {
             case 1:
-                selectMission();
+                this.displayMissionDetails();
                 runAutomaticSimulation(newPlayer);
                 break;
             case 2:
-                selectMission();
+                this.displayMissionDetails();
                 runManualSimulation(newPlayer);
                 break;
             case 9:
@@ -99,4 +99,79 @@ public class ModeManager {
 
         SaveToJsonFile.saveJsonFile(report);
     }
+
+    private void displayMissionDetails() {
+        this.displayMission();
+        this.displayRoomDetails(missionImpl.getBattlefield());
+        this.displayAdjacentRoomDetails(missionImpl.getBattlefield());
+        this.displayEnemyIntel();
+        this.displayItems();
+        this.displayEntryExitPoints();
+        this.displayTarget();
+    }
+
+    private void displayMission() {
+        System.out.println("\n\t=========  MISSAO  =========");
+        System.out.println(this.missionImpl.getCode());
+    }
+
+    private void displayRoomDetails(CustomNetwork<Room> graph) {
+        String result = ("\n\t========= DIVISOES =========");
+
+        for (Room room : graph.getVertices()) {
+            result += "\nRoom: " + room.getName();
+        }
+        System.out.println(result);
+    }
+
+    private  void displayAdjacentRoomDetails(CustomNetwork<Room> graph) {
+        // System.out.println("\n\t========= CONEXOES =========");
+
+        String result = ("\n\t========= CONEXOES =========");
+
+        for (Room room : graph.getVertices()) {
+            for (Room connectedRoom : graph.getConnectedVertices(room)) {
+                // System.out.printf("%-20s <-----> %-15s\n",
+                // 	room.getName(), connectedRoom.getName());
+
+                result += "\n["+room.getName() + "] <-----> [" + connectedRoom.getName()+ "]";
+            }
+        }
+        System.out.println(result);
+    }
+
+    private void displayEnemyIntel() {
+        String result = ("\n\t========= INIMIGOS =========");
+        for (Enemy enemy : missionImpl.getEnemies()) {
+            // System.out.printf("Name: %-10s Fire Power: %-4s Position: %s\n",
+            // 	enemy.getName(), enemy.getFirePower(), enemy.getPosition());
+            result += "\nName: " + enemy.getName() +
+                    "\tFire Power: " + enemy.getFirePower() +
+                    " Position: " + enemy.getPosition();
+        }
+        System.out.println(result);
+    }
+
+    private void displayItems() {
+        String result = ("\n\t=========  ITEMS  =========");
+        for (Item item : missionImpl.getItems()) {
+            result += "\nItem: " + item.getName() +
+                    "\tValue: " + item.getItemValue() +
+                    "\tPosition: " + item.getPosition();
+        }
+        System.out.println(result);
+    }
+
+    private void displayEntryExitPoints() {
+        System.out.println("\n===== Pontos de Entrada/Saída =====");
+        for (Room roomObj : missionImpl.getEntryExitPoints()) {
+            System.out.println(roomObj.getName());
+        }
+    }
+
+    private void displayTarget() {
+        System.out.println("\n==== TARGET ====");
+        System.out.println(missionImpl.getTarget());
+    }
+
 }

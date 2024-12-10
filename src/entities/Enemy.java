@@ -1,6 +1,6 @@
 package entities;
 
-public class Enemy extends entities.Character implements Comparable<Enemy> {
+public class Enemy extends Character implements Comparable<Enemy> {
 
 	private Room position;
 

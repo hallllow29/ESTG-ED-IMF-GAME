@@ -166,7 +166,6 @@ public class SimulationTest {
 		} else {
 			fail("Nenuk caminho de volta para extraction");
 		}
-
 	}
 
 	@Test
