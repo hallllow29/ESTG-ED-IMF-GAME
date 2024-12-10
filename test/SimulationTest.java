@@ -51,11 +51,12 @@ public class SimulationTest {
 
 		// Adicionar conexoes ao mapa
 		battlefield.addEdge(room1, room2, 1);
-		battlefield.addEdge(room2, targetRoom, 2);
-		battlefield.addEdge(targetRoom, extractionPoint, 3);
+		battlefield.addEdge(room2, targetRoom, 1);
+		battlefield.addEdge(targetRoom, extractionPoint, 1);
 
 		// Definir o target e o entry point
 		mission.setTarget(new Target(targetRoom, "Professor Ricardo"));
+        mission.setEntryExitPoint(extractionPoint);
 		// mission.setEntryExitPoint(entryPoint);
 		// mission.setEntryExitPoint(extractionPoint);
 
@@ -122,7 +123,7 @@ public class SimulationTest {
 	public void testSetupEntryPoints() throws EmptyCollectionException {
 		assertFalse(mission.getEntryExitPoints().isEmpty(), "Os pontos de entrada/saída devem estar configurados!");
 		Room firstEntry = this.mission.getEntryExitPoints().first();
-		assertEquals("Extraction Point", firstEntry.getName());
+		assertEquals("Entry room", firstEntry.getName());
 	}
 
 	@Test
@@ -217,7 +218,10 @@ public class SimulationTest {
 		Enemy ruben = new Enemy("Ruben", 10, room2);
 		mission.setEnemy(pedro);
 		mission.setEnemy(ruben);
-		double damage = simulation.calculatePathDamage(battlefield.iteratorShortestPath(room1, targetRoom));
+        room1.setEnemies(true);
+        room2.setEnemies(true);
+		double damage = simulation.calculatePathDamage(battlefield.iteratorShortestPath(room1, room2));
+        System.out.println(damage);
 		assertEquals(20, damage);
 
 	}
@@ -230,7 +234,8 @@ public class SimulationTest {
 
 	@Test
 	public void testExtractionPointSelection() throws ElementNotFoundException {
-		Room bestExtractionPoint = simulation.bestExtractionPoint(player.getPosition());
+		Room bestExtractionPoint = simulation.bestExtractionPoint(targetRoom);
+        System.out.println(bestExtractionPoint);
 		assertEquals("Extraction Point", bestExtractionPoint.getName());
 
 	}
