@@ -397,26 +397,31 @@ public abstract class Simulation {
 
 	protected void scenarioQUATRO() {
 
-		String scenarioQUATROstart =
-			"\n|========== [<< SCENARIO 4 START >>] ==========" +
-				"\n|\t" + player.getName() + " seems to be injured..." +
-				"\n|" +
-				"\n|\t-------------- PLAYER  TURN --------------" +
-				"\n|\t" + player.getName() + " halts and is checking BackPack...";
-		System.out.print(scenarioQUATROstart);
+		String scenarioQUATROinfo = scenarioQUATROstartMessage();
 
-		String scenarioQUATROend = "";
 		try {
-			scenarioQUATROend += "\n|\t" + this.player.useMediKit();
+			scenarioQUATROinfo += "\n|\t" + this.player.useMediKit();
 		} catch (EmptyCollectionException e) {
 			System.err.println(e.getMessage());
 		}
-		setNextTurn(Turn.ENEMY);
 
-		scenarioQUATROend +=
+		scenarioQUATROinfo += scenarioQUATROendMessage();
+		System.out.print(scenarioQUATROinfo);
+
+		setNextTurn(Turn.ENEMY);
+	}
+
+	private String scenarioQUATROstartMessage() {
+		return "\n|========== [<< SCENARIO 4 START >>] ==========" +
+			"\n|\t" + player.getName() + " seems to be injured..." +
 			"\n|" +
-				"\n|========== [<< SCENARIO 4  END  >>] ==========";
-		System.out.print(scenarioQUATROend);
+			"\n|\t-------------- PLAYER  TURN --------------" +
+			"\n|\t" + player.getName() + " halts and is checking BackPack...";
+	}
+
+	private String scenarioQUATROendMessage() {
+		return "\n|" +
+			"\n|========== [<< SCENARIO 4  END  >>] ==========";
 	}
 
 	private void scenarioCINCO() {
@@ -728,11 +733,8 @@ public abstract class Simulation {
 
 	private void enemyAttacksPlayer(Enemy enemy, Player player) {
 		String takesDamageFromInfo = "";
-
 		player.takesDamageFrom(enemy.getFirePower());
-
 		takesDamageFromInfo = takesDamageFromMessage(player, enemy, enemy.getFirePower());
-
 		System.out.print(takesDamageFromInfo);
 	}
 
