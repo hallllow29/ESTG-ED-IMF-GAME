@@ -304,42 +304,65 @@ public abstract class Simulation {
 	private void scenarioDOIS() {
 		Room playerPosition = player.getPosition();
 
-		String scenarioDOISstart =
-			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
-				"\n|========== [<< SCENARIO 2 START >>] ==========" +
-				"\n|\tAND the room " + player.getName() + " entered is clear..." +
-				"\n|" +
-				"\n|\t-------------- PLAYER  TURN --------------";
-		System.out.print(scenarioDOISstart);
+		String scenarioDOISinfo = scenarioDOISstartMessage();
+
 
 		// RECOLHE ITEMS...
-		String scenarioDOISend =
-			"\n|\t"
-				+ player.getName() + " searches the " + player.getPosition() + "...";
 		if (playerPosition.hasItems()) {
-			scenarioDOISend += gatherItems(playerPosition);
-			// PODE USAR ITEMS???---
+			scenarioDOISinfo += gatherItems(playerPosition);
+
+			// TODO: Entra o cenario 4 ?? Que dizes?
+
 		}
 
-		scenarioDOISend +=
-			"\n|" +
-				"\n|\t-------------- ENEMY  TURN  --------------";
+		scenarioDOISinfo += enemyTurnMessage();
 
-		if (!this.enemies.isEmpty()) {
-			scenarioDOISend += "\n|\tBUT the enemies are somewhere..." +
-				"\n|\tEnemies are moving...";
+		if (!getEnemies().isEmpty()) {
 
+			scenarioDOISinfo += enemiesAreMovingMessage();
 			moveEnemies();
 
 		} else {
-			scenarioDOISend += "\n|\tBUT there are no enemies left...";
+
+			scenarioDOISinfo += noEnemiesLeftMessage();
 		}
-		scenarioDOISend +=
-			"\n|" +
+
+		scenarioDOISinfo += scenarioDOISendMessage();
+
+		System.out.println(scenarioDOISinfo);
+	}
+
+
+	private String scenarioDOISstartMessage() {
+		return "\n" + player.getName() + " is in " + player.getPosition().getName() + "..." +
+				"\n|========== [<< SCENARIO 2 START >>] ==========" +
+				"\n|\tAND the room " + player.getName() + " entered is clear..." +
+				"\n|" +
+				"\n|\t-------------- PLAYER  TURN --------------" +
+			"\n|\t" + player.getName() + " searches the " + player.getPosition() + "...";
+	}
+
+	private String scenarioDOISendMessage() {
+		return "\n|" +
 				"\n|========== [<< SCENARIO 2  END  >>] ==========";
 
-		System.out.println(scenarioDOISend);
 	}
+
+	private String enemyTurnMessage() {
+		return "\n|" +
+			"\n|\t-------------- ENEMY  TURN  --------------";
+	}
+
+	private String enemiesAreMovingMessage() {
+		return "\n|" +
+				"\n|\tBUT the enemies are somewhere..." +
+				"\n|\tEnemies are moving...";
+	}
+
+	private String noEnemiesLeftMessage() {
+		return "\n|\tBUT there are no enemies left...";
+	}
+
 
 	private void scenarioTRES() {
 		Room playerPosition = player.getPosition();
@@ -347,7 +370,7 @@ public abstract class Simulation {
 		String scenarioTRESinfo = scenarioTRESstartMessage();
 		System.out.print(scenarioTRESinfo);
 
-		// Trigger para o scenario 4 se o to cruz precisar de items...
+		// Tem um trigger para o scenario 4 se o to cruz precisar de items...
 		enemiesConfronts(player);
 
 		scenarioTRESinfo = "";
@@ -531,6 +554,27 @@ public abstract class Simulation {
 		// movePlayer();
 
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
 		return playerPosition.equals(targetPosition);
