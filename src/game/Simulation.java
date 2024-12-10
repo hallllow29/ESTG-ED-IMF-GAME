@@ -90,7 +90,8 @@ public abstract class Simulation {
 
 			movePlayer();
 		} else {
-			playerConfronts();
+			scenarioUM();
+			// playerConfronts();
 		}
 
 		System.out.println(playerTurnOutput);
@@ -106,7 +107,8 @@ public abstract class Simulation {
 
 	public void renderAutomaticSimulation(Player player, Target target) throws ElementNotFoundException {
 		setNextObjective(target.getRoom());
-		setEntryPoint(findBestEntryPoint());
+		this.entryPoint = findBestEntryPoint();
+		setEntryPoint(entryPoint);
 		player.setPosition(entryPoint);
 		this.missionAccomplished = false;
 		this.currentTurn = Turn.PLAYER;
@@ -286,7 +288,7 @@ public abstract class Simulation {
 
 		} else {
 			scenarioUMend +=
-				"\n|\t" + player.getName() + "eliminated all ENEMIES in " + playerPosition.getName() + "...";
+				"\n|\t" + player.getName() + " eliminated all ENEMIES in " + playerPosition.getName() + "...";
 
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
@@ -369,7 +371,6 @@ public abstract class Simulation {
 
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESend =
-				"\n|" +
 					"\n|  --------------  ENEMY TURN  --------------" +
 					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
 					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving..." +
@@ -382,7 +383,7 @@ public abstract class Simulation {
 
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
-			scenarioTRESend += "\n|\t"+ player.getName() + " eliminated all ENEMIES..." + "\n\tin " + playerPosition.getName() + "...";
+			scenarioTRESend += "\n|\t"+ player.getName() + " eliminated all ENEMIES..." + "\n|\tin " + playerPosition.getName() + "...";
 
 		} else if (!player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
@@ -477,7 +478,7 @@ public abstract class Simulation {
 		if (isMissionAccomplished()) {
 			scenarioSEISend +=
 			"\n|\tTARGET is in EXTRACTION POINT..." +
-				"\n|\tWELL DONE " + player.getName() + " return to base..." +
+				"\n|\tWELL DONE " + player.getName() + " is returning to base..." +
 				"\n|" +
 				"\n|========== [<< SCENARIO 6  END  >>] ==========";
 			this.setGameOver(true);
@@ -513,16 +514,16 @@ public abstract class Simulation {
 		return player.isAlive() && mission.isTargetSecured() && playerPosition.equals(this.nextObjective);
 	}
 
-	protected Room findBestEntryPoint() throws ElementNotFoundException {
-		Network<Room> battlefield = mission.getBattlefield();
-		Iterator<Room> entryPoints = mission.getEntryExitPoints().iterator();
+	public Room findBestEntryPoint() throws ElementNotFoundException {
+		Network<Room> battlefield = this.mission.getBattlefield();
+		Iterator<Room> entryPoints = this.mission.getEntryExitPoints().iterator();
 		double minimalDamage = Double.MAX_VALUE;
 		Room bestEntryPoint = null;
 
 		while (entryPoints.hasNext()) {
 
 			Room entryPoint = entryPoints.next();
-			Iterator<Room> entryPointsPaths = battlefield.iteratorShortestPath(entryPoint, this.nextObjective);
+			Iterator<Room> entryPointsPaths = battlefield.iteratorShortestPath(entryPoint, nextObjective);
 			double calculatedDamage = calculatePathDamage(entryPointsPaths);
 			if (calculatedDamage < minimalDamage) {
 				minimalDamage = calculatedDamage;
@@ -550,18 +551,17 @@ public abstract class Simulation {
 				enemy.takesDamageFrom(playerAttack);
 
 				playerConfrontsOutput +=
-					"\n|\t" +
 						"\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
 
 				if (!enemy.isAlive()) {
 					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
 						" suffered " + playerAttack + " of attack..." +
-						"\n|\tAND is now DEAD!!!";
+						"\n|\tAND is now DEAD!!!" + "\n|";
 					enemies.remove();
 					enemyPosition.removeEnemy();
 				} else {
 					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
-						" endured " + playerAttack + " of attack...";
+						" endured " + playerAttack + " of attack..." + "\n|";
 				}
 			}
 
@@ -715,6 +715,9 @@ public abstract class Simulation {
 					setNextScenario(ScenarioNr.FOUR);
 					scenarioQUATRO();
 					return;
+				} if (!player.isAlive()) {
+					setGameOver(true);
+					break;
 				}
 
 			}

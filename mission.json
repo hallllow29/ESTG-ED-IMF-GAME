@@ -30,16 +30,19 @@
     ["Heliporto", "Escada 6"]
     ],
     "inimigos": [
-    {"nome": "badguy1", "poder": 5, "divisao": "Laboratório"},
-    {"nome": "badguy2", "poder": 10, "divisao": "Laboratório"},
-    {"nome": "badguy3", "poder": 15, "divisao": "Corredor 1"},
-    {"nome": "badguy4", "poder": 20, "divisao": "Laboratório"},
-    {"nome": "badguy5", "poder": 25, "divisao": "Hall"}
+    {"nome": "badguy1", "poder": 150, "divisao": "Garagem"},
+    {"nome": "badguy2", "poder": 150, "divisao": "Corredor 1"},
+    {"nome": "badguy3", "poder": 150, "divisao": "Heliporto"},
+    {"nome": "badguy4", "poder": 100, "divisao": "Laboratório"},
+    {"nome": "badguy5", "poder": 50, "divisao": "Heliporto"}
     ],
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
     "alvo": {"divisao": "Laboratório", "tipo": "quimico"},
     "itens":[
     {"divisao": "WC", "pontos-recuperados": 20, "tipo":"kit de vida"},
-    {"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},
+    {"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},{"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},
+        {"divisao": "Laboratório", "pontos-recuperados": 15, "tipo":"colete"},
+        {"divisao": "Heliporto", "pontos-recuperados": 15, "tipo":"colete"},
+        {"divisao": "Escada 5", "pontos-recuperados": 15, "tipo":"colete"},
     {"divisao": "Escada 2", "pontos-extra": 25, "tipo":"colete"} ]
     }
