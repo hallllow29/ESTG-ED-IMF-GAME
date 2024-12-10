@@ -1,3 +1,5 @@
+package game;
+
 import entities.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;

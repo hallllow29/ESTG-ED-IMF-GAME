@@ -1,3 +1,5 @@
+package game;
+
 import entities.BackPack;
 import entities.Player;
 import lib.graphs.CustomNetwork;
@@ -19,7 +21,7 @@ public class ModeManager {
     public Player createPlayer() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Welcome to Improbable Mission Force (IMF) ===");
+        System.out.println("=== Welcome to Improbable game.Mission Force (IMF) ===");
         System.out.println("Please enter your name: ");
         String name = scanner.nextLine();
         BackPack backPack = new BackPack();
@@ -32,7 +34,7 @@ public class ModeManager {
         Scanner scanner = new Scanner(System.in);
         int choice;
 
-        System.out.println("==== IMF - Mission Select");
+        System.out.println("==== IMF - game.Mission Select");
         System.out.println("[1] Pata de coelho");
         System.out.println("[2] Rato de Aço");
         System.out.println("[9] Exit");
@@ -56,7 +58,7 @@ public class ModeManager {
 
     public void startGame() throws NotElementComparableException, IOException, ParseException, ElementNotFoundException, EmptyCollectionException {
         Player newPlayer = createPlayer();
-        System.out.println("==== IMF - Simulation Mode");
+        System.out.println("==== IMF - game.Simulation Mode");
         System.out.println("[1] Automatic");
         System.out.println("[2] Manual");
 

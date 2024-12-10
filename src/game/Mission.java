@@ -1,3 +1,5 @@
+package game;
+
 import entities.Enemy;
 import entities.Item;
 import entities.Room;
@@ -13,7 +15,6 @@ public class Mission {
 	private final String code;
 	private final int version;
 	private Target target;
-	private Room entryPoint;
 	private boolean targetSecured;
 
 	private final CustomNetwork<Room> battlefield;

@@ -1,3 +1,5 @@
+package game;
+
 import entities.*;
 
 import lib.graphs.CustomNetwork;
@@ -54,10 +56,10 @@ public class JsonSimpleRead {
     }
 
     /**
-     * Creates a new Mission object based on the information provided in the JSON object.
+     * Creates a new game.Mission object based on the information provided in the JSON object.
      *
      * @param jsonObject the JSON object containing the mission data, expected to have keys "cod-missao" and "versao"
-     * @return a new Mission instance initialized with the specified code and version
+     * @return a new game.Mission instance initialized with the specified code and version
      */
     private static Mission newMission(JSONObject jsonObject, CustomNetwork<Room> network) {
         String mission_code = (String) jsonObject.get("cod-missao");
@@ -241,7 +243,7 @@ public class JsonSimpleRead {
      *
      * @param entries_exits a JSONArray containing room names designated as entry and exit points
      * @param graph a Graph<Room> used to retrieve Room objects for the given room names
-     * @param missionImpl a Mission object to which the entry and exit points are added
+     * @param missionImpl a game.Mission object to which the entry and exit points are added
      */
     private static void addEntryAndExitsPoints(JSONArray entries_exits, CustomNetwork<Room> graph, Mission missionImpl) throws NotElementComparableException {
         for (Object entry_exit_obj : entries_exits) {
@@ -264,7 +266,7 @@ public class JsonSimpleRead {
      *
      * @param targetJson a JSONObject containing the target data, expected to have keys "divisao" and "tipo"
      * @param graph a Graph<Room> used to locate the target room based on the specified room name
-     * @param missionImpl the Mission object in which the target is to be set
+     * @param missionImpl the game.Mission object in which the target is to be set
      */
     private static void setMissionTarget(JSONObject targetJson, CustomNetwork<Room> graph, Mission missionImpl) {
         String target_room = (String) targetJson.get("divisao");

@@ -1,3 +1,5 @@
+package game;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -47,7 +49,7 @@ public class SaveToJsonFile {
 
         try (FileWriter file = new FileWriter(report.getPlayer().getName() + ".json")) {
             file.write(jsonReport.toJSONString());
-            System.out.println("Report saved in: " + report.getPlayer().getName() + ".json");
+            System.out.println("game.Report saved in: " + report.getPlayer().getName() + ".json");
         } catch (IOException e) {
             System.out.println("Error saving report");
         }

@@ -1,3 +1,5 @@
+package game;
+
 import entities.Player;
 import lib.lists.ArrayUnorderedList;
 

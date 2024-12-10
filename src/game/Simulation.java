@@ -1,3 +1,5 @@
+package game;
+
 import entities.*;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
@@ -39,7 +41,7 @@ public abstract class Simulation {
 		this.report = report;
 	}
 
-	protected abstract void movePlayer() throws ElementNotFoundException, EmptyCollectionException;
+	public abstract void movePlayer() throws ElementNotFoundException, EmptyCollectionException;
 
 	public abstract void game() throws ElementNotFoundException, EmptyCollectionException;
 
@@ -122,7 +124,7 @@ public abstract class Simulation {
 		return this.report;
 	}
 
-	public Network<Room> getBattlefield() {
+	public CustomNetwork<Room> getBattlefield() {
 		return this.battlefield;
 	}
 
@@ -721,7 +723,7 @@ public abstract class Simulation {
 
 	}
 
-	private Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {
+	public Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {
 		Room bestExtractionPoint = null;
 		Iterator<Room> extractionPoints = mission.getEntryExitPoints().iterator();
 		double minimalDamage = Double.MAX_VALUE;
@@ -742,7 +744,7 @@ public abstract class Simulation {
 		return bestExtractionPoint;
 	}
 
-	protected double calculatePathDamage(Iterator<Room> path) {
+	public double calculatePathDamage(Iterator<Room> path) {
 		double totalDamage = 0;
 		int playerHealth = player.getCurrentHealth();
 		int playerMaxHealth = 100;
@@ -865,9 +867,9 @@ public abstract class Simulation {
 
 	protected void addStatusToReport() {
 		if (player.isAlive() && isGameOver()) {
-			report.setMissionStatus("Mission Accomplished");
+			report.setMissionStatus("game.Mission Accomplished");
 		} else {
-			report.setMissionStatus("Mission Failed");
+			report.setMissionStatus("game.Mission Failed");
 		}
 	}
 
