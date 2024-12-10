@@ -1,13 +1,16 @@
 /**
- * @author      8230069
- * @file        IteratorADT.java
- * @copyright   ESTG IPP
- * @brief       ED, Ficha Prática 6, Exercicio 4
- * @date        2024/11/01
+ * @author 8230068, 8230069
 **/
 
 package lib.interfaces;
 
+/**
+ * An interface representing an abstract data type for an iterator
+ * that allows traversal over a collection of elements of type E.
+ * Provides methods to check the availability of the next element,
+ * retrieve the next element, and optionally remove elements from
+ * the underlying collection.
+ */
 public interface IteratorADT <E> {
 
 	/**

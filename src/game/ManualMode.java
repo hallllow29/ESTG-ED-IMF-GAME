@@ -107,7 +107,6 @@ public class ManualMode extends Simulation {
                 scanner.next();
             }
 
-
         }
 
         System.out.println(YOUR_NEXT_MOVE);
@@ -167,18 +166,6 @@ public class ManualMode extends Simulation {
         }
         return selectedRoom;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private Room displayAllEntries() throws ElementNotFoundException {

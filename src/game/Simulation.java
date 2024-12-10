@@ -30,10 +30,14 @@ public abstract class Simulation {
 	private final Report report;
 
 	public Simulation(Mission mission, Player player, Report report) {
-		this.mission = mission; this.battlefield = new CustomNetwork<>();
-		this.battlefield = this.mission.getBattlefield(); this.player = player;
-		this.currentTurn = Turn.PLAYER; this.missionAccomplished = false;
-		this.enemies = new LinkedList<>(); this.enemies = this.mission.getEnemies();
+		this.mission = mission;
+		this.battlefield = new CustomNetwork<>();
+		this.battlefield = mission.getBattlefield();
+		this.player = player;
+		this.currentTurn = Turn.PLAYER;
+		this.missionAccomplished = false;
+		this.enemies = new LinkedList<>();
+		this.enemies = mission.getEnemies();
 		this.report = report;
 	}
 
@@ -62,7 +66,7 @@ public abstract class Simulation {
 		System.out.println("IT WAS A SIMULATION...");
 		System.out.println("...OR WASN'T IT..."); System.out.println("GAME OVER!");
 
-		Iterator<Enemy> enemies = this.getEnemies().iterator();
+		Iterator<Enemy> enemies = getEnemies().iterator();
 
 		while (enemies.hasNext()) {
 			Enemy enemy = enemies.next(); System.out.println(enemy);
@@ -86,7 +90,8 @@ public abstract class Simulation {
 		System.out.println(playerTurnOutput);
 
 		// "o jogo se me sequência de ações"
-		scenariosSituations(); scenariosCase(this.getCurrentScenario());
+		scenariosSituations();
+		scenariosCase(this.getCurrentScenario());
 	}
 
 	public boolean isReturningToExit() {
@@ -94,15 +99,20 @@ public abstract class Simulation {
 	}
 
 	public void renderAutomaticSimulation(Player player, Target target) throws ElementNotFoundException {
-		setNextObjective(target.getRoom()); this.entryPoint = findBestEntryPoint();
-		setEntryPoint(entryPoint); player.setPosition(entryPoint);
-		this.missionAccomplished = false; this.currentTurn = Turn.PLAYER;
-		this.gameOver = false;
+		setNextObjective(target.getRoom());
+		entryPoint = findBestEntryPoint();
+		setEntryPoint(entryPoint);
+		player.setPosition(entryPoint);
+		missionAccomplished = false;
+		currentTurn = Turn.PLAYER;
+		gameOver = false;
 	}
 
 	public void renderManualSimulation(Room target) {
-		setNextObjective(target); this.missionAccomplished = false;
-		this.currentTurn = Turn.PLAYER; this.gameOver = false;
+		setNextObjective(target);
+		missionAccomplished = false;
+		currentTurn = Turn.PLAYER;
+		gameOver = false;
 	}
 
 	public Report getReport() {
@@ -163,9 +173,12 @@ public abstract class Simulation {
 
 	protected void enemyTurn() throws ElementNotFoundException, EmptyCollectionException {
 		if (this.currentScenario == ScenarioNr.TWO) {
-			movePlayer(); setNextTurn(Turn.ENEMY);
+			movePlayer();
+			setNextTurn(Turn.ENEMY);
 			// NAO FAZ SENTIDO, mas é que eu entendo!
-		} scenariosSituations(); scenariosCase(this.currentScenario);
+		}
+		scenariosSituations();
+		scenariosCase(this.currentScenario);
 	}
 
 	protected void scenariosSituations() {
@@ -233,7 +246,6 @@ public abstract class Simulation {
 
 		String scenarioUMinfo = scenarioUMstartMessage();
 		scenarioUMinfo += playerTurnMessage();
-
 		System.out.print(scenarioUMinfo);
 
 		playerConfronts();
@@ -246,7 +258,8 @@ public abstract class Simulation {
 			scenarioUMinfo += enemyTurnMessage();
 
 			if (getEnemies().isEmpty()) {
-				scenarioUMinfo += enemiesAreMovingMessage(); moveEnemiesNotInSameRoom();
+				scenarioUMinfo += enemiesAreMovingMessage();
+				moveEnemiesNotInSameRoom();
 			} setNextTurn(Turn.ENEMY);
 
 		} else {
@@ -254,10 +267,12 @@ public abstract class Simulation {
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
 				scenarioUMinfo += gatherItems(playerPosition);
-			} setNextTurn(Turn.PLAYER);
+			}
+			setNextTurn(Turn.PLAYER);
 		}
 
-		scenarioUMinfo += scenarioUMendMessage(); System.out.print(scenarioUMinfo);
+		scenarioUMinfo += scenarioUMendMessage();
+		System.out.print(scenarioUMinfo);
 
 	}
 
@@ -301,18 +316,25 @@ public abstract class Simulation {
 		// Tem um trigger para o scenario 4 se o to cruz precisar de items...
 		enemiesConfronts(player);
 
-		scenarioTRESinfo = ""; while (playerPosition.hasEnemies() && player.isAlive()) {
+		scenarioTRESinfo = "";
 
-			if (this.currentScenario != ScenarioNr.FOUR && this.currentScenario == ScenarioNr.THREE && player.isAlive()) {
-				String scenarioTRESendSpecial = "\n|\t-------------- PLAYER  TURN --------------";
-				System.out.print(scenarioTRESendSpecial); playerConfronts();
+		while (playerPosition.hasEnemies() && player.isAlive()) {
+
+			if (this.currentScenario != ScenarioNr.FOUR &&
+				this.currentScenario == ScenarioNr.THREE && player.isAlive()) {
+
+				scenarioTRESinfo = playerTurnMessage();
+				System.out.print(scenarioTRESinfo);
+
+				playerConfronts();
 			}
 
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESinfo = scenarioTRESwhileConfrontationInPositionMessage(playerPosition);
 			System.out.println(scenarioTRESinfo);
 
-			moveEnemiesNotInSameRoom(); enemiesConfronts(player);
+			moveEnemiesNotInSameRoom();
+			enemiesConfronts(player);
 
 		}
 
@@ -382,7 +404,8 @@ public abstract class Simulation {
 		}
 
 		if (isMissionAccomplished()) {
-			scenarioSEISinfo += targetInExtractionPointMessage(); this.setGameOver(true);
+			scenarioSEISinfo += targetInExtractionPointMessage();
+			this.setGameOver(true);
 
 		} else {
 
@@ -597,11 +620,13 @@ public abstract class Simulation {
 	}
 
 	private void playerDecidesToRecover() {
-		setNextScenario(ScenarioNr.FOUR); scenarioQUATRO();
+		setNextScenario(ScenarioNr.FOUR);
+		scenarioQUATRO();
 	}
 
 	private void enemyAttacksPlayer(Enemy enemy, Player player) {
-		String takesDamageFromInfo = ""; player.takesDamageFrom(enemy.getFirePower());
+		String takesDamageFromInfo = "";
+		player.takesDamageFrom(enemy.getFirePower());
 		takesDamageFromInfo = takesDamageFromMessage(player, enemy, enemy.getFirePower());
 		System.out.print(takesDamageFromInfo);
 	}
@@ -609,7 +634,8 @@ public abstract class Simulation {
 	public Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {
 		Room bestExtractionPoint = null;
 		Iterator<Room> extractionPoints = mission.getEntryExitPoints().iterator();
-		double minimalDamage = Double.MAX_VALUE; double calculatedDamage = 0.0;
+		double minimalDamage = Double.MAX_VALUE;
+		double calculatedDamage = 0.0;
 
 		while (extractionPoints.hasNext()) {
 

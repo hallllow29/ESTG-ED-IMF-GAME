@@ -1,10 +1,20 @@
+/**
+ * @author 8230068, 8230069
+**/
+
 package lib.interfaces;
 
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import java.util.Iterator;
 
-
+/**
+ * A generic interface representing the abstract data type for a list. A list is an
+ * ordered collection that allows duplicate elements and supports positional access
+ * and modifications.
+ *
+ * @param <T> the type of elements maintained by this list
+ */
 public interface ListADT<T> extends Iterable<T> {
 
 	/**
@@ -73,8 +83,20 @@ public interface ListADT<T> extends Iterable<T> {
 	 */
 	int size();
 
+	/**
+	 * Returns an iterator over the elements in this collection. The iterator provides
+	 * sequential access to the elements in the order they appear in the collection.
+	 *
+	 * @return an iterator over the elements in this collection
+	 */
 	Iterator<T> iterator();
 
+	/**
+	 * Returns a string representation of the list. The format and content of the
+	 * resulting string may vary based on the specific implementation of the list.
+	 *
+	 * @return a string representation of the list
+	 */
 	String toString();
 
 }
