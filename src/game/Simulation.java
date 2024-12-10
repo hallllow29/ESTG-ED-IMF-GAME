@@ -257,54 +257,63 @@ public abstract class Simulation {
 		Room playerPosition = player.getPosition();
 		boolean enemiesRemained;
 
-		String scenarioUMstart =
-			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
-				"\n|========== [<< SCENARIO 1 START >>] ==========" +
-				"\n|\t" + player.getName() + " makes contact with ENEMIES..." +
-				"\n|\tAND has priority of attack over ENEMIES..." +
-				"\n|" +
-				"\n|\t-------------- PLAYER  TURN --------------";
-		System.out.print(scenarioUMstart);
+		String scenarioUMinfo = scenarioUMstartMessage();
+		scenarioUMinfo += playerTurnMessage();
+
+		System.out.print(scenarioUMinfo);
 
 		playerConfronts();
 
 		enemiesRemained = playerPosition.hasEnemies();
-		String scenarioUMend = "";
+
+		scenarioUMinfo = "";
 
 		if (enemiesRemained) {
-			scenarioUMend +=
-				"\n|" +
-					"\n|\t--------------  ENEMY TURN  --------------" +
-					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack...";
+			scenarioUMinfo += enemyTurnMessage();
 
-			if (!this.enemies.isEmpty()) {
-				scenarioUMend +=
-					"\n|\tBUT the enemies are somewhere..." +
-						"\n|\tENEMIES not in " + playerPosition.getName() + " are moving...";
+			if (getEnemies().isEmpty()) {
+				scenarioUMinfo += enemiesAreMovingMessage();
+				moveEnemiesNotInSameRoom();
 			}
 			setNextTurn(Turn.ENEMY);
 
 		} else {
-			scenarioUMend +=
-				"\n|\t" + player.getName() + " eliminated all ENEMIES in " + playerPosition.getName() + "...";
-
+			scenarioUMinfo += playerEliminatedAllEnemiesInPositionMessage(playerPosition);
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
-				scenarioUMend += gatherItems(playerPosition);
+				scenarioUMinfo += gatherItems(playerPosition);
 			}
-
 			setNextTurn(Turn.PLAYER);
 		}
-		scenarioUMend +=
-			"\n|" +
-				"\n|========== [<< SCENARIO 1  END  >>] ==========";
-		System.out.println(scenarioUMend);
+
+		scenarioUMinfo += scenarioUMendMessage();
+		System.out.print(scenarioUMinfo);
+
+	}
+
+	private String scenarioUMstartMessage() {
+		return "\n" + player.getName() + " is in " + player.getPosition().getName() + "..." +
+				"\n|========== [<< SCENARIO 1 START >>] ==========" +
+				"\n|\t" + player.getName() + " makes contact with ENEMIES..." +
+				"\n|\tAND has priority of attack over ENEMIES...";
+	}
+
+	private String playerTurnMessage() {
+		return "\n|" +
+				"\n|\t-------------- PLAYER  TURN --------------";
+	}
+
+	private String scenarioUMendMessage() {
+		return "\n|" +
+			"\n|========== [<< SCENARIO 1  END  >>] ==========";
 	}
 
 	private void scenarioDOIS() {
 		Room playerPosition = player.getPosition();
 
 		String scenarioDOISinfo = scenarioDOISstartMessage();
+		scenarioDOISinfo += playerTurnMessage();
+		scenarioDOISinfo += playerSearchsMessage();
 
 
 		// RECOLHE ITEMS...
@@ -336,10 +345,11 @@ public abstract class Simulation {
 	private String scenarioDOISstartMessage() {
 		return "\n" + player.getName() + " is in " + player.getPosition().getName() + "..." +
 				"\n|========== [<< SCENARIO 2 START >>] ==========" +
-				"\n|\tAND the room " + player.getName() + " entered is clear..." +
-				"\n|" +
-				"\n|\t-------------- PLAYER  TURN --------------" +
-			"\n|\t" + player.getName() + " searches the " + player.getPosition() + "...";
+				"\n|\tAND the room " + player.getName() + " entered is clear...";
+	}
+
+	private String playerSearchsMessage() {
+		return "\n|\t" + player.getName() + " searches the " + player.getPosition() + "...";
 	}
 
 	private String scenarioDOISendMessage() {
