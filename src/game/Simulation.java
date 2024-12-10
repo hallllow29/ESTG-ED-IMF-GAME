@@ -344,19 +344,13 @@ public abstract class Simulation {
 	private void scenarioTRES() {
 		Room playerPosition = player.getPosition();
 
-		String scenarioTRESstart =
-			"\nENEMIES enter in " + playerPosition.getName() + "..." +
-				"\n|========== [<< SCENARIO 3 START >>] ==========" +
-				"\n|\tENEMIES make contact with " + player.getName() + "..." +
-				"\n|\tAND have priority of attack over " + player.getName() + "..." +
-				"\n|" +
-				"\n|  --------------  ENEMY TURN  --------------";
-		System.out.print(scenarioTRESstart);
+		String scenarioTRESinfo = scenarioTRESstartMessage();
+		System.out.print(scenarioTRESinfo);
 
 		// Trigger para o scenario 4 se o to cruz precisar de items...
 		enemiesConfronts(player);
 
-		String scenarioTRESend = "";
+		scenarioTRESinfo = "";
 		while (playerPosition.hasEnemies() && player.isAlive()) {
 
 			if (this.currentScenario != ScenarioNr.FOUR &&
@@ -368,32 +362,62 @@ public abstract class Simulation {
 			}
 
 			setNextScenario(ScenarioNr.THREE);
-			scenarioTRESend =
-				"\n|  --------------  ENEMY TURN  --------------" +
-					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
-					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving..." +
-					"\n|";
-			System.out.print(scenarioTRESend);
+			scenarioTRESinfo = scenarioTRESwhileConfrontationInPositionMessage(playerPosition);
+			System.out.println(scenarioTRESinfo);
+
 			moveEnemiesNotInSameRoom();
 			enemiesConfronts(player);
-			playerPosition = player.getPosition();
+
 		}
 
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
-			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
-			scenarioTRESend += "\n|\t" + player.getName() + " eliminated all ENEMIES..." + "\n|\tin " + playerPosition.getName() + "...";
+
+			scenarioTRESinfo += playerEliminatedAllEnemiesInPositionMessage(playerPosition);
 
 		} else if (!player.isAlive()) {
-			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
-			scenarioTRESend += "\n|\t" + player.getName() + " DIED DAMN IT!!!!!";
-			this.gameOver = true;
+
+			scenarioTRESinfo += playerDiedMessage();
+			setGameOver(true);
 		}
 
-		scenarioTRESend +=
-			"\n|" +
-				"\n|========== [<< SCENARIO 3  END  >>] ==========";
-		System.out.println(scenarioTRESend);
+		scenarioTRESinfo += scenarioTRESendMessage();
+		System.out.println(scenarioTRESinfo);
 	}
+
+	private String scenarioTRESstartMessage() {
+		return "\nENEMIES enter in " + player.getPosition().getName() + "..." +
+				"\n|========== [<< SCENARIO 3 START >>] ==========" +
+				"\n|\tENEMIES make contact with " + player.getName() + "..." +
+				"\n|\tAND have priority of attack over " + player.getName() + "..." +
+				"\n|" +
+				"\n|  --------------  ENEMY TURN  --------------";
+	}
+
+	private String scenarioTRESwhileConfrontationInPositionMessage(Room playerPosition) {
+		return "\n|" +
+				"\n|  --------------  ENEMY TURN  --------------" +
+					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
+					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving...";
+	}
+
+	private String scenarioTRESendMessage() {
+		return "\n|" +
+				"\n|========== [<< SCENARIO 3  END  >>] ==========";
+	}
+
+	private String playerDiedMessage() {
+		return "\n|\t-------------- PLAYER  TURN --------------" +
+			"\n|\t" + player.getName() + " DIED DAMN IT!!!!!";
+	}
+
+	private String playerEliminatedAllEnemiesInPositionMessage(Room playerPosition) {
+		return "\n|\t-------------- PLAYER  TURN --------------" +
+			"\n|\t" + player.getName() + " eliminated all ENEMIES..." +
+			"\n|\tin " + playerPosition.getName() + "...";
+	}
+
+
+
 
 	protected void scenarioQUATRO() {
 
