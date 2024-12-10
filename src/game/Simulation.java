@@ -56,9 +56,7 @@ public abstract class Simulation {
 				this.setGameOver(true);
 			}
 
-
 			enemyTurn();
-
 
 		}
 
@@ -85,8 +83,8 @@ public abstract class Simulation {
 		String playerTurnOutput = "";
 		if (!playerPosition.hasEnemies() || this.getCurrentScenario() == ScenarioNr.TWO) {
 			playerTurnOutput +=
-					"\n" + this.getPlayer().getName() + " is moving..." +
-							"\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
+				"\n" + this.getPlayer().getName() + " is moving..." +
+					"\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
 
 			movePlayer();
 		} else {
@@ -262,7 +260,7 @@ public abstract class Simulation {
 		String scenarioUMstart =
 			"\n" + player.getName() + " is in " + playerPosition.getName() + "..." +
 				"\n|========== [<< SCENARIO 1 START >>] ==========" +
-				"\n|\t"+ player.getName() + " makes contact with ENEMIES..." +
+				"\n|\t" + player.getName() + " makes contact with ENEMIES..." +
 				"\n|\tAND has priority of attack over ENEMIES..." +
 				"\n|" +
 				"\n|\t-------------- PLAYER  TURN --------------";
@@ -371,7 +369,7 @@ public abstract class Simulation {
 
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESend =
-					"\n|  --------------  ENEMY TURN  --------------" +
+				"\n|  --------------  ENEMY TURN  --------------" +
 					"\n|\tENEMIES in " + playerPosition.getName() + " survived the attack..." +
 					"\n|\tENEMIES not in " + playerPosition.getName() + " are moving..." +
 					"\n|";
@@ -383,7 +381,7 @@ public abstract class Simulation {
 
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
-			scenarioTRESend += "\n|\t"+ player.getName() + " eliminated all ENEMIES..." + "\n|\tin " + playerPosition.getName() + "...";
+			scenarioTRESend += "\n|\t" + player.getName() + " eliminated all ENEMIES..." + "\n|\tin " + playerPosition.getName() + "...";
 
 		} else if (!player.isAlive()) {
 			scenarioTRESend = "\n|\t-------------- PLAYER  TURN --------------";
@@ -393,7 +391,7 @@ public abstract class Simulation {
 
 		scenarioTRESend +=
 			"\n|" +
-			"\n|========== [<< SCENARIO 3  END  >>] ==========";
+				"\n|========== [<< SCENARIO 3  END  >>] ==========";
 		System.out.println(scenarioTRESend);
 	}
 
@@ -477,10 +475,10 @@ public abstract class Simulation {
 
 		if (isMissionAccomplished()) {
 			scenarioSEISend +=
-			"\n|\tTARGET is in EXTRACTION POINT..." +
-				"\n|\tWELL DONE " + player.getName() + " is returning to base..." +
-				"\n|" +
-				"\n|========== [<< SCENARIO 6  END  >>] ==========";
+				"\n|\tTARGET is in EXTRACTION POINT..." +
+					"\n|\tWELL DONE " + player.getName() + " is returning to base..." +
+					"\n|" +
+					"\n|========== [<< SCENARIO 6  END  >>] ==========";
 			this.setGameOver(true);
 			System.out.println(scenarioSEISend);
 			return;
@@ -551,7 +549,7 @@ public abstract class Simulation {
 				enemy.takesDamageFrom(playerAttack);
 
 				playerConfrontsOutput +=
-						"\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
+					"\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
 
 				if (!enemy.isAlive()) {
 					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() +
@@ -783,18 +781,33 @@ public abstract class Simulation {
 		return totalDamage;
 	}
 
-	private void updateWeightsForEnemies() {
-		// TODO: Stack issue? need to ? this...
 
-		for (Room room : this.battlefield.getVertices()) {
-			for (Room connectedRoom : this.battlefield.getConnectedVertices(room)) {
-				double newWeight = calculateWeight(connectedRoom);
-				this.battlefield.addEdge(room, connectedRoom, newWeight);
+
+
+
+
+
+
+
+
+
+
+
+
+
+	protected void updateWeightsForEnemies() {
+		double newWeight = 0.0;
+
+		for (Room room : getBattlefield().getVertices()) {
+			for (Room connectedRoom : getBattlefield().getConnectedVertices(room)) {
+				newWeight = calculateWeight(connectedRoom);
+				getBattlefield().addEdge(room, connectedRoom, newWeight);
 			}
 		}
 	}
 
 	private double calculateWeight(Room room) {
+		final double NONE = 0.0;
 		double weight = 0.0;
 		int totalDamage = 0;
 
@@ -805,59 +818,75 @@ public abstract class Simulation {
 					totalDamage += enemy.getFirePower();
 				}
 			}
-
 			weight += totalDamage;
-
 		} else {
-			return weight;
+			return weight += NONE;
 		}
 		return weight;
 	}
 
-	protected void getBestPath() throws ElementNotFoundException {
-		Room playerPosition = this.player.getPosition();
-		String bestPathOutput = "";
+	protected void nextMissionStageInfo(boolean isReturningToExit) {
 
-		this.updateWeightsForEnemies();
+		String getBestPathOutput = "";
 
-		if (returningToExit) {
-			bestPathOutput += "\nCalculating best path to EXTRACTION POINT...";
-			bestPathOutput += "\nPath to EXTRACTION POINT";
+		// updateWeightsForEnemies();
 
+		if (isReturningToExit) {
+			getBestPathOutput += bestPathExtractionMessage();
 		} else {
-			bestPathOutput += "\nCalculating best path to OBJECTIVE...";
-			bestPathOutput += "\nPath to OBJECTIVE";
+			getBestPathOutput += bestPathObjectiveMessage();
 		}
 
-		System.out.println(bestPathOutput);
+		System.out.println(getBestPathOutput);
+		// this.displayPath(playerPosition, this.nextObjective);
+	}
 
-		this.displayPath(playerPosition, this.nextObjective);
+	protected String bestPathObjectiveMessage() {
+		return "\nCalculating best path to OBJECTIVE..." +
+			"\nPath to OBJECTIVE";
+	}
 
+	protected String bestPathExtractionMessage() {
+		return "\nCalculating best path to EXTRACTION POINT..." +
+			"\nPath to EXTRACTION POINT";
 	}
 
 	protected void displayPath(Room fromPosition, Room toPosition) throws ElementNotFoundException {
-		Iterator<Room> bestPath = this.battlefield.iteratorShortestPath(fromPosition, toPosition);
+		Iterator<Room> bestPath = getBattlefield().iteratorShortestPath(fromPosition, toPosition);
+		Room nextRoom;
 
-		Room nextRoom = bestPath.next();
-		StringBuilder displayPathOutput = new StringBuilder();
-		displayPathOutput.append(String.format("\n%-25s <--- %-20s", nextRoom.getName(), player.getName()));
-
+		StringBuilder displayPathOutput = appendPlayerPositionInfo(bestPath.next());
 		while (bestPath.hasNext()) {
 			nextRoom = bestPath.next();
-			if (!nextRoom.equals(this.nextObjective)) {
-				displayPathOutput.append("\n  |\t").append(nextRoom.getName());
-
-			} else if (!nextRoom.equals(this.nextObjective) && !nextRoom.equals(this.closestItem.getName())) {
-				displayPathOutput.append(String.format("\n%-26s <--- %-20s", this.closestItem, "ITEM"));
-
-			} else if (returningToExit) {
-				displayPathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "EXTRACTION POINT"));
-			} else {
-				displayPathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "OBJECTIVE"));
-			}
+			displayPathOutput = appendNextRoomInfo(displayPathOutput, nextRoom);
 		}
 		System.out.println(displayPathOutput);
-		// String print = displayPathOutput.toString();
+	}
+
+	protected StringBuilder appendNextRoomInfo(StringBuilder pathOutput, Room nextRoom) {
+
+		if (!nextRoom.equals(this.nextObjective)) {
+
+			pathOutput.append("\n  |\t").append(nextRoom.getName());
+
+		} else if (!nextRoom.equals(this.nextObjective) && !nextRoom.equals(this.closestItem.getName())) {
+			pathOutput.append(String.format("\n%-26s <--- %-20s", this.closestItem, "ITEM"));
+
+		} else if (returningToExit) {
+
+			pathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "EXTRACTION POINT"));
+		} else {
+
+			pathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "OBJECTIVE"));
+		}
+
+		return pathOutput;
+	}
+
+	protected StringBuilder appendPlayerPositionInfo(Room playerPosition) {
+		StringBuilder pathOutput = new StringBuilder();
+		pathOutput.append(String.format("\n%-25s <--- %-20s", playerPosition.getName(), player.getName()));
+		return pathOutput;
 	}
 
 	protected void addRoomToReport(String roomName) {
@@ -870,9 +899,9 @@ public abstract class Simulation {
 
 	protected void addStatusToReport() {
 		if (player.isAlive() && isGameOver()) {
-			report.setMissionStatus("game.Mission Accomplished");
+			getReport().setMissionStatus("game.Mission Accomplished");
 		} else {
-			report.setMissionStatus("game.Mission Failed");
+			getReport().setMissionStatus("game.Mission Failed");
 		}
 	}
 

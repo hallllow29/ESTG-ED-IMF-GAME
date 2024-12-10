@@ -34,7 +34,12 @@ public class AutomaticMode extends Simulation {
         Room nextObjective = this.getNextObjective();
         Iterator<Room> path;
 
-        this.getBestPath();
+        updateWeightsForEnemies();
+        nextMissionStageInfo(isReturningToExit());
+        // getBestPath();
+
+        // Pode ficar aqui
+        this.displayPath(playerPosition, nextObjective);
 
         path = this.getBattlefield().iteratorShortestPath(playerPosition, nextObjective);
 
