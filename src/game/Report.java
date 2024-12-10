@@ -9,18 +9,19 @@ import java.util.UUID;
 
 public class Report {
 
-    private String simulationId;
+    private final String simulationId;
     private String timestamp;
     private String type;
     private String missionStatus;
     private Player player;
     private Mission mission;
     private String entryPoint;
-    private ArrayUnorderedList<String> trajectoryToTarget;
-    private ArrayUnorderedList<String> trajectoryToExtraction;
+    private final ArrayUnorderedList<String> trajectoryToTarget;
+    private final ArrayUnorderedList<String> trajectoryToExtraction;
     private final ArrayUnorderedList<String> enemiesSurvived;
 
     public Report(String type, Player player, Mission mission) {
+        // TODO: Mudar UIID.
         this.simulationId = UUID.randomUUID().toString();
         this.timestamp = getCurrentTimestamp();
         this.player = player;

@@ -423,8 +423,6 @@ public abstract class Simulation {
 
 	}
 
-
-
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
 		return playerPosition.equals(targetPosition);
 	}
@@ -448,40 +446,6 @@ public abstract class Simulation {
 				minimalDamage = calculatedDamage; bestEntryPoint = entryPoint;
 			}
 		} return bestEntryPoint;
-	}
-
-	protected void playerConfronts() {
-		String playerConfrontsOutput = ""; final int NONE = 0;
-		Iterator<Enemy> enemies = this.enemies.iterator();
-		String playerName = player.getName(); Room playerPosition = player.getPosition();
-		int playerAttack = player.getFirePower();
-
-		while (enemies.hasNext()) {
-
-			Enemy enemy = enemies.next(); Room enemyPosition = enemy.getPosition();
-
-			if (enemyPosition.equals(playerPosition)) {
-
-				enemy.takesDamageFrom(playerAttack);
-
-				playerConfrontsOutput += "\n|\t" + playerName + " is attacking " + enemy.getName() + "...";
-
-				if (!enemy.isAlive()) {
-					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() + " suffered " + playerAttack + " of attack..." + "\n|\tAND is now DEAD!!!" + "\n|";
-					enemies.remove(); enemyPosition.removeEnemy();
-				} else {
-					playerConfrontsOutput += "\n|\tENEMY " + enemy.getName() + " endured " + playerAttack + " of attack..." + "\n|";
-				}
-			}
-
-		}
-
-		if (playerPosition.getTotalEnemies() <= NONE) {
-			playerPosition.setEnemies(false);
-		}
-
-		System.out.print(playerConfrontsOutput);
-
 	}
 
 	private boolean playerNeedsRecoveryItem() {
@@ -589,6 +553,17 @@ public abstract class Simulation {
 		return gatherItemsOutput;
 	}
 
+
+
+
+
+
+
+
+
+
+
+
 	private void enemiesConfronts(Player player) {
 		Room playerPosition = player.getPosition(); Room enemyPosition;
 		boolean playerWantsToRecover;
@@ -598,26 +573,81 @@ public abstract class Simulation {
 			enemyPosition = enemy.getPosition();
 
 			if (enemyPosition.equals(playerPosition)) {
-
 				enemyAttacksPlayer(enemy, player);
 				playerWantsToRecover = playerNeedsRecoveryItem();
 
 				if (playerWantsToRecover) {
-					playerDecidesToRecover(); return;
+					playerDecidesToRecover();
+					return;
 				}
 
 				if (!player.isAlive()) {
-					setGameOver(true); break;
+					setGameOver(true);
+					break;
 				}
 			}
+		}
+	}
 
+	protected void playerConfronts() {
+		String playerConfrontsInfo = "";
+		Iterator<Enemy> enemies = getEnemies().iterator();
+		final int PLAYER_ATTACK = player.getFirePower();
+
+		while (enemies.hasNext()) {
+			Enemy enemy = enemies.next();
+			Room enemyPosition = enemy.getPosition();
+
+			if (enemyPosition.equals(player.getPosition())) {
+				playerAttacksEnemy(player, enemy, PLAYER_ATTACK);
+
+				if (!enemy.isAlive()) {
+					oneEnemyDies(enemy, enemies);
+
+				} else {
+					playerConfrontsInfo += enemyEnduredAttackMessage(enemy.getName(), PLAYER_ATTACK);
+				}
+			}
 		}
 
+		allEnemiesInSamePositionDead(player.getPosition());
+
+		System.out.print(playerConfrontsInfo);
+
 	}
 
-	private String takesDamageFromMessage(Player player, Enemy enemy, int enemyAttack) {
-		return "\n|\t" + enemy.getName() + " is attacking " + player.getName() + "..." + "\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
+
+	private void allEnemiesInSamePositionDead(Room playerPosition) {
+		if (playerPosition.getTotalEnemies() <= 0) {
+			playerPosition.setEnemies(false);
+		}
 	}
+
+
+
+	private void playerAttacksEnemy(Player player, Enemy enemy, int playerAttack) {
+		String playerAttacksEnemyInfo = "";
+
+		enemy.takesDamageFrom(playerAttack);
+
+		playerAttacksEnemyInfo += playerIsAttackingMessage(player.getName(), enemy.getName(), playerAttack);
+		playerAttacksEnemyInfo += enemySufferedAttackMessage(enemy.getName(), playerAttack);
+
+		System.out.println(playerAttacksEnemyInfo);
+	}
+
+	private void oneEnemyDies(Enemy enemy, Iterator<Enemy> enemies) {
+		String oneEnemyDiesInfo = "";
+
+		oneEnemyDiesInfo += enemyIsDeadMessage();
+
+		enemies.remove();
+		enemy.getPosition().removeEnemy();
+
+		System.out.println(oneEnemyDiesInfo);
+	}
+
+
 
 	private void playerDecidesToRecover() {
 		setNextScenario(ScenarioNr.FOUR);
@@ -625,10 +655,13 @@ public abstract class Simulation {
 	}
 
 	private void enemyAttacksPlayer(Enemy enemy, Player player) {
-		String takesDamageFromInfo = "";
+		String enemyAttacksPlayerInfo = "";
+
 		player.takesDamageFrom(enemy.getFirePower());
-		takesDamageFromInfo = takesDamageFromMessage(player, enemy, enemy.getFirePower());
-		System.out.print(takesDamageFromInfo);
+
+		enemyAttacksPlayerInfo = enemyIsAttackingMessage(enemy.getName(), player.getName(), enemy.getFirePower());
+
+		System.out.print(enemyAttacksPlayerInfo);
 	}
 
 	public Room bestExtractionPoint(Room playerPosition) throws ElementNotFoundException {
@@ -651,8 +684,9 @@ public abstract class Simulation {
 	}
 
 	public double calculatePathDamage(Iterator<Room> path) {
-		double totalDamage = 0; int playerHealth = player.getCurrentHealth();
-		int playerMaxHealth = 100;
+		final int PLAYER_MAX_HEALTH = 100;
+		double totalDamage = 0;
+		int playerHealth = player.getCurrentHealth();
 
 		while (path.hasNext()) {
 
@@ -673,7 +707,7 @@ public abstract class Simulation {
 				for (Item item : mission.getItems()) {
 					if (item.getPosition() != null && item.getPosition().equals(room)) {
 						if (item instanceof MediKit) {
-							playerHealth = Math.min(playerMaxHealth, playerHealth + ((MediKit) item).getHealPower());
+							playerHealth = Math.min(PLAYER_MAX_HEALTH, playerHealth + ((MediKit) item).getHealPower());
 						} else if (item instanceof Kevlar) {
 							playerHealth += ((Kevlar) item).getExtraHp();
 						}
@@ -727,13 +761,7 @@ public abstract class Simulation {
 		// this.displayPath(playerPosition, this.nextObjective);
 	}
 
-	protected String bestPathObjectiveMessage() {
-		return "\nCalculating best path to OBJECTIVE..." + "\nPath to OBJECTIVE";
-	}
 
-	protected String bestPathExtractionMessage() {
-		return "\nCalculating best path to EXTRACTION POINT..." + "\nPath to EXTRACTION POINT";
-	}
 
 	protected void displayPath(Room fromPosition, Room toPosition) throws ElementNotFoundException {
 		Iterator<Room> bestPath = getBattlefield().iteratorShortestPath(fromPosition, toPosition);
@@ -789,6 +817,49 @@ public abstract class Simulation {
 	}
 
 	//------------------- MESSAGES --------- MAYBE ANOTHER CLASS? ------------------------
+
+
+
+
+
+
+
+
+	private String enemyEnduredAttackMessage(String enemyName, int playerAttack) {
+		return "\n|\tENEMY " + enemyName + " endured " + playerAttack + " of attack..." + "\n|";
+	}
+
+	private String enemySufferedAttackMessage(String enemyName, int playerAttack) {
+		return "\n|\tENEMY " + enemyName + " suffered " + playerAttack + " of attack...";
+	}
+
+	private String enemyIsDeadMessage() {
+		return "\n|\tAND is now DEAD!!!";
+	}
+
+	private String enemyIsAttackingMessage(String enemyName, String playerName, int enemyAttack) {
+		return
+			"\n|\t" + enemyName + " is attacking " + playerName + "..." +
+			"\n|\t" + "with " + enemyAttack + " damage..." + "\n|";
+	}
+
+	private String playerIsAttackingMessage(String playerName, String enemyName, int playerAttack) {
+		return
+			"\n|\t" + playerName + " is attacking " + enemyName + "..." +
+			"\n|\t" + "with" + playerAttack + " damage..." + "\n|";
+	}
+
+
+
+	protected String bestPathObjectiveMessage() {
+		return "\nCalculating best path to OBJECTIVE..." + "\nPath to OBJECTIVE";
+	}
+
+	protected String bestPathExtractionMessage() {
+		return "\nCalculating best path to EXTRACTION POINT..." + "\nPath to EXTRACTION POINT";
+	}
+
+
 
 	private String scenarioQUATROstartMessage() {
 		return "\n|========== [<< SCENARIO 4 START >>] ==========" + "\n|\t" + player.getName() + " seems to be injured..." + "\n|" + "\n|\t-------------- PLAYER  TURN --------------" + "\n|\t" + player.getName() + " halts and is checking BackPack...";
