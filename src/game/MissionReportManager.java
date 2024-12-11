@@ -14,7 +14,6 @@ import java.util.Scanner;
 
 public class MissionReportManager {
 
-
     public void listReports() {
         File dir = new File("reports/");
 
@@ -118,6 +117,7 @@ public class MissionReportManager {
             System.out.println("Name ->" + player.get("name"));
             System.out.println("Final HP -> " + player.get("finalHealth"));
             System.out.println("Fire Power -> " + player.get("firePower"));
+            System.out.println("Backpack -> " + player.get("backPack"));
 
             JSONObject mission = (JSONObject) report.get("mission");
             System.out.println("\n==== MISSION DETAILS ====");

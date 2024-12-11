@@ -30,6 +30,7 @@ public class SaveToJsonFile {
         player.put("name", report.getPlayer().getName());
         player.put("finalHealth", report.getPlayer().getCurrentHealth());
         player.put("firePower", report.getPlayer().getFirePower());
+        player.put("backPack", report.getBackPackSize());
         jsonReport.put("player", player);
 
         JSONObject mission = new JSONObject();

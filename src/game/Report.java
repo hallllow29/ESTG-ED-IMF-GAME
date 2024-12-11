@@ -1,5 +1,6 @@
 package game;
 
+import entities.BackPackSize;
 import entities.Player;
 import lib.lists.ArrayUnorderedList;
 
@@ -16,6 +17,7 @@ public class Report {
     private Player player;
     private Mission mission;
     private String entryPoint;
+    private String backPackSize;
     private ArrayUnorderedList<String> trajectoryToTarget;
     private ArrayUnorderedList<String> trajectoryToExtraction;
     private final ArrayUnorderedList<String> enemiesSurvived;
@@ -33,6 +35,31 @@ public class Report {
         this.enemiesKilled = new ArrayUnorderedList<>();
         this.entryPoint = null;
         this.missionStatus = null;
+        this.backPackSize = null;
+    }
+
+    public String getBackPackSize() {
+        return this.backPackSize;
+    }
+
+    public void setBackPackSize(int backPackSize) {
+        switch (backPackSize) {
+            case 0 :
+                this.backPackSize = "Try hard mode (No backpack)";
+                break;
+            case 1:
+                this.backPackSize = "Small Backpack";
+                break;
+            case 2:
+                this.backPackSize = "Medium Backpack";
+                break;
+            case 5:
+                this.backPackSize = "Big Backpack";
+                break;
+            default:
+                this.backPackSize = "No backPack used";
+                break;
+        }
     }
 
     public String getEntryPoint() {
@@ -120,6 +147,7 @@ public class Report {
     public void addEnemyKilled(String enemy) {
         this.enemiesKilled.addToRear(enemy);
     }
+
     public ArrayUnorderedList<String> getEnemiesKilled() {
         return this.enemiesKilled;
     }

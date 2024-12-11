@@ -46,4 +46,8 @@ public class BackPack {
         return this.back_pack.size() == maxCapacity;
     }
 
+    public int getMaxCapacity() {
+        return this.maxCapacity;
+    }
+
 }
