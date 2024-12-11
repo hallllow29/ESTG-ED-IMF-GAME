@@ -253,7 +253,8 @@ public abstract class Simulation {
 	private void scenarioUM() {
 		Room playerPosition = player.getPosition(); boolean enemiesRemained;
 
-		String scenarioUMinfo = Display.scenarioUMstartMessage(player.getName());
+		String scenarioUMinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
+		scenarioUMinfo += Display.scenarioUMstartMessage(player.getName());
 		scenarioUMinfo += Display.playerTurnMessage();
 		System.out.print(scenarioUMinfo);
 
@@ -269,10 +270,12 @@ public abstract class Simulation {
 			if (getEnemies().isEmpty()) {
 				scenarioUMinfo += Display.enemiesAreMovingMessage();
 				moveEnemiesNotInSameRoom();
-			} setNextTurn(Turn.ENEMY);
+			}
+			setNextTurn(Turn.ENEMY);
 
 		} else {
 			scenarioUMinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());
+			scenarioUMinfo += Display.playerSearchsMessage(player.getName(),playerPosition.getName());
 			// RECOLHE ITEMS.
 			if (playerPosition.hasItems()) {
 				scenarioUMinfo += gatherItems(playerPosition);
@@ -288,7 +291,7 @@ public abstract class Simulation {
 	private void scenarioDOIS() {
 		Room playerPosition = player.getPosition();
 
-		String scenarioDOISinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
+		String scenarioDOISinfo = Display.playerIsInMessage(player.getName(), playerPosition.getName());
 		scenarioDOISinfo += Display.scenarioDOISstartMessage(player.getName());
 		scenarioDOISinfo += Display.playerTurnMessage();
 		scenarioDOISinfo += Display.playerSearchsMessage(player.getName(), playerPosition.getName());
@@ -323,15 +326,14 @@ public abstract class Simulation {
 	private void scenarioTRES() {
 		Room playerPosition = player.getPosition();
 
-		String scenarioTRESinfo = Display.scenarioTRESstartMessage(player.getName());
+		String scenarioTRESinfo = Display.playerEntersInMessage(player.getName(),playerPosition.getName());
+		scenarioTRESinfo += Display.scenarioTRESstartMessage(player.getName());
 		scenarioTRESinfo += Display.enemyTurnMessage();
 		scenarioTRESinfo += Display.enemiesEngageConfront(playerPosition.getName());
 		System.out.print(scenarioTRESinfo);
 
 		// Tem um trigger para o scenario 4 se o to cruz precisar de items...
 		enemiesConfronts(player);
-
-		scenarioTRESinfo = "";
 
 		while (playerPosition.hasEnemies() && player.isAlive()) {
 
@@ -344,6 +346,7 @@ public abstract class Simulation {
 				playerConfronts();
 			}
 
+			scenarioTRESinfo = "";
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESinfo += Display.enemyTurnMessage();
 			scenarioTRESinfo += Display.enemiesNotIsTheSamePositionMessage(playerPosition.getName());
@@ -353,6 +356,8 @@ public abstract class Simulation {
 			enemiesConfronts(player);
 
 		}
+
+		scenarioTRESinfo = "";
 		scenarioTRESinfo += Display.playerTurnMessage();
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 
@@ -420,8 +425,9 @@ public abstract class Simulation {
 		scenarioSEISinfo += Display.scenarioSEISstartMessage();
 		scenarioSEISinfo += Display.playerTurnMessage();
 		scenarioSEISinfo += Display.playerSearchsMessage(player.getName(), playerPosition.getName());
-		System.out.println(scenarioSEISinfo);
+		System.out.print(scenarioSEISinfo);
 
+		scenarioSEISinfo = "";
 		if (playerPosition.hasItems()) {
 			scenarioSEISinfo += gatherItems(playerPosition);
 		}
@@ -662,7 +668,7 @@ public abstract class Simulation {
 		playerAttacksEnemyInfo += Display.playerIsAttackingMessage(player.getName(), enemy.getName(), playerAttack);
 		playerAttacksEnemyInfo += Display.enemySufferedAttackMessage(enemy.getName(), playerAttack);
 
-		System.out.println(playerAttacksEnemyInfo);
+		System.out.print(playerAttacksEnemyInfo);
 	}
 
 	private void oneEnemyDies(Enemy enemy, Iterator<Enemy> enemies) {
@@ -673,7 +679,7 @@ public abstract class Simulation {
 		enemies.remove();
 		enemy.getPosition().removeEnemy();
 
-		System.out.println(oneEnemyDiesInfo);
+		System.out.print(oneEnemyDiesInfo);
 	}
 
 	private void playerDecidesToRecover() {
