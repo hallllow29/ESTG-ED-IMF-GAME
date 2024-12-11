@@ -1,6 +1,6 @@
 package entities;
 
-public abstract class Character {
+public abstract class Character implements CharacterI {
 
     /**
      * The name of the character.

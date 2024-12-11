@@ -12,7 +12,7 @@ import lib.lists.LinkedList;
 import java.util.Iterator;
 import java.util.Random;
 
-public abstract class Simulation {
+public abstract class Simulation implements SimulationI {
 
 	private final Mission mission;
 	private CustomNetwork<Room> battlefield;
@@ -155,7 +155,7 @@ public abstract class Simulation {
 		this.nextObjective = nextObjective;
 	}
 
-	protected boolean isGameOver() {
+	public boolean isGameOver() {
 		return this.gameOver;
 	}
 
@@ -167,7 +167,7 @@ public abstract class Simulation {
 		return this.entryPoint;
 	}
 
-	protected Turn getCurrentTurn() {
+	public Turn getCurrentTurn() {
 		return this.currentTurn;
 	}
 

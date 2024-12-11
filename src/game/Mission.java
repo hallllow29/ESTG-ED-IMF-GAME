@@ -10,7 +10,7 @@ import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
 
-public class Mission {
+public class Mission implements MissionI {
 
 	private final String code;
 	private final int version;
