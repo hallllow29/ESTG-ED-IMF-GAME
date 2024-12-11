@@ -346,14 +346,14 @@ public abstract class Simulation {
 
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESinfo += Display.enemyTurnMessage();
-			scenarioTRESinfo = Display.enemiesAreMovingMessage();
-			System.out.println(scenarioTRESinfo);
+			scenarioTRESinfo += Display.enemiesNotIsTheSamePositionMessage(playerPosition.getName());
+			System.out.print(scenarioTRESinfo);
 
 			moveEnemiesNotInSameRoom();
 			enemiesConfronts(player);
 
 		}
-
+		scenarioTRESinfo += Display.playerTurnMessage();
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 
 			scenarioTRESinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());

@@ -144,6 +144,12 @@ public class Display {
 			"\n|\tENEMIES not in " + playerPositionName + " are moving...";
 	}
 
+	public static String enemiesNotIsTheSamePositionMessage(String playerPositionName) {
+		return
+			"\n|\tENEMIES in " + playerPositionName + " engaging in confront..." +
+			"\n|\tENEMIES not in " + playerPositionName + " are moving...";
+	}
+
 	public static String enemiesAreMovingMessage() {
 		return "\n|\tBUT the enemies are somewhere..." +
 			"\n|\tEnemies are moving...";
@@ -158,7 +164,7 @@ public class Display {
 	}
 
 	public static String enemiesEngageConfront(String playerPositionName) {
-		return "\n|\t" + "Enemies engage confront in " + playerPositionName + "...";
+		return "\n|\t" + "ENEMIES engage confront in " + playerPositionName + "...";
 	}
 
 	//------------------------------TARGET------------------------------------------------
