@@ -9,19 +9,19 @@ import java.util.UUID;
 
 public class Report {
 
-    private final String simulationId;
+    private String simulationId;
     private String timestamp;
     private String type;
     private String missionStatus;
     private Player player;
     private Mission mission;
     private String entryPoint;
-    private final ArrayUnorderedList<String> trajectoryToTarget;
-    private final ArrayUnorderedList<String> trajectoryToExtraction;
+    private ArrayUnorderedList<String> trajectoryToTarget;
+    private ArrayUnorderedList<String> trajectoryToExtraction;
     private final ArrayUnorderedList<String> enemiesSurvived;
+    private final ArrayUnorderedList<String> enemiesKilled;
 
     public Report(String type, Player player, Mission mission) {
-        // TODO: Mudar UIID.
         this.simulationId = UUID.randomUUID().toString();
         this.timestamp = getCurrentTimestamp();
         this.player = player;
@@ -30,6 +30,7 @@ public class Report {
         this.trajectoryToTarget = new ArrayUnorderedList<>();
         this.enemiesSurvived = new ArrayUnorderedList<>();
         this.trajectoryToExtraction = new ArrayUnorderedList<>();
+        this.enemiesKilled = new ArrayUnorderedList<>();
         this.entryPoint = null;
         this.missionStatus = null;
     }
@@ -114,6 +115,13 @@ public class Report {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         return now.format(formatter);
+    }
+
+    public void addEnemyKilled(String enemy) {
+        this.enemiesKilled.addToRear(enemy);
+    }
+    public ArrayUnorderedList<String> getEnemiesKilled() {
+        return this.enemiesKilled;
     }
 
 }

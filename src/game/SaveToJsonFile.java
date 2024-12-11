@@ -3,12 +3,23 @@ package game;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class SaveToJsonFile {
 
+    private static final String REPORTS_DIR = "reports/";
+    private static int counter = 0;
+
     public static void saveJsonFile(Report report) {
+
+        File dir = new File(REPORTS_DIR);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
+
+        String fileName = REPORTS_DIR + "Report_" + (++counter) + ".json";
 
         JSONObject jsonReport = new JSONObject();
         jsonReport.put("simulationId" , report.getSimulationId());
@@ -41,15 +52,22 @@ public class SaveToJsonFile {
 
         jsonReport.put("trajectoryToExtraction", pathToExtraction);
 
-        JSONArray enemiesArray = new JSONArray();
+        JSONArray enemiesSurvived = new JSONArray();
         for (String enemy : report.getEnemiesSurvived()) {
-            enemiesArray.add(enemy);
+            enemiesSurvived.add(enemy);
         }
-        jsonReport.put("enemiesSurvived", enemiesArray);
+        jsonReport.put("enemiesSurvived", enemiesSurvived);
 
-        try (FileWriter file = new FileWriter(report.getPlayer().getName() + ".json")) {
+        JSONArray enemiesKilled = new JSONArray();
+        for (String enemy : report.getEnemiesKilled()) {
+            enemiesKilled.add(enemy);
+        }
+
+        jsonReport.put("enemiesKilled", enemiesKilled);
+
+        try (FileWriter file = new FileWriter(fileName)) {
             file.write(jsonReport.toJSONString());
-            System.out.println("game.Report saved in: " + report.getPlayer().getName() + ".json");
+            System.out.println("Report saved as: " + fileName);
         } catch (IOException e) {
             System.out.println("Error saving report");
         }
