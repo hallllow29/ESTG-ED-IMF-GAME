@@ -1,8 +1,5 @@
 import entities.*;
-import game.JsonSimpleRead;
-import game.Mission;
-import game.ModeManager;
-import game.Simulation;
+import game.*;
 import lib.graphs.CustomNetwork;
 import lib.lists.LinkedList;
 import lib.graphs.Network;
@@ -72,9 +69,13 @@ public class Main {
 			/*for (Room roomobj : mission.getBattlefield().getVertices()) {
 				simulation.scnario2(roomobj);
 			} */
-			ModeManager modeManager = new ModeManager();
+			//ModeManager modeManager = new ModeManager();
 
-			modeManager.startGame();
+			//modeManager.startGame();
+
+			MainMenu.mainMenu();
+
+
 
 			// manualSimulation.play();
 
