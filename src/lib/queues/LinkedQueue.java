@@ -3,7 +3,9 @@ package lib.queues;
 
 import lib.Node;
 import lib.exceptions.EmptyCollectionException;
-public class LinkedQueue <T> {
+import lib.interfaces.QueueADT;
+
+public class LinkedQueue <T> implements QueueADT<T> {
 
 	private Node<T> front;
 	private Node<T> rear;
@@ -41,12 +43,21 @@ public class LinkedQueue <T> {
 		return result;
 	}
 
-	public boolean isEmpty(){
-		return getSize() == 0 || front == null;
+	@Override
+	public T first() throws EmptyCollectionException {
+		if (this.isEmpty()) {
+			throw new EmptyCollectionException("LinkedQueue");
+		}
+
+		return this.front.getData();
 	}
 
-	public int getSize(){
-		return size;
+	public boolean isEmpty(){
+		return size() == 0 || front == null;
+	}
+
+	public int size(){
+		return this.size;
 	}
 
 	@Override
