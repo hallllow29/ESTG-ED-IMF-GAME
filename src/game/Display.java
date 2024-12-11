@@ -109,11 +109,12 @@ public class Display {
 	}
 
 	public static String playerSearchsMessage(String playerName, String playerPosition) {
-		return "\n|\t" + playerName + " searches the " + playerPosition + "...";
+		return "\n|" +"\n|\t" + playerName + " searches the " + playerPosition + "...";
 	}
 
 	public static String playerEliminatedAllEnemiesInPositionMessage(String playerName, String playerPositionName) {
-		return "\n|\t" + playerName + " eliminated all ENEMIES..." +
+		return "\n|" +
+			"\n|\t" + playerName + " eliminated all ENEMIES..." +
 			"\n|\tin " + playerPositionName + "...";
 	}
 
@@ -203,13 +204,18 @@ public class Display {
 	//----------------------------BANNERS-------------------------------------------------
 	public static String initSimulation() {
 		return
-			"\n|==== SSS Sophisticated Spy System ====" +
+			"\n==== SSS Sophisticated Spy System ====" +
 			"\n|Initializing Simulation..." +
 			"\n|Gathering Intel for Simulation...";
 	}
 
+	public static String collectingData() {
+		return "\n==== SSS Sophisticated Spy System ====" +
+			"\n|Collecting Simulation Environment Data...";
+	}
+
 	public static String enemiesBanner() {
-		return "\n\n|\t========= INIMIGOS =========";
+		return "\n\n\t========= INIMIGOS =========";
 	}
 
 	public static String enemiesIntelMessage(String enemyName, int enemyAttack, String enemyPositionName) {
@@ -218,7 +224,7 @@ public class Display {
 	}
 
 	public static String mediKitsKevlarsBanner() {
-		return "\n\n|\t=========  ITEMS  =========";
+		return "\n\n\t=========  ITEMS  =========";
 	}
 
 	public static String itemsIntelMessage(String itemName, int itemValue, String itemPositionName) {
@@ -226,11 +232,12 @@ public class Display {
 	}
 
 	public static String closestMediKitBanner() {
-		return "\n|\n|==== BEST PATH TO CLOSEST MEDIC KIT ====";
+		return "\n\n==== BEST PATH TO CLOSEST MEDIC KIT ====";
 	}
 
 	public static String noMediKitsLeftMessage() {
-		return "\nThere are no more medic kits available on the building!";
+		return "\n" +
+			"There are no more medic kits available on the building!";
 	}
 
 	public static String playerBanner(){
@@ -238,7 +245,7 @@ public class Display {
 	}
 
 	public static String playerHealthStatusMessage(int playerHealth) {
-		return "\nHP: " + playerHealth + "/100";
+		return "\n|HP: " + playerHealth + "/100";
 	}
 
 	public static String backPackBanner() {
@@ -250,10 +257,15 @@ public class Display {
 	}
 
 	public static String backPackNoItemsMessage() {
-		return "\nBackPack has no items";
+		return "\n|BackPack has no items";
 	}
 
-	public static String renderingSimulationCompletedMessage() {
-		return "\nRendering simulation completed...";
+	public static String renderingNextSituationMessage() {
+		return "\n\t======== ENVIRONMENT =========" +
+			"\n|Rendering next situation...";
+	}
+
+	public static String allPossibleEntriesBanner(){
+		return "\n\n\t==== IMF - ENTRY POINT SELECTION ====";
 	}
 }

@@ -54,15 +54,15 @@ public class ManualMode extends Simulation {
 
         // Aqui podemos mexer na parte visual.
         // Ai que nostalgia de LP man lembras-te? <3
-        final String POSSIBLE_MOVES         = "==== IMF - Possible Moves ====";
-        final String CHOOSE_NEXT_MOVE       = "==== IMF - Choose your next move ====";
+        final String POSSIBLE_MOVES         = "\n\t==== IMF - Possible Moves ====";
+        final String CHOOSE_NEXT_MOVE       = "\n==== IMF - Choose your next move ====";
         final String CHOOSE_TO_STAY         = "==== You choose to stay ====";
         final String NO_MEDICKITS_BACKPACK  = "==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====";
         final String INVALID_OPTION         = "==== Invalid option ====";
         final String SELECT_VALID_OPTION    = "==== Please select a valid option ====";
         final String YOUR_NEXT_MOVE         = "==== IMF - Your next move is =====";
 
-        System.out.println(POSSIBLE_MOVES);
+        System.out.print(POSSIBLE_MOVES);
         int choice = -1;
         Scanner scanner = new Scanner(System.in);
         Room selectedRoom = null;
@@ -91,6 +91,7 @@ public class ManualMode extends Simulation {
 
         while (true) {
 
+            // Display.chooseNextMoveMessage();
             System.out.println(CHOOSE_NEXT_MOVE);
 
             if (scanner.hasNextInt()) {
@@ -99,6 +100,8 @@ public class ManualMode extends Simulation {
 
                if (choice >= 0 && choice <= medicKitOption) {
                    if (choice == medicKitOption && !getPlayer().hasRecoveryItem()) {
+
+                       // Display.noMediKitsBackPackMessage();
                        System.out.println(NO_MEDICKITS_BACKPACK);
                        continue;
                    }
@@ -107,13 +110,16 @@ public class ManualMode extends Simulation {
                }
 
             } else {
+                // Display.selectValidOptionMessage();
                 System.out.println(SELECT_VALID_OPTION);
                 scanner.next();
             }
 
         }
 
+        // Display.selectYourNextMoveMessage();
         System.out.println(YOUR_NEXT_MOVE);
+        // Display.selectedPositionMessage();
         System.out.println(selectedRoom.getName());
 
         return selectedRoom;
@@ -124,18 +130,18 @@ public class ManualMode extends Simulation {
         String possiblePositionInfo = "";
 
         for (Room room : possibleMoves) {
-            possiblePositionInfo += "[" + possiblePositions + "] " + possibleMoves.getElement(possiblePositions);
+            possiblePositionInfo += "\n[" + possiblePositions + "] " + possibleMoves.getElement(possiblePositions);
             displayRooms.addToRear(room);
             possiblePositions++;
         }
 
-        System.out.println(possiblePositionInfo);
+        System.out.print(possiblePositionInfo);
 
         return possiblePositions;
     }
 
     private String optionNrMessage (int option, String selection) {
-        return "[" + option + "] " + selection;
+        return "\n[" + option + "] " + selection;
     }
 
     private String currentHealthMessage() {
@@ -147,18 +153,22 @@ public class ManualMode extends Simulation {
         int medicKitOption = lastSelection + 1;
 
         final String CHOOSE_TO_STAY         = "==== You choose to stay ====";
-        final String NO_MEDICKITS_BACKPACK  = "==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====";
+        final String NO_MEDICKITS_BACKPACK  = "No MediKits in BackPack!";
         final String INVALID_OPTION         = "==== Invalid option ====";
 
         if (choice >= 0 && choice < lastSelection) {
             selectedRoom = possibleMoves.getElement(choice);
 
         } else if (choice == lastSelection) {
+
+            // Display.chooseToStayMessage();
             System.out.println(CHOOSE_TO_STAY);
             selectedRoom = getPlayer().getPosition();
 
         } else if (choice == medicKitOption) {
             if (getPlayer().getBack_pack().isBackPackEmpty()) {
+
+                // Display.noMediKitsInBackpackMessage();
                 System.out.println(NO_MEDICKITS_BACKPACK);
 
             } else {
@@ -166,6 +176,7 @@ public class ManualMode extends Simulation {
                 selectedRoom = getPlayer().getPosition();
             }
         } else {
+            // Display.invalidOptionMessage();
             System.out.println(INVALID_OPTION);
         }
         return selectedRoom;
@@ -173,7 +184,9 @@ public class ManualMode extends Simulation {
 
 
     private Room displayAllEntries() throws ElementNotFoundException {
-        System.out.println("==== IMF - All possible entries ====");
+        String displayAllEntiesInfo = "";
+        displayAllEntiesInfo += Display.allPossibleEntriesBanner();
+        System.out.println(displayAllEntiesInfo);
         Room selectedRoom = null;
         Room ourRecommendation = super.findBestEntryPoint();
 
@@ -191,7 +204,6 @@ public class ManualMode extends Simulation {
 
         while (choice != 1) {
             for (Room entry : entryPoints) {
-                System.out.println("==== IMF - Select your entry point: ");
                 System.out.println("Your best entry point to the target is " + ourRecommendation.getName());
                 System.out.println("[1] Select this room -> " + entry.getName());
                 System.out.println("[2] Next room ");
@@ -206,7 +218,7 @@ public class ManualMode extends Simulation {
     }
 
     private void displaySophisticatedSpySystem() throws EmptyCollectionException, ElementNotFoundException {
-       String gatheringIntelInfo = Display.initSimulation();
+       String gatheringIntelInfo = Display.collectingData();
 
 	   gatheringIntelInfo += Display.enemiesBanner();
 
@@ -239,9 +251,8 @@ public class ManualMode extends Simulation {
 		System.out.print(gatheringIntelInfo);
         displayMedicKits();
 
-		gatheringIntelInfo = Display.renderingSimulationCompletedMessage();
+		gatheringIntelInfo = Display.renderingNextSituationMessage();
 		System.out.println(gatheringIntelInfo);
-
     }
 
     private Room calculateClosestPathToMedicKit() throws EmptyCollectionException, ElementNotFoundException {
