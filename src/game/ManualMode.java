@@ -206,41 +206,42 @@ public class ManualMode extends Simulation {
     }
 
     private void displaySophisticatedSpySystem() throws EmptyCollectionException, ElementNotFoundException {
-        System.out.println("Getting intel...");
-        System.out.println("==== SSS Sophisticated Spy System ====");
-        System.out.println("==== ENEMIES INFORMATION ====");
+       String gatheringIntelInfo = Display.initSimulation();
 
-        for (Enemy enemy : getEnemies()) {
-            System.out.println(enemy.getName() + " Current Room -> " + enemy.getPosition().getName()
-                    + " | Fire Power: " + enemy.getFirePower());
+	   gatheringIntelInfo += Display.enemiesBanner();
+
+	   for (Enemy enemy : getEnemies()) {
+           gatheringIntelInfo += Display.enemiesIntelMessage(enemy.getName(),enemy.getFirePower(), enemy.getPosition().getName());
         }
 
-        System.out.println("==== MEDIC KITS/KEVLARS ====");
+        gatheringIntelInfo += Display.mediKitsKevlarsBanner();
 
         for (Item item : getMission().getItems()) {
-            System.out.printf(item.getName() + " Current Room -> " + item.getPosition().getName()
-                    + " | Heal Points: " + item.getItemValue() + "\n");
-        }
+			gatheringIntelInfo += Display.itemsIntelMessage(item.getName(), item.getItemValue(), item.getPosition().getName());
+		}
 
         if (getPlayer().getPosition() != null) {
-            System.out.println("==== BEST PATH TO CLOSEST MEDIC KIT ====");
+           gatheringIntelInfo += Display.closestMediKitBanner();
 
             Room toPosition = calculateClosestPathToMedicKit();
             if (toPosition != null) {
                 displayPath(getPlayer().getPosition(), toPosition);
             } else {
-                System.out.println("There are no more medic kits available on the building!");
+                gatheringIntelInfo += Display.noMediKitsLeftMessage();
             }
 
         }
 
-        System.out.println("Current Health: " + this.getPlayer().getCurrentHealth() + "/100");
 
+		gatheringIntelInfo += Display.playerBanner();
+		gatheringIntelInfo += Display.playerHealthStatusMessage(getPlayer().getCurrentHealth());
 
-        System.out.println(displayMedicKits());
+		System.out.print(gatheringIntelInfo);
+        displayMedicKits();
 
+		gatheringIntelInfo = Display.renderingSimulationCompletedMessage();
+		System.out.println(gatheringIntelInfo);
 
-        System.out.println("==== SSS Sophisticated Spy System ====");
     }
 
     private Room calculateClosestPathToMedicKit() throws EmptyCollectionException, ElementNotFoundException {
@@ -266,16 +267,17 @@ public class ManualMode extends Simulation {
         return destinationRoom;
     }
 
-    private String displayMedicKits() {
-        System.out.println("==== BACK PACK  ====");
+    private void displayMedicKits() {
+        String displayMedicKitsInfo ="";
+
         ArrayStack<MediKit> stack = super.getPlayer().getBack_pack().getListItems();
 
         if (stack.isEmpty()) {
-            return "Back Pack is empty";
+            displayMedicKitsInfo += Display.backPackNoItemsMessage();
         }
 
-        return stack.toString();
-
+        displayMedicKitsInfo += Display.backPackContentMessage(stack.toString());
+        System.out.print(displayMedicKitsInfo);
     }
 
     private void useMedicKit() {
