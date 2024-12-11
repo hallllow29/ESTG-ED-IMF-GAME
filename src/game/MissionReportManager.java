@@ -41,13 +41,9 @@ public class MissionReportManager {
         }
 
         File[] files = dir.listFiles();
-        if (files == null || files.length == 0) {
-            return false;
-        }
+		return files != null && files.length != 0;
 
-        return true;
-
-    }
+	}
 
     public void visualizeReport() {
         Scanner scanner = new Scanner(System.in);
@@ -152,7 +148,7 @@ public class MissionReportManager {
             JSONArray enemiesSurvived = (JSONArray) report.get("enemiesSurvived");
 
             if (enemiesSurvived.isEmpty()) {
-                System.out.println("Player is so god that he rescue the target without killing an enemy! Ninja!");
+                System.out.println("Player is so good that he rescue the target without killing an enemy! Ninja!");
             } else {
                 for (int i = 0; i < enemiesSurvived.size(); i++) {
                     System.out.println("-> " + enemiesSurvived.get(i));
