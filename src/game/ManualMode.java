@@ -97,7 +97,11 @@ public class ManualMode extends Simulation {
 
                 choice = scanner.nextInt();
 
-               if (choice >= 0 && choice < medicKitOption) {
+               if (choice >= 0 && choice <= medicKitOption) {
+                   if (choice == medicKitOption && !getPlayer().hasRecoveryItem()) {
+                       System.out.println(NO_MEDICKITS_BACKPACK);
+                       continue;
+                   }
                     selectedRoom = decideNextMove(choice, lastSelection, possibleMoves);
                     break;
                }
