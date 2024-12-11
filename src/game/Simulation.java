@@ -571,11 +571,11 @@ public abstract class Simulation {
 
 			if (item.getPosition() != null && item.getPosition().equals(room)) {
 
-				if (item instanceof MediKit) {
+				if (item instanceof MediKit && !player.getBack_pack().isBackPackFull()) {
 					player.addKitToBackPack((MediKit) item);
 					gatherItemsOutput += Display.playerAddsItemMessage(player.getName(), item.getName());
 
-				} else if (item instanceof Kevlar) {
+				} else if (item instanceof Kevlar && !player.getBack_pack().isBackPackFull()) {
 					player.equipKevlar((Kevlar) item);
 					gatherItemsOutput +=
 						Display.playerEquipsItemMessage(player.getName(), item.getName(), player.getCurrentHealth());

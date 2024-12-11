@@ -145,19 +145,42 @@
     },
     "itens": [
         {
-            "divisao": "WC Principal",
+            "divisao": "Heliporto",
             "pontos-recuperados": 30,
             "tipo": "kit de vida"
         },
         {
-            "divisao": "Escritório Alpha",
+            "divisao": "Heliporto",
             "pontos-recuperados": 20,
             "tipo": "kit de vida"
         },
         {
-            "divisao": "Escada D",
+            "divisao": "Heliporto",
+            "pontos-recuperados": 30,
+            "tipo": "kit de vida"
+        },
+        {
+            "divisao": "Heliporto",
+            "pontos-recuperados": 30,
+            "tipo": "kit de vida"
+        },
+
+        {
+            "divisao": "Heliporto",
             "pontos-extra": 40,
             "tipo": "colete"
+        },
+
+        {
+            "divisao": "Heliporto",
+            "pontos-recuperados": 30,
+            "tipo": "kit de vida"
+        },
+
+        {
+            "divisao": "Heliporto",
+            "pontos-recuperados": 30,
+            "tipo": "kit de vida"
         }
     ]
 }

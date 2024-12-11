@@ -30,7 +30,7 @@ public class SimulationTest {
 	public void gameSetup() throws NotElementComparableException {
 		battlefield = new CustomNetwork<>();
 		mission = new Mission("Mission001", 1, battlefield);
-		BackPack mochila = new BackPack();
+		BackPack mochila = new BackPack(BackPackSize.LARGE.getCapacity());
 		player = new Player("Tó Cruz", 100, mochila);
 		report = new Report("Teste", player, mission);
 
@@ -185,7 +185,7 @@ public class SimulationTest {
 
 	@Test
 	public void testBackPack() throws EmptyCollectionException {
-		BackPack mochila = new BackPack();
+		BackPack mochila = new BackPack(BackPackSize.LARGE.getCapacity());
 
 		MediKit kit1 = new MediKit("Small kit", null, 20);
 		MediKit kit2 = new MediKit("Big kit", null, 50);

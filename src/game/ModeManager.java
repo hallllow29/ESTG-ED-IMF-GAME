@@ -9,6 +9,7 @@ import lib.graphs.Network;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class ModeManager {
@@ -24,9 +25,8 @@ public class ModeManager {
         System.out.println("=== Welcome to Improbable game.Mission Force (IMF) ===");
         System.out.println("Please enter your name: ");
         String name = scanner.nextLine();
-        BackPack backPack = new BackPack();
 
-        return new Player(name, 100, backPack);
+        return new Player(name, 100, chooseBackPackSize(scanner));
 
     }
 
@@ -172,6 +172,37 @@ public class ModeManager {
     private void displayTarget() {
         System.out.println("\n==== TARGET ====");
         System.out.println(missionImpl.getTarget());
+    }
+
+    private BackPack chooseBackPackSize(Scanner scanner) {
+        System.out.println("==== CHOOSE THE BACKPACK SIZE ====");
+        System.out.println("[1] Small (Capacity-> 1 Items");
+        System.out.println("[2] Medium (Capacity-> 2 Items ");
+        System.out.println("[3] Large (Capacity-> 5 Items");
+        System.out.println("[4] No BackPack (Try hard mode)");
+        int choice = 0;
+        BackPackSize backPackSize = null;
+        choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1:
+                backPackSize = BackPackSize.SMALL;
+                break;
+            case 2:
+                backPackSize = BackPackSize.MEDIUM;
+                break;
+            case 3:
+                backPackSize = BackPackSize.LARGE;
+                break;
+            case 4:
+                backPackSize = BackPackSize.TRY_HARD;
+                break;
+            default:
+                System.out.println("Select a valid option");
+                break;
+        }
+
+        return new BackPack(backPackSize.getCapacity());
     }
 
 }
