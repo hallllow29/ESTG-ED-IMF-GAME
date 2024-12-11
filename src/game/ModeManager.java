@@ -84,6 +84,7 @@ public class ModeManager {
 
     private void runAutomaticSimulation(Player player) throws ElementNotFoundException, EmptyCollectionException {
         Report report = new Report("Automatic", player, missionImpl);
+        report.setBackPackSize(player.getBack_pack().getMaxCapacity());
         AutomaticMode autoMode = new AutomaticMode(missionImpl, player, report);
 
         autoMode.game();
@@ -93,6 +94,7 @@ public class ModeManager {
 
     private void runManualSimulation(Player player) throws EmptyCollectionException, ElementNotFoundException {
         Report report = new Report("Manual", player, missionImpl);
+        report.setBackPackSize(player.getBack_pack().getMaxCapacity());
         ManualMode manualMode = new ManualMode(missionImpl, player, report);
 
         manualMode.game();
