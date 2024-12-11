@@ -289,13 +289,13 @@ public abstract class Simulation {
 		Room playerPosition = player.getPosition();
 
 		String scenarioDOISinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
-			scenarioDOISinfo += Display.scenarioDOISstartMessage(playerPosition.getName());
+		scenarioDOISinfo += Display.scenarioDOISstartMessage(player.getName());
 		scenarioDOISinfo += Display.playerTurnMessage();
 		scenarioDOISinfo += Display.playerSearchsMessage(player.getName(), playerPosition.getName());
 		System.out.print(scenarioDOISinfo);
-		// RECOLHE ITEMS...
 
 		scenarioDOISinfo = "";
+		// RECOLHE ITEMS...
 		if (playerPosition.hasItems()) {
 			scenarioDOISinfo = gatherItems(playerPosition);
 
@@ -324,6 +324,8 @@ public abstract class Simulation {
 		Room playerPosition = player.getPosition();
 
 		String scenarioTRESinfo = Display.scenarioTRESstartMessage(player.getName());
+		scenarioTRESinfo += Display.enemyTurnMessage();
+		scenarioTRESinfo += Display.enemiesEngageConfront(playerPosition.getName());
 		System.out.print(scenarioTRESinfo);
 
 		// Tem um trigger para o scenario 4 se o to cruz precisar de items...
@@ -369,6 +371,8 @@ public abstract class Simulation {
 	protected void scenarioQUATRO() {
 
 		String scenarioQUATROinfo = Display.scenarioQUATROstartMessage(player.getName());
+		scenarioQUATROinfo += Display.playerTurnMessage();
+		scenarioQUATROinfo += Display.playerChecksBackPackMessage(player.getName());
 
 		try {
 			scenarioQUATROinfo += "\n|\t" + this.player.useMediKit();
@@ -414,7 +418,9 @@ public abstract class Simulation {
 
 		String scenarioSEISinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
 		scenarioSEISinfo += Display.scenarioSEISstartMessage();
-		scenarioSEISinfo += Display.playerTurnMessage(); System.out.println(scenarioSEISinfo);
+		scenarioSEISinfo += Display.playerTurnMessage();
+		scenarioSEISinfo += Display.playerSearchsMessage(player.getName(), playerPosition.getName());
+		System.out.println(scenarioSEISinfo);
 
 		if (playerPosition.hasItems()) {
 			scenarioSEISinfo += gatherItems(playerPosition);
@@ -435,10 +441,10 @@ public abstract class Simulation {
 	}
 
 	private void playerReachedTarget() throws ElementNotFoundException {
-		mission.setTargetSecured(true); setReturningToExtraction(true);
+		mission.setTargetSecured(true);
+		setReturningToExtraction(true);
 		extractionPoint = bestExtractionPoint(player.getPosition());
 		setNextObjective(extractionPoint);
-
 	}
 
 	private boolean isAtTarget(Room playerPosition, Room targetPosition) {
@@ -559,12 +565,14 @@ public abstract class Simulation {
 
 			if (item.getPosition() != null && item.getPosition().equals(room)) {
 
-
 				if (item instanceof MediKit) {
-					addMediKitToBackPack((MediKit) item);
+					player.addKitToBackPack((MediKit) item);
+					gatherItemsOutput += Display.playerAddsItemMessage(player.getName(), item.getName());
 
 				} else if (item instanceof Kevlar) {
-					playerWearsKevlar((Kevlar) item);
+					player.equipKevlar((Kevlar) item);
+					gatherItemsOutput +=
+						Display.playerEquipsItemMessage(player.getName(), item.getName(), player.getCurrentHealth());
 				}
 				oneItemGetsPicked(playerPosition, itemIterator);
 			}
@@ -579,26 +587,6 @@ public abstract class Simulation {
 		playerPosition.removeItem();
 		items.remove();
 	}
-
-	private void playerWearsKevlar(Kevlar item) {
-		String playerWarsKevlarInfo = "";
-
-		player.equipKevlar(item);
-		playerWarsKevlarInfo +=
-			Display.playerEquipsItemMessage(player.getName(), item.getName(), player.getCurrentHealth());
-
-		System.out.println(playerWarsKevlarInfo);
-	}
-
-	private void addMediKitToBackPack(MediKit item) {
-		String addMediKitToBackPackInfo = "";
-
-		player.addKitToBackPack(item);
-		addMediKitToBackPackInfo += Display.playerAddsItemMessage(player.getName(), item.getName());
-
-		System.out.println(addMediKitToBackPackInfo);
-	}
-
 
 	private void allItemsInPositionCollected(Room playerPosition) {
 		if (playerPosition.getTotalItems() <= 0) {
@@ -647,8 +635,6 @@ public abstract class Simulation {
 					report.addEnemyKilled(enemy.getName());
 
 					oneEnemyDies(enemy, enemies);
-
-
 
 				} else {
 					playerConfrontsInfo += Display.enemyEnduredAttackMessage(enemy.getName(), PLAYER_ATTACK);
@@ -855,9 +841,8 @@ public abstract class Simulation {
 		}
 	}
 
-		public void setReturningToExtraction(boolean returningToExtraction) {
-			this.returningToExtraction = returningToExtraction;
+	public void setReturningToExtraction(boolean returningToExtraction) {
+		this.returningToExtraction = returningToExtraction;
 	}
-
 
 }

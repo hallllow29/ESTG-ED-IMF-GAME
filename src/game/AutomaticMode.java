@@ -17,7 +17,9 @@ public class AutomaticMode extends Simulation {
 
         renderAutomaticSimulation(this.getPlayer(), this.getMission().getTarget());
 
-        System.out.println("TO CRUZ starts mission in " + "\n\t[" + getEntryPoint().getName() + "]");
+       String simulationStartInfo =  Display.playerStartsInEntryPoint(getPlayer().getName(), getMission().getCode(), getEntryPoint().getName());
+       System.out.println(simulationStartInfo);
+
 
         this.getReport().addRoom(getPlayer().getPosition().getName());
         this.getReport().setEntryPoint(getPlayer().getPosition().getName());

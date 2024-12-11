@@ -37,7 +37,7 @@ public class Display {
 
 	// Scenario 4
 	public static String scenarioQUATROstartMessage(String playerName) {
-		return "\n|========== [<< SCENARIO 4 START >>] ==========" +
+		return "\n|\t" + "\n|========== [<< SCENARIO 4 START >>] ==========" +
 			"\n|\t" + playerName + " seems to be injured...";
 	}
 
@@ -77,13 +77,19 @@ public class Display {
 	}
 
 	//-----------------------------PLAYER-------------------------------------------------
+
+	public static String playerStartsInEntryPoint(String playerName, String missionName, String entryPointName) {
+		return "\n" + playerName + " starts mission " + missionName + " in" +
+		"\n\t [" + entryPointName +"]";
+	}
+
 	public static String playerTurnMessage() {
 		return "\n|" + "\n|\t-------------- PLAYER  TURN --------------";
 	}
 
 	public static String playerIsAttackingMessage(String playerName, String enemyName, int playerAttack) {
-		return "\n|\t" + enemyName + " is attacking " + playerName + "..." +
-			"\n|\twith " + playerAttack + " damage..." + "\n|";
+		return "\n|\t" + playerName + " is attacking " + enemyName + "..." +
+			"\n|\twith " + playerAttack + " damage...";
 	}
 
 	public static String playerDiedMessage(String playerName) {
@@ -91,16 +97,15 @@ public class Display {
 	}
 
 	public static String playerChecksBackPackMessage(String playerName) {
-		return "\n|" + "\n|\t-------------- PLAYER  TURN --------------" +
-			"\n|\t" + playerName + " halts and is checking BackPack...";
+		return "\n|\t" + playerName + " halts and is checking BackPack...";
 	}
 
 	public static String playerAddsItemMessage(String playerName, String itemName) {
-		return "\n|\t" + playerName + " adds " + itemName + " to his BackPack...";
+		return "\n|\t" +"\n|\t" + playerName + " adds " + itemName + " to his BackPack...";
 	}
 
 	public static String playerEquipsItemMessage(String playerName, String itemName, int givenItemValue) {
-		return "\n|\t" + playerName + " equips " + itemName + ", current health " + givenItemValue + "...";
+		return "\n|\t" + "\n|\t" + playerName + " equips " + itemName + ", current health " + givenItemValue + "...";
 	}
 
 	public static String playerSearchsMessage(String playerName, String playerPosition) {
@@ -130,8 +135,8 @@ public class Display {
 	}
 
 	public static String enemyIsAttackingMessage(String enemyName, String playerName, int enemyAttack) {
-		return "\n|\t" + enemyName + " is attacking " + playerName + "..." +
-			"\n|\twith " + enemyAttack + " damage..." + "\n|";
+		return "\n|\t" + "\n|\t" + enemyName + " is attacking " + playerName + "..." +
+			"\n|\twith " + enemyAttack + " damage...";
 	}
 
 	public static String enemiesSurvivedAttackMessage(String playerPositionName) {
@@ -152,6 +157,10 @@ public class Display {
 		return "\n|" + "\n|\t-------------- ENEMY  TURN  --------------";
 	}
 
+	public static String enemiesEngageConfront(String playerPositionName) {
+		return "\n|\t" + "Enemies engage confront in " + playerPositionName + "...";
+	}
+
 	//------------------------------TARGET------------------------------------------------
 	public static String targetInExtractionPointMessage(String playerName) {
 		return "\n|\tTARGET is in EXTRACTION POINT..." +
@@ -159,7 +168,7 @@ public class Display {
 	}
 
 	public static String targetIsSecuredMessage(String playerName, String nextObjectiveName) {
-		return "\n|\tTARGET is now secured..." +
+		return "\n|\t" + "\n|\tTARGET is now secured..." +
 			"\n|\tWELL DONE " + playerName + " return to " + nextObjectiveName + "...";
 	}
 
