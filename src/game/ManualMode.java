@@ -201,7 +201,8 @@ public class ManualMode extends Simulation {
 
                 displayEntryPointInfo +=
                     Display.entryPointSelection(ourRecommendation.getName(), entryPoint.getName());
-
+                System.out.print(displayEntryPointInfo);
+                displayEntryPointInfo = "";
                 boolean validSelection = false;
                 while (!validSelection) {
 
