@@ -71,15 +71,6 @@ public class ManualMode extends Simulation {
         ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(getPlayer().getPosition());
         ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
 
-        // ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(playerPosition);
-        // ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
-        //
-        // for (Room room : possibleMoves) {
-        //     System.out.println("[" + possibleSelection + "] " + possibleMoves.getElement(possibleSelection));
-        //     displayRooms.addToRear(room);
-        //     possibleSelection++;
-        // }
-
         lastSelection = countPossiblePositions(possibleMoves, displayRooms);
 
         int stayOption = lastSelection;
@@ -202,14 +193,30 @@ public class ManualMode extends Simulation {
         Scanner scanner = new Scanner(System.in);
         int choice = 2;
 
+
+        String displayEntryPointInfo = "";
+
         while (choice != 1) {
-            for (Room entry : entryPoints) {
-                System.out.println("Your best entry point to the target is " + ourRecommendation.getName());
-                System.out.println("[1] Select this room -> " + entry.getName());
-                System.out.println("[2] Next room ");
-                choice = scanner.nextInt();
+            for (Room entryPoint : entryPoints) {
+
+                displayEntryPointInfo +=
+                    Display.entryPointSelection(ourRecommendation.getName(), entryPoint.getName());
+
+                boolean validSelection = false;
+                while (!validSelection) {
+
+                    choice = scanner.nextInt();
+                    if (choice == 1) {
+                        selectedRoom = entryPoint;
+                        validSelection = true;
+                    } else if (choice == 2) {
+                        validSelection = true;
+                    } else {
+                        System.out.println("Invalid option.");
+                    }
+                }
+
                 if (choice == 1) {
-                    selectedRoom = entry;
                     break;
                 }
             }
@@ -243,7 +250,6 @@ public class ManualMode extends Simulation {
             }
 
         }
-
 
 		gatheringIntelInfo += Display.playerBanner();
 		gatheringIntelInfo += Display.playerHealthStatusMessage(getPlayer().getCurrentHealth());

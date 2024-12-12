@@ -268,4 +268,61 @@ public class Display {
 	public static String allPossibleEntriesBanner(){
 		return "\n\n\t==== IMF - ENTRY POINT SELECTION ====";
 	}
+
+	public static String welcomeIMFbanner(){
+		return "\n\n\t==== CREATE PLAYER ====";
+	}
+
+	public static String enterYourNameMessage(){
+		return "\nPlease enter your codename: ";
+	}
+
+	public static String selectBackPackBanner() {
+		return "\n\n\t==== SELECT BACKPACK SIZE ====";
+	}
+
+	public static String backPackSelection() {
+		return
+			"\n[1] SMALL \t[max 1 item ]" +
+			"\n[2] MEDIUM\t[max 2 items]" +
+			"\n[3] LARGE \t[max 5 items]" +
+			"\n[4] NONE \t[survival]" +
+			"\n\n Option: ";
+	}
+
+	public static String missionSelection() {
+		return
+			"\n[1] NORMAL MISSION" +
+			"\n[2] RATO DE ACO" +
+			"\n\n Option: ";
+	}
+
+	public static String invalidOptionMessage() {
+		return "\nINVALID OPTION.";
+	}
+
+	public static String simulationModeSelection() {
+		return
+			"\n[1] AUTOMATIC" +
+			"\n[2] MANUAL" +
+			"\n\nOption: ";
+	}
+
+	public static String optionNrMessage(int option, String selection) {
+		return "\n[" + option + "] " + selection;
+	}
+
+	public static String selectMessage(String thing) {
+		return "\nPlease select " + thing + ":";
+	}
+
+	public static String entryPointSelection(String bestEntryPointName, String entryPointName) {
+		return
+			"\nYour best entry point to the target is " + bestEntryPointName +
+				"\n[1] Select this entry point: " + entryPointName +
+				"\n[2] Next Entry Point" +
+				"\n\nOption: ";
+
+	}
+
 }
