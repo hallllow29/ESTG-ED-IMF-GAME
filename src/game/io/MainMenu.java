@@ -1,5 +1,6 @@
-package game;
+package game.io;
 
+import game.briefings.MissionReportManager;
 import game.modes.ModeManager;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;

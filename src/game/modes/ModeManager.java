@@ -2,9 +2,9 @@ package game.modes;
 
 import entities.*;
 import entities.enums.BackPackSize;
-import game.Display;
+import game.io.Display;
 import entities.Mission;
-import game.Report;
+import game.briefings.Report;
 import game.util.JsonSimpleRead;
 import game.util.SaveToJsonFile;
 import lib.exceptions.ElementNotFoundException;

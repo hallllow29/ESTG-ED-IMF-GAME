@@ -1,4 +1,4 @@
-package game;
+package game.briefings;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

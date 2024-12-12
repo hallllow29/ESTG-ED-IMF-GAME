@@ -1,4 +1,4 @@
-package game;
+package game.briefings;
 
 import entities.Mission;
 import entities.Player;

@@ -1,6 +1,6 @@
 package game.util;
 
-import game.Report;
+import game.briefings.Report;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 

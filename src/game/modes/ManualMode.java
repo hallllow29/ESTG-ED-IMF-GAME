@@ -1,9 +1,9 @@
 package game.modes;
 
 import entities.*;
-import game.Display;
+import game.io.Display;
 import entities.Mission;
-import game.Report;
+import game.briefings.Report;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.lists.ArrayUnorderedList;
