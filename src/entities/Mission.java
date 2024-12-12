@@ -219,4 +219,25 @@ public class Mission implements MissionI {
 		this.items.remove(item);
 	}
 
+	/**
+	 * Compares this Mission object to another object to determine equality.
+	 * Two Mission objects are considered equal if they have the same code
+	 * and version.
+	 *
+	 * @param obj the Object to be compared for equality with this Mission
+	 * @return true if the specified object is equal to this Mission; false otherwise
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Mission other = (Mission) obj;
+		return this.code.equals(other.code);
+	}
+
 }
