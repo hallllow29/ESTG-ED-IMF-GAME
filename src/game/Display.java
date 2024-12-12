@@ -80,7 +80,7 @@ public class Display {
 
 	public static String playerStartsInEntryPoint(String playerName, String missionName, String entryPointName) {
 		return "\n" + playerName + " starts mission " + missionName + " in" +
-		"\n\t [" + entryPointName +"]";
+			"\n\t [" + entryPointName + "]";
 	}
 
 	public static String playerTurnMessage() {
@@ -101,7 +101,7 @@ public class Display {
 	}
 
 	public static String playerAddsItemMessage(String playerName, String itemName) {
-		return "\n|" +"\n|\t" + playerName + " adds " + itemName + " to his BackPack...";
+		return "\n|" + "\n|\t" + playerName + " adds " + itemName + " to his BackPack...";
 	}
 
 	public static String playerEquipsItemMessage(String playerName, String itemName, int givenItemValue) {
@@ -109,7 +109,7 @@ public class Display {
 	}
 
 	public static String playerSearchsMessage(String playerName, String playerPosition) {
-		return "\n|" +"\n|\t" + playerName + " searches the " + playerPosition + "...";
+		return "\n|" + "\n|\t" + playerName + " searches the " + playerPosition + "...";
 	}
 
 	public static String playerEliminatedAllEnemiesInPositionMessage(String playerName, String playerPositionName) {
@@ -132,7 +132,7 @@ public class Display {
 	}
 
 	public static String enemySufferedAttackMessage(String enemyName, int playerAttack) {
-		return "\n|" +"\n|\tENEMY " + enemyName + " suffered " + playerAttack + " of attack...";
+		return "\n|" + "\n|\tENEMY " + enemyName + " suffered " + playerAttack + " of attack...";
 	}
 
 	public static String enemyIsDeadMessage() {
@@ -152,7 +152,7 @@ public class Display {
 	public static String enemiesNotIsTheSamePositionMessage(String playerPositionName) {
 		return
 			"\n|\tENEMIES in " + playerPositionName + " engaging in confront..." +
-			"\n|\tENEMIES not in " + playerPositionName + " are moving...";
+				"\n|\tENEMIES not in " + playerPositionName + " are moving...";
 	}
 
 	public static String enemiesAreMovingMessage() {
@@ -205,8 +205,8 @@ public class Display {
 	public static String initSimulation() {
 		return
 			"\n==== SSS Sophisticated Spy System ====" +
-			"\n|Initializing Simulation..." +
-			"\n|Gathering Intel for Simulation...";
+				"\n|Initializing Simulation..." +
+				"\n|Gathering Intel for Simulation...";
 	}
 
 	public static String collectingData() {
@@ -240,16 +240,12 @@ public class Display {
 			"There are no more medic kits available on the building!";
 	}
 
-	public static String playerBanner(){
+	public static String playerBanner() {
 		return "\n\n\t========  PLAYER  =========";
 	}
 
 	public static String playerHealthStatusMessage(int playerHealth) {
 		return "\n|HP: " + playerHealth + "/100";
-	}
-
-	public static String backPackBanner() {
-		return "\n\n\t======== BACKPACK =========";
 	}
 
 	public static String backPackContentMessage(String backPackContent) {
@@ -265,47 +261,47 @@ public class Display {
 			"\n|Rendering next situation...";
 	}
 
-	public static String allPossibleEntriesBanner(){
+	public static String allPossibleEntriesBanner() {
 		return "\n\n\t==== IMF - ENTRY POINT SELECTION ====";
 	}
 
-	public static String welcomeIMFbanner(){
+	public static String welcomeIMFbanner() {
 		return "\n\n\t==== CREATE PLAYER ====";
 	}
 
-	public static String enterYourNameMessage(){
+	public static String enterYourNameMessage() {
 		return "\nPlease enter your codename: ";
 	}
 
-	public static String selectBackPackBanner() {
-		return "\n\n\t==== SELECT BACKPACK SIZE ====";
+	public static String selectBackPackMenu() {
+		return
+			"\n\n\t==== SELECT BACKPACK SIZE ====" +
+				"\n[1] SMALL \t[max 1 item ]" +
+				"\n[2] MEDIUM\t[max 2 items]" +
+				"\n[3] LARGE \t[max 5 items]" +
+				"\n[4] NONE \t[survival]" +
+				"\n\n Option: ";
 	}
 
-	public static String backPackSelection() {
+	public static String selectMissionMenu() {
 		return
-			"\n[1] SMALL \t[max 1 item ]" +
-			"\n[2] MEDIUM\t[max 2 items]" +
-			"\n[3] LARGE \t[max 5 items]" +
-			"\n[4] NONE \t[survival]" +
-			"\n\n Option: ";
-	}
-
-	public static String missionSelection() {
-		return
-			"\n[1] NORMAL MISSION" +
-			"\n[2] RATO DE ACO" +
-			"\n\n Option: ";
+			"\n\n\t==== SELECT MISSION MODE ====" +
+				"\n[1] NORMAL MISSION" +
+				"\n[2] RATO DE ACO" +
+				"\n[3] CUSTOM" +
+				"\n\n Option: ";
 	}
 
 	public static String invalidOptionMessage() {
 		return "\nINVALID OPTION.";
 	}
 
-	public static String simulationModeSelection() {
+	public static String selectSimulationMenu() {
 		return
-			"\n[1] AUTOMATIC" +
-			"\n[2] MANUAL" +
-			"\n\nOption: ";
+			"\n\n\t==== SELECT SIMULATION MODE ====" +
+				"\n[1] AUTOMATIC" +
+				"\n[2] MANUAL" +
+				"\n\nOption: ";
 	}
 
 	public static String optionNrMessage(int option, String selection) {
@@ -323,6 +319,22 @@ public class Display {
 				"\n[2] Next Entry Point" +
 				"\n\nOption: ";
 
+	}
+
+	public static String possibleMovesMessage() {
+		return "\n\n\t==== POSSIBLE MOVES ====";
+	}
+
+	public static String yourNextPositionMessage(String nextPositionName) {
+		return "\nYour next position is: ["+ nextPositionName + "]";
+	}
+
+	public static String noMediKitsBackPackMessage() {
+		return "\nNo MediKits in BackPack!";
+	}
+
+	public static String youChooseStayMessage() {
+		return "\nYou choose to stay.";
 	}
 
 }

@@ -490,7 +490,7 @@ public abstract class Simulation {
 		return this.player.getCurrentHealth() <= playerCriticalHealth && this.player.hasRecoveryItem();
 	}
 
-	private void moveEnemies() {
+	protected void moveEnemies() {
 		for (Enemy enemy : this.enemies) {
 			moveEnemy(enemy);
 		}

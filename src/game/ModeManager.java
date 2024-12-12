@@ -19,8 +19,8 @@ public class ModeManager {
 
 	public Player createPlayer() {
 		Scanner scanner = new Scanner(System.in);
-		String createPlayerInfo = "";
 
+		String createPlayerInfo = "";
 		createPlayerInfo = Display.welcomeIMFbanner();
 		createPlayerInfo += Display.enterYourNameMessage();
 		System.out.print(createPlayerInfo);
@@ -35,10 +35,11 @@ public class ModeManager {
 		int choice;
 		Scanner scanner = new Scanner(System.in);
 
+		// SELECT MISSION MENU
 		String selectMissionInfo = "";
-		selectMissionInfo += Display.selectMessage("a mission");
-		selectMissionInfo += Display.missionSelection();
+		selectMissionInfo += Display.selectMissionMenu();
 		System.out.print(selectMissionInfo);
+		selectMissionInfo = "";
 
 		choice = scanner.nextInt();
 
@@ -49,6 +50,9 @@ public class ModeManager {
 			case 2:
 				this.missionImpl = JsonSimpleRead.loadMissionFromJson("missao_rato_de_aco.json", new CustomNetwork<>());
 				break;
+			case 3:
+				// CUSTOM MISSION....
+				// TODO: Custom mission.
 			default:
 				System.out.println("Please select a valid option!");
 				break;
@@ -61,10 +65,11 @@ public class ModeManager {
 
 		this.selectMission();
 
-		String startGameInfo = "";
-		startGameInfo += Display.simulationModeSelection();
-		startGameInfo += Display.selectMessage("the simulation");
-		System.out.print(startGameInfo);
+		// SELECT SIMULATION MENU
+		String simulationModeInfo = "";
+		simulationModeInfo += Display.selectSimulationMenu();
+		System.out.print(simulationModeInfo);
+		simulationModeInfo = "";
 
 		Scanner scanner = new Scanner(System.in);
 		int choice = scanner.nextInt();
@@ -181,10 +186,12 @@ public class ModeManager {
 	}
 
 	private BackPack chooseBackPackSize(Scanner scanner) {
+
+		// BACKPACKSIZE MENU
 		String backPackSizeInfo = "";
-		backPackSizeInfo += Display.selectBackPackBanner();
-		backPackSizeInfo += Display.backPackSelection();
+		backPackSizeInfo += Display.selectBackPackMenu();
 		System.out.print(backPackSizeInfo);
+		backPackSizeInfo = "";
 
 		int choice = 0;
 		BackPackSize backPackSize = null;

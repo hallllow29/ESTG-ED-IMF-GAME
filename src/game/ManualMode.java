@@ -7,7 +7,7 @@ import lib.lists.ArrayUnorderedList;
 import lib.lists.CircularDoubleLinkedList;
 import lib.stacks.ArrayStack;
 
-import java.sql.SQLOutput;
+import javax.swing.text.Element;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -37,10 +37,16 @@ public class ManualMode extends Simulation {
 		Room currentRoom = getPlayer().getPosition();
 
 		if (!isMissionAccomplished()) {
+
+
 			super.displayPath(getPlayer().getPosition(), getNextObjective());
 			this.displaySophisticatedSpySystem();
+
 			Room nextRoom = this.selectNextRoom(currentRoom);
 
+			if (nextRoom.equals(currentRoom)) {
+				super.getPlayer().setPosition(currentRoom);
+			}
 			super.getPlayer().setPosition(nextRoom);
 
 			super.addRoomToReport(nextRoom.getName());
@@ -51,40 +57,28 @@ public class ManualMode extends Simulation {
 	}
 
 	private Room selectNextRoom(Room playerPosition) {
-		String selectNextRoomInfo = "";
-
-		// Aqui podemos mexer na parte visual.
-		// Ai que nostalgia de LP man lembras-te? <3
-		final String POSSIBLE_MOVES = "\n\t==== IMF - Possible Moves ====";
-		final String CHOOSE_NEXT_MOVE = "\n==== IMF - Choose your next move ====";
-		final String CHOOSE_TO_STAY = "==== You choose to stay ====";
-		final String NO_MEDICKITS_BACKPACK = "==== NO MEDICKITS AVAILABLE IN YOUR BACKPACK! ====";
-		final String INVALID_OPTION = "==== Invalid option ====";
-		final String SELECT_VALID_OPTION = "==== Please select a valid option ====";
-		final String YOUR_NEXT_MOVE = "==== IMF - Your next move is =====";
-
-		System.out.print(POSSIBLE_MOVES);
+		String selectNextPositionInfo = "";
 		int choice = -1;
 		Scanner scanner = new Scanner(System.in);
 		Room selectedRoom = null;
 		int lastSelection = 0;
 
+
+
 		ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(getPlayer().getPosition());
 		ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
 
 		lastSelection = countPossiblePositions(possibleMoves, displayRooms);
-
 		int stayOption = lastSelection;
-		selectNextRoomInfo += optionNrMessage(stayOption, "Stay");
+		selectNextPositionInfo += optionNrMessage(stayOption, "Stay");
 
 		int medicKitOption = lastSelection + 1;
-		selectNextRoomInfo += optionNrMessage(medicKitOption, "Use MedicKit - HP" + currentHealthMessage());
-		System.out.println(selectNextRoomInfo);
+		selectNextPositionInfo += optionNrMessage(medicKitOption, "Use MedicKit - HP" + currentHealthMessage());
+
+		System.out.print(selectNextPositionInfo);
+		selectNextPositionInfo = "";
 
 		while (true) {
-
-			// Display.chooseNextMoveMessage();
-			System.out.println(CHOOSE_NEXT_MOVE);
 
 			if (scanner.hasNextInt()) {
 
@@ -93,8 +87,7 @@ public class ManualMode extends Simulation {
 				if (choice >= 0 && choice <= medicKitOption) {
 					if (choice == medicKitOption && !getPlayer().hasRecoveryItem()) {
 
-						// Display.noMediKitsBackPackMessage();
-						System.out.println(NO_MEDICKITS_BACKPACK);
+						System.out.println(Display.noMediKitsBackPackMessage());
 						continue;
 					}
 					selectedRoom = decideNextMove(choice, lastSelection, possibleMoves);
@@ -102,17 +95,14 @@ public class ManualMode extends Simulation {
 				}
 
 			} else {
-				// Display.selectValidOptionMessage();
-				System.out.println(SELECT_VALID_OPTION);
+				System.out.println(Display.invalidOptionMessage());
 				scanner.next();
 			}
 
 		}
 
-		// Display.selectYourNextMoveMessage();
-		System.out.println(YOUR_NEXT_MOVE);
-		// Display.selectedPositionMessage();
-		System.out.println(selectedRoom.getName());
+		selectNextPositionInfo += Display.yourNextPositionMessage(selectedRoom.getName());
+		System.out.print(selectNextPositionInfo);
 
 		return selectedRoom;
 	}
@@ -120,6 +110,7 @@ public class ManualMode extends Simulation {
 	private int countPossiblePositions(ArrayUnorderedList<Room> possibleMoves, ArrayUnorderedList<Room> displayRooms) {
 		int possiblePositions = 0;
 		String possiblePositionInfo = "";
+		possiblePositionInfo += Display.possibleMovesMessage();
 
 		for (Room room : possibleMoves) {
 			possiblePositionInfo += "\n[" + possiblePositions + "] " + possibleMoves.getElement(possiblePositions);
@@ -141,43 +132,42 @@ public class ManualMode extends Simulation {
 	}
 
 	private Room decideNextMove(int choice, int lastSelection, ArrayUnorderedList<Room> possibleMoves) {
+
+		String decideNextMoveInfo = "";
 		Room selectedRoom = null;
 		int medicKitOption = lastSelection + 1;
-
-		final String CHOOSE_TO_STAY = "==== You choose to stay ====";
-		final String NO_MEDICKITS_BACKPACK = "No MediKits in BackPack!";
-		final String INVALID_OPTION = "==== Invalid option ====";
 
 		if (choice >= 0 && choice < lastSelection) {
 			selectedRoom = possibleMoves.getElement(choice);
 
 		} else if (choice == lastSelection) {
 
-			// Display.chooseToStayMessage();
-			System.out.println(CHOOSE_TO_STAY);
+			decideNextMoveInfo += Display.youChooseStayMessage();
 			selectedRoom = getPlayer().getPosition();
+			moveEnemies();
 
 		} else if (choice == medicKitOption) {
 			if (getPlayer().getBack_pack().isBackPackEmpty()) {
 
-				// Display.noMediKitsInBackpackMessage();
-				System.out.println(NO_MEDICKITS_BACKPACK);
+				decideNextMoveInfo += Display.noMediKitsBackPackMessage();
 
 			} else {
 				useMedicKit();
 				selectedRoom = getPlayer().getPosition();
+
 			}
 		} else {
-			// Display.invalidOptionMessage();
-			System.out.println(INVALID_OPTION);
+			decideNextMoveInfo += Display.invalidOptionMessage();
 		}
+
+		System.out.println(decideNextMoveInfo);
 		return selectedRoom;
 	}
 
 	private Room displayAllEntries() throws ElementNotFoundException {
 		String displayAllEntiesInfo = "";
 		displayAllEntiesInfo += Display.allPossibleEntriesBanner();
-		System.out.println(displayAllEntiesInfo);
+		System.out.print(displayAllEntiesInfo);
 		Room selectedRoom = null;
 		Room ourRecommendation = super.findBestEntryPoint();
 
@@ -214,6 +204,7 @@ public class ManualMode extends Simulation {
 							validSelection = true;
 						} else {
 							System.out.println("Invalid option.");
+							System.out.print("Option: ");
 						}
 					} else {
 						System.out.print("Option: ");
@@ -229,32 +220,15 @@ public class ManualMode extends Simulation {
 		return selectedRoom;
 	}
 
-	private void displaySophisticatedSpySystem() throws EmptyCollectionException, ElementNotFoundException {
+	private void displaySophisticatedSpySystem() {
 		String gatheringIntelInfo = Display.collectingData();
+		System.out.print(gatheringIntelInfo);
+		gatheringIntelInfo = "";
 
-		gatheringIntelInfo += Display.enemiesBanner();
+		displayEnemiesIntel();
 
-		for (Enemy enemy : getEnemies()) {
-			gatheringIntelInfo += Display.enemiesIntelMessage(enemy.getName(), enemy.getFirePower(), enemy.getPosition().getName());
-		}
+		displayItemsIntel();
 
-		gatheringIntelInfo += Display.mediKitsKevlarsBanner();
-
-		for (Item item : getMission().getItems()) {
-			gatheringIntelInfo += Display.itemsIntelMessage(item.getName(), item.getItemValue(), item.getPosition().getName());
-		}
-
-		if (getPlayer().getPosition() != null) {
-			gatheringIntelInfo += Display.closestMediKitBanner();
-
-			Room toPosition = calculateClosestPathToMedicKit();
-			if (toPosition != null) {
-				displayPath(getPlayer().getPosition(), toPosition);
-			} else {
-				gatheringIntelInfo += Display.noMediKitsLeftMessage();
-			}
-
-		}
 
 		gatheringIntelInfo += Display.playerBanner();
 		gatheringIntelInfo += Display.playerHealthStatusMessage(getPlayer().getCurrentHealth());
@@ -263,7 +237,7 @@ public class ManualMode extends Simulation {
 		displayMedicKits();
 
 		gatheringIntelInfo = Display.renderingNextSituationMessage();
-		System.out.println(gatheringIntelInfo);
+		System.out.print(gatheringIntelInfo);
 	}
 
 	private Room calculateClosestPathToMedicKit() throws EmptyCollectionException, ElementNotFoundException {
@@ -304,5 +278,44 @@ public class ManualMode extends Simulation {
 
 	private void useMedicKit() {
 		super.scenarioQUATRO();
+	}
+
+	private void displayItemsIntel() {
+
+		String gatheringItemsInfo = "";
+		gatheringItemsInfo += Display.mediKitsKevlarsBanner();
+
+
+		for (Item item : getMission().getItems()) {
+			gatheringItemsInfo += Display.itemsIntelMessage(item.getName(), item.getItemValue(), item.getPosition().getName());
+		}
+
+		if (getPlayer().getPosition() != null) {
+			gatheringItemsInfo += Display.closestMediKitBanner();
+			try {
+
+				Room toPosition = calculateClosestPathToMedicKit();
+				if (toPosition != null) {
+					displayPath(getPlayer().getPosition(), toPosition);
+				} else {
+					gatheringItemsInfo += Display.noMediKitsLeftMessage();
+				}
+			} catch (EmptyCollectionException| ElementNotFoundException e) {
+				System.err.println(e.getMessage());
+			}
+
+		}
+
+		System.out.print(gatheringItemsInfo);
+	}
+
+	private void displayEnemiesIntel() {
+		String gatheringEnemiesInfo = "";
+		gatheringEnemiesInfo += Display.enemiesBanner();
+
+		for (Enemy enemy : getEnemies()) {
+			gatheringEnemiesInfo += Display.enemiesIntelMessage(enemy.getName(), enemy.getFirePower(), enemy.getPosition().getName());
+		}
+		System.out.print(gatheringEnemiesInfo);
 	}
 }
