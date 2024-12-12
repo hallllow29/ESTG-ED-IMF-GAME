@@ -165,8 +165,9 @@ public class ManualMode extends Simulation {
 
 					selectedRoom = decideNextMove(choice, lastSelection, possibleMoves);
 
-					if (selectedRoom != null);
-					break;
+					if (selectedRoom != null) {
+						break;
+					}
 				}
 			} else {
 				System.out.println(Display.invalidOptionMessage());
