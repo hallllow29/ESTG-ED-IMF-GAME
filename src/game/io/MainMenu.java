@@ -38,18 +38,17 @@ public class MainMenu {
 
 		Scanner scanner = new Scanner(System.in);
 		int choice = 0;
+		String welcomeMenuInfo = "";
 
 		while (running) {
-			System.out.println("==== WELCOME TO IMPROBABLE MISSION FORCE ====");
-			System.out.println("[1] Mission Select");
-			System.out.println("[2] Report Menu");
-			System.out.println("[9] Exit");
-			System.out.print("\nOption: ");
+
+			welcomeMenuInfo = Display.welcomeMenu();
+			System.out.print(welcomeMenuInfo);
 
 			boolean validSelection = false;
 			while (!validSelection) {
 				if (scanner.hasNextInt()) {
-				choice = scanner.nextInt();
+					choice = scanner.nextInt();
 					switch (choice) {
 						case 1:
 							validSelection = true;
@@ -65,7 +64,8 @@ public class MainMenu {
 							validSelection = true;
 							break;
 						default:
-							System.out.println("Invalid option!");
+							System.out.println("\nInvalid option!");
+							System.out.print("Option: ");
 					}
 				} else {
 					System.out.println("\nInvalid option!");
@@ -87,28 +87,41 @@ public class MainMenu {
 	 */
 	private static void showReportsMenu(Scanner scanner, MissionReportManager reportManager) {
 		boolean running = true;
+		String showReportMenuInfo = "";
 
 		while (running) {
-			System.out.println("\n==== REPORTS MENU ====");
-			System.out.println("[1] List Available Reports");
-			System.out.println("[2] Visualize Report");
-			System.out.println("[3] Back");
 
-			int choice = scanner.nextInt();
+			showReportMenuInfo = Display.selectReportMenu();
+			System.out.print(showReportMenuInfo);
 
-			switch (choice) {
-				case 1:
-					System.out.println("Listing all reports available....");
-					reportManager.listReports();
-					break;
-				case 2:
-					reportManager.visualizeReport();
-					break;
-				case 3:
-					running = false;
-					break;
-				default:
-					System.out.println("Invalid option!");
+			int choice;
+			boolean validSelection = false;
+			while (!validSelection) {
+				if (scanner.hasNextInt()) {
+					choice = scanner.nextInt();
+					switch (choice) {
+						case 1:
+							System.out.println("Listing all reports available....");
+							reportManager.listReports();
+							validSelection = true;
+							break;
+						case 2:
+							reportManager.visualizeReport();
+							validSelection = true;
+							break;
+						case 3:
+							running = false;
+							validSelection = true;
+							break;
+						default:
+							System.out.println("\nInvalid option!");
+							System.out.print("Option: ");
+					}
+				} else {
+					System.out.println("\nInvalid option!");
+					System.out.print("Option: ");
+					scanner.next();
+				}
 			}
 		}
 	}

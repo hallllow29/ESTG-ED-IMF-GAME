@@ -33,7 +33,7 @@ public class MissionReportManager {
         if (this.checkIfThereAreReports(dir)) {
             File[] files = dir.listFiles();
 
-            System.out.println("==== REPORTS AVAILABLE ====");
+            System.out.println("\n\t==== REPORTS AVAILABLE ====");
             int index = 1;
             for (File file : files) {
                 if (file.isFile() && file.getName().endsWith(".json")) {
@@ -88,17 +88,18 @@ public class MissionReportManager {
             return;
         }
 
-        System.out.println("==== Select a report to visualize ====");
+        System.out.println("\n\t==== VISUALIZE REPORT ====");
         for (int i = 0; i < jsonFiles.length; i++) {
             System.out.println("[" + (i + 1) + "] -> " + jsonFiles[i].getName());
 
         }
 
         try {
+            System.out.print("Option: ");
             int choice = scanner.nextInt() - 1;
 
             if (choice < 0 || choice >= jsonFiles.length) {
-                System.out.println("==== INVALID OPTION ==== ");
+                System.out.println("Invalid option!");
                 return;
             }
 
@@ -106,7 +107,7 @@ public class MissionReportManager {
             showReport(selectedFile);
 
         } catch (NumberFormatException e) {
-            System.out.println("Please select a number!");
+            System.out.print("Option: ");
         }
     }
 

@@ -337,4 +337,21 @@ public class Display {
 		return "\nYou choose to stay.";
 	}
 
+	public static String selectReportMenu() {
+		return "\n\t==== REPORTS MENU ====" +
+			"\n[1] List Available Reports" +
+			"\n[2] Visualize Report" +
+			"\n[3] Back" +
+			"\n\nOption: ";
+	}
+
+	public static String welcomeMenu(){
+		return
+			"\t==== WELCOME TO IMPROBABLE MISSION FORCE ====" +
+			"\n[1] Mission Select" +
+			"\n[2] Report Menu" +
+			"\n[9] Exit" +
+			"\n\nOption: ";
+	}
+
 }
