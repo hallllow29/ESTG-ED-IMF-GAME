@@ -1044,7 +1044,7 @@ public abstract class Simulation {
 					player.addKitToBackPack((MediKit) item);
 					gatherItemsOutput += Display.playerAddsItemMessage(player.getName(), item.getName());
 
-				} else if (item instanceof Kevlar && !player.getBack_pack().isBackPackFull()) {
+				} else if (item instanceof Kevlar) {
 					player.equipKevlar((Kevlar) item);
 					gatherItemsOutput +=
 						Display.playerEquipsItemMessage(player.getName(), item.getName(), player.getCurrentHealth());

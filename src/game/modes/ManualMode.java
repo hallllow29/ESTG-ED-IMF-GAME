@@ -67,6 +67,12 @@ public class ManualMode extends Simulation {
 
 		getReport().addRoom(getPlayer().getPosition().getName());
 		getReport().setEntryPoint(getPlayer().getPosition().getName());
+
+		if (entryRoom.hasItems()){
+			scenariosSituations();
+			scenariosCase(getCurrentScenario());
+		}
+
 		super.setNextTurn(Turn.PLAYER);
 
 		super.gameFlow();
