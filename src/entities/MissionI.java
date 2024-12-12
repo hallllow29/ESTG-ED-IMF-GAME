@@ -1,9 +1,5 @@
-package game;
+package entities;
 
-import entities.Enemy;
-import entities.Item;
-import entities.Room;
-import entities.Target;
 import lib.exceptions.NotElementComparableException;
 import lib.graphs.CustomNetwork;
 import lib.lists.LinkedList;

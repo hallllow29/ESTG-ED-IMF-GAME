@@ -4,7 +4,7 @@ import entities.*;
 import entities.enums.ScenarioNr;
 import entities.enums.Turn;
 import game.Display;
-import game.Mission;
+import entities.Mission;
 import game.Report;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
@@ -1436,14 +1436,14 @@ public abstract class Simulation {
 
 	/**
 	 * Updates the mission status in the report based on the player's state and the game status.
-	 * If the player is alive and the game is over, the mission status is set to "game.Mission Accomplished".
-	 * Otherwise, the mission status is set to "game.Mission Failed".
+	 * If the player is alive and the game is over, the mission status is set to "entities.Mission Accomplished".
+	 * Otherwise, the mission status is set to "entities.Mission Failed".
 	 */
 	protected void addStatusToReport() {
 		if (player.isAlive() && isGameOver()) {
-			getReport().setMissionStatus("game.Mission Accomplished");
+			getReport().setMissionStatus("entities.Mission Accomplished");
 		} else {
-			report.setMissionStatus("game.Mission Failed");
+			report.setMissionStatus("entities.Mission Failed");
 		}
 	}
 

@@ -1,5 +1,6 @@
 package game;
 
+import entities.Mission;
 import entities.Player;
 import lib.lists.ArrayUnorderedList;
 
@@ -277,7 +278,7 @@ public class Report {
      *
      * @param status a string representing the mission status to be set.
      *               It typically indicates the outcome or progress of the mission,
-     *               such as "game.Mission Accomplished" or "game.Mission Failed".
+     *               such as "entities.Mission Accomplished" or "entities.Mission Failed".
      */
     public void setMissionStatus(String status) {
         this.missionStatus = status;

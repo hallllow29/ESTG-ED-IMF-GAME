@@ -1,9 +1,10 @@
-package game;
+package game.modes;
 
 import entities.*;
 import entities.enums.BackPackSize;
-import game.modes.AutomaticMode;
-import game.modes.ManualMode;
+import game.Display;
+import entities.Mission;
+import game.Report;
 import game.util.JsonSimpleRead;
 import game.util.SaveToJsonFile;
 import lib.exceptions.ElementNotFoundException;
