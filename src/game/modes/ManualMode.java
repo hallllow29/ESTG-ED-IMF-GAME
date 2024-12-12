@@ -67,7 +67,7 @@ public class ManualMode extends Simulation {
 
 		getReport().addRoom(getPlayer().getPosition().getName());
 		getReport().setEntryPoint(getPlayer().getPosition().getName());
-
+		super.setNextTurn(Turn.PLAYER);
 
 		super.gameFlow();
 	}
@@ -114,6 +114,7 @@ public class ManualMode extends Simulation {
 				super.setNextTurn(Turn.ENEMY);
 			} else {
 				super.getPlayer().setPosition(nextRoom);
+				super.setNextTurn(Turn.PLAYER);
 			}
 
 			this.displaySophisticatedSpySystem();
@@ -268,6 +269,8 @@ public class ManualMode extends Simulation {
 			} else if (getPlayer().playerNeedsRecoveryItem()) {
 				useMedicKit();
 				selectedRoom = getPlayer().getPosition();
+			} else if (!getPlayer().playerNeedsRecoveryItem()) {
+				decideNextMoveInfo += Display.playerHealthFullMessage();
 			}
 		} else {
 			decideNextMoveInfo += Display.invalidOptionMessage();

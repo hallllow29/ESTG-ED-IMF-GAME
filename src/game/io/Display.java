@@ -358,4 +358,9 @@ public class Display {
 			"\n\nOption: ";
 	}
 
+	public static String playerHealthFullMessage() {
+		return
+			"\nHealth is full!";
+	}
+
 }
