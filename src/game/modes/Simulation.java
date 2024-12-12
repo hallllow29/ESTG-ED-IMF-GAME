@@ -261,7 +261,7 @@ public abstract class Simulation {
 			movePlayer();
 		} else {
 			scenarioUM();
-			// playerConfronts();
+
 		}
 
 		System.out.println(playerTurnOutput);
@@ -589,7 +589,7 @@ public abstract class Simulation {
 	 * actions, and the outcome of the current turn. The method also determines the next
 	 * turn in the game based on whether enemies remain in the room or not.
 	 */
-	private void scenarioUM() {
+	protected void scenarioUM() {
 		Room playerPosition = player.getPosition(); boolean enemiesRemained;
 
 		String scenarioUMinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
@@ -925,15 +925,7 @@ public abstract class Simulation {
 	 * @return true if the player has a current health value less than or equal to a
 	 * critical threshold and possesses a recovery item; false otherwise.
 	 */
-	private boolean playerNeedsRecoveryItem() {
 
-		int playerCriticalHealth = 80;
-
-		/**
-		 * Se TO CRUZ decide usar um kit...
-		 */
-		return this.player.getCurrentHealth() <= playerCriticalHealth && this.player.hasRecoveryItem();
-	}
 
 	protected void moveEnemies() {
 		for (Enemy enemy : this.enemies) {
@@ -1109,7 +1101,7 @@ public abstract class Simulation {
 
 			if (enemyPosition.equals(playerPosition)) {
 				enemyAttacksPlayer(enemy, player);
-				playerWantsToRecover = playerNeedsRecoveryItem();
+				playerWantsToRecover = player.playerNeedsRecoveryItem();
 
 				if (playerWantsToRecover) {
 					playerDecidesToRecover();

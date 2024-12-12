@@ -132,6 +132,16 @@ public class Player extends Character {
 		return !this.back_pack.isBackPackEmpty();
 	}
 
+	public boolean playerNeedsRecoveryItem() {
+
+		int playerCriticalHealth = 80;
+
+		/**
+		 * Se TO CRUZ decide usar um kit...
+		 */
+		return this.getCurrentHealth() <= playerCriticalHealth && this.hasRecoveryItem();
+	}
+
 	/**
 	 * Retrieves the player's backpack, which is used to store items such as MediKits.
 	 *

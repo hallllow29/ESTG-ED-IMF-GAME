@@ -1,6 +1,7 @@
 package game.modes;
 
 import entities.*;
+import entities.enums.Turn;
 import game.briefings.Report;
 import game.io.Display;
 import lib.exceptions.ElementNotFoundException;
@@ -98,15 +99,18 @@ public class ManualMode extends Simulation {
 		if (!isMissionAccomplished()) {
 
 			super.displayPath(getPlayer().getPosition(), getNextObjective());
-			this.displaySophisticatedSpySystem();
 
 			Room nextRoom = this.selectNextRoom(currentRoom);
 
+			// STAY
 			if (nextRoom.equals(currentRoom)) {
 				super.getPlayer().setPosition(currentRoom);
+				super.setNextTurn(Turn.ENEMY);
+			} else {
+				super.getPlayer().setPosition(nextRoom);
 			}
 
-			super.getPlayer().setPosition(nextRoom);
+			this.displaySophisticatedSpySystem();
 
 			super.addRoomToReport(nextRoom.getName());
 
@@ -152,7 +156,7 @@ public class ManualMode extends Simulation {
 
 				if (choice >= 0 && choice <= medicKitOption) {
 
-					if (choice == medicKitOption && !getPlayer().hasRecoveryItem()) {
+					if (choice == medicKitOption && !getPlayer().hasRecoveryItem() && !getPlayer().playerNeedsRecoveryItem()) {
 						System.out.println(Display.noMediKitsBackPackMessage());
 						continue;
 					}
@@ -245,27 +249,28 @@ public class ManualMode extends Simulation {
 		Room selectedRoom = null;
 		int medicKitOption = lastSelection + 1;
 
-		if (choice >= 0 && choice < lastSelection) {
-			selectedRoom = possibleMoves.getElement(choice);
+		boolean validMove = false;
+		while (!validMove) {
+			if (choice >= 0 && choice < lastSelection) {
+				selectedRoom = possibleMoves.getElement(choice);
+				validMove = true;
+			} else if (choice == lastSelection) {
 
-		} else if (choice == lastSelection) {
-
-			decideNextMoveInfo += Display.youChooseStayMessage();
-			selectedRoom = getPlayer().getPosition();
-			moveEnemies();
-
-		} else if (choice == medicKitOption) {
-			if (getPlayer().getBack_pack().isBackPackEmpty()) {
-
-				decideNextMoveInfo += Display.noMediKitsBackPackMessage();
-
-			} else {
-				useMedicKit();
+				decideNextMoveInfo += Display.youChooseStayMessage();
 				selectedRoom = getPlayer().getPosition();
+				validMove = true;
 
+			} else if (choice == medicKitOption) {
+				if (getPlayer().getBack_pack().isBackPackEmpty()) {
+					decideNextMoveInfo += Display.noMediKitsBackPackMessage();
+				} else if (getPlayer().playerNeedsRecoveryItem()) {
+					useMedicKit();
+					selectedRoom = getPlayer().getPosition();
+					validMove = true;
+				}
+			} else {
+				decideNextMoveInfo += Display.invalidOptionMessage();
 			}
-		} else {
-			decideNextMoveInfo += Display.invalidOptionMessage();
 		}
 
 		System.out.println(decideNextMoveInfo);
