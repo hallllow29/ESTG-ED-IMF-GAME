@@ -186,12 +186,12 @@ public class Display {
 	}
 
 	//------------------------------PATH--------------------------------------------------
-	protected static String bestPathObjectiveMessage() {
+	public static String bestPathObjectiveMessage() {
 		return "\nCalculating best path to OBJECTIVE..." +
 			"\nPath to OBJECTIVE";
 	}
 
-	protected static String bestPathExtractionMessage() {
+	public static String bestPathExtractionMessage() {
 		return "\nCalculating best path to EXTRACTION POINT..." +
 			"\nPath to EXTRACTION POINT";
 	}
