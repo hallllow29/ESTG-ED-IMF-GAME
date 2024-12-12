@@ -119,4 +119,25 @@ public abstract class Character implements CharacterI {
                 "\nHP: " + this.current_health +
                 "\nFire power: " + this.fire_power;
     }
+
+    /**
+     * Compares this character to the specified object for equality.
+     * The comparison is based on the {@code name} attribute of the character.
+     *
+     * @param obj the object to be compared with this character for equality
+     * @return true if the specified object is equal to this character, otherwise false
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj){
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()){
+            return false;
+        }
+
+        Character other = (Character) obj;
+        return this.name.equals(other.name);
+    }
 }

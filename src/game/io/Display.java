@@ -186,12 +186,12 @@ public class Display {
 	}
 
 	//------------------------------PATH--------------------------------------------------
-	public static String bestPathObjectiveMessage() {
+	protected static String bestPathObjectiveMessage() {
 		return "\nCalculating best path to OBJECTIVE..." +
 			"\nPath to OBJECTIVE";
 	}
 
-	public static String bestPathExtractionMessage() {
+	protected static String bestPathExtractionMessage() {
 		return "\nCalculating best path to EXTRACTION POINT..." +
 			"\nPath to EXTRACTION POINT";
 	}
@@ -232,7 +232,7 @@ public class Display {
 	}
 
 	public static String closestMediKitBanner() {
-		return "\n\n\t==== CLOSEST MEDIC KIT ====";
+		return "\n\n==== BEST PATH TO CLOSEST MEDIC KIT ====";
 	}
 
 	public static String noMediKitsLeftMessage() {
@@ -249,7 +249,7 @@ public class Display {
 	}
 
 	public static String backPackContentMessage(String backPackContent) {
-		return "\n|" + backPackContent;
+		return "\n" + backPackContent;
 	}
 
 	public static String backPackNoItemsMessage() {
@@ -257,7 +257,7 @@ public class Display {
 	}
 
 	public static String renderingNextSituationMessage() {
-		return "\n\n\t======== ENVIRONMENT =========" +
+		return "\n\t======== ENVIRONMENT =========" +
 			"\n|Rendering next situation...";
 	}
 

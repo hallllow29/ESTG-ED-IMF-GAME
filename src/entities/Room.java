@@ -173,4 +173,26 @@ public class Room implements Comparable<Room> {
 	public String toString() {
 		return this.name;
 	}
+
+	/**
+	 * Compares this Room object to the specified object to determine equality.
+	 * Two Room objects are considered equal if they have the same name.
+	 *
+	 * @param obj the object to be compared for equality with this Room
+	 * @return true if the specified object is equal to this Room, false otherwise
+	 */
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+
+		Room other = (Room) obj;
+		return this.name.equals(other.name);
+	}
 }
