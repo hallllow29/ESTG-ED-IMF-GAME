@@ -17,7 +17,7 @@ public class Display {
 	// Scenario 2
 	public static String scenarioDOISstartMessage(String playerName) {
 		return "\n|========== [<< SCENARIO 2 START >>] ==========" +
-			"\n|\tAND the room " + playerName + " entered is clear...";
+			"\n|\tAND the room " + playerName + " is, is clear...";
 	}
 
 	public static String scenarioDOISendMessage() {
@@ -204,18 +204,21 @@ public class Display {
 	//----------------------------BANNERS-------------------------------------------------
 	public static String initSimulation() {
 		return
-			"\n==== SSS Sophisticated Spy System ====" +
+			"\n==== SSS Sophisticated Spy System by IMF ====" +
 				"\n|Initializing Simulation..." +
 				"\n|Gathering Intel for Simulation...";
 	}
 
+	public static String sophisticatedSpySystemBanner(){
+		return "\n\n==== SSS Sophisticated Spy System by IMF ====";
+	}
+
 	public static String collectingData() {
-		return "\n==== SSS Sophisticated Spy System ====" +
-			"\n|Collecting Simulation Environment Data...";
+		return "\n|Collecting Simulation Environment Data...";
 	}
 
 	public static String enemiesBanner() {
-		return "\n\n\t========= INIMIGOS =========";
+		return "\n\n\t========= ENEMIES =========";
 	}
 
 	public static String enemiesIntelMessage(String enemyName, int enemyAttack, String enemyPositionName) {

@@ -56,7 +56,9 @@ public class ManualMode extends Simulation {
 	 */
 	@Override
 	public void game() throws ElementNotFoundException, EmptyCollectionException {
+		System.out.print(Display.initSimulation());
 		renderManualSimulation(getMission().getTarget().getRoom());
+
 		this.displaySophisticatedSpySystem();
 		Room entryRoom = displayAllEntries();
 
@@ -98,6 +100,8 @@ public class ManualMode extends Simulation {
 		Room currentRoom = getPlayer().getPosition();
 
 		if (!isMissionAccomplished()) {
+
+			System.out.println(Display.sophisticatedSpySystemBanner());
 
 			super.displayPath(getPlayer().getPosition(), getNextObjective());
 
@@ -147,6 +151,7 @@ public class ManualMode extends Simulation {
 		int medicKitOption = lastSelection + 1;
 		selectNextPositionInfo += optionNrMessage(medicKitOption, "Use MedicKit - HP" + currentHealthMessage());
 
+		selectNextPositionInfo += "\n\nOption: ";
 		System.out.print(selectNextPositionInfo);
 		selectNextPositionInfo = "";
 
@@ -352,7 +357,7 @@ public class ManualMode extends Simulation {
 	 * upcoming scenarios. This method consolidates and outputs critical game information
 	 * for the user to observe and analyze.
 	 */
-	private void displaySophisticatedSpySystem() {
+	private void displaySophisticatedSpySystem() throws ElementNotFoundException {
 		String gatheringIntelInfo = Display.collectingData();
 		System.out.print(gatheringIntelInfo);
 		gatheringIntelInfo = "";
@@ -368,7 +373,7 @@ public class ManualMode extends Simulation {
 		displayMedicKits();
 
 		gatheringIntelInfo = Display.renderingNextSituationMessage();
-		System.out.print(gatheringIntelInfo);
+		System.out.println(gatheringIntelInfo);
 	}
 
 	/**

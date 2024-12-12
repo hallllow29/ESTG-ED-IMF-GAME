@@ -556,7 +556,8 @@ public abstract class Simulation {
 				if (!this.player.isAlive()) {
 					setMissionAccomplished(false);
 					setGameOver(true);
-				} break;
+				}
+				break;
 			case THREE:
 				scenarioTRES();
 				setNextTurn(Turn.PLAYER);
@@ -600,7 +601,7 @@ public abstract class Simulation {
 		if (enemiesRemained) {
 			scenarioUMinfo += Display.enemyTurnMessage();
 
-			if (getEnemies().isEmpty()) {
+			if (this.enemies.isEmpty()) {
 				scenarioUMinfo += Display.enemiesAreMovingMessage();
 				moveEnemiesNotInSameRoom();
 			}
@@ -608,11 +609,7 @@ public abstract class Simulation {
 
 		} else {
 			scenarioUMinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());
-			scenarioUMinfo += Display.playerSearchsMessage(player.getName(), playerPosition.getName());
-			// RECOLHE ITEMS.
-			if (playerPosition.hasItems()) {
-				scenarioUMinfo += gatherItems(playerPosition);
-			}
+
 			setNextTurn(Turn.PLAYER);
 		}
 
@@ -636,17 +633,16 @@ public abstract class Simulation {
 		System.out.print(scenarioDOISinfo);
 
 		scenarioDOISinfo = "";
+
 		// RECOLHE ITEMS...
 		if (playerPosition.hasItems()) {
 			scenarioDOISinfo = gatherItems(playerPosition);
-
-			// TODO: Entra o cenario 4 ?? Que dizes?
 
 		}
 
 		scenarioDOISinfo += Display.enemyTurnMessage();
 
-		if (!getEnemies().isEmpty()) {
+		if (!this.enemies.isEmpty()) {
 
 			scenarioDOISinfo += Display.enemiesAreMovingMessage();
 			moveEnemies();
