@@ -1,6 +1,5 @@
 package game;
 
-import entities.Room;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -9,11 +8,25 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.Scanner;
 
+/**
+ * The MissionReportManager class provides functionality to manage mission reports,
+ * including listing available reports, visualizing individual reports, and
+ * retrieving information about missions and simulations.
+ */
 public class MissionReportManager {
 
+    /**
+     * Lists all available report files located in the "reports/" directory.
+     *
+     * The method searches for JSON files in the directory and prints their names
+     * in a numbered list. If no reports are found, an appropriate message is displayed.
+     *
+     * This method relies on the presence of the "reports/" directory and the
+     * {@code checkIfThereAreReports(File dir)} method to validate its existence
+     * and check if it contains any files.
+     */
     public void listReports() {
         File dir = new File("reports/");
 
@@ -34,6 +47,12 @@ public class MissionReportManager {
 
     }
 
+    /**
+     * Checks if the given directory exists, is a directory, and contains at least one file.
+     *
+     * @param dir the directory to check
+     * @return true if the directory exists, is a directory, and contains files; otherwise false
+     */
     private boolean checkIfThereAreReports(File dir) {
         if (!dir.exists() || !dir.isDirectory()) {
             return false;
@@ -44,6 +63,15 @@ public class MissionReportManager {
 
 	}
 
+    /**
+     * Displays a menu for visualizing mission reports from JSON files located in the "reports/" directory.
+     *
+     * The method lists all available JSON report files, prompts the user to select one, and then displays
+     * the contents of the selected report in a predefined format. If no reports or JSON files are found,
+     * appropriate messages are displayed. The user is required to input a number corresponding to the report
+     * they wish to view.
+     *
+     */
     public void visualizeReport() {
         Scanner scanner = new Scanner(System.in);
         File dir = new File("reports/");
@@ -82,6 +110,12 @@ public class MissionReportManager {
         }
     }
 
+    /**
+     * Filters an array of files and returns only the files with a ".json" extension.
+     *
+     * @param files an array of File objects to be filtered
+     * @return an array of File objects containing only files with a ".json" extension
+     */
     private File[] filterJsonFiles(File[] files) {
         int counter = 0;
         for (File file : files) {
@@ -101,6 +135,15 @@ public class MissionReportManager {
         return jsonFiles;
     }
 
+    /**
+     * Displays the details of a specific mission report stored in a JSON file.
+     *
+     * The method parses the given file, extracts information such as simulation details,
+     * player statistics, mission details, trajectories to target and extraction points,
+     * and lists of enemies survived or killed. The extracted data is printed in a structured format.
+     *
+     * @param file the JSON file containing the mission report to be displayed
+     */
     private void showReport(File file) {
         JSONParser parser = new JSONParser();
 
