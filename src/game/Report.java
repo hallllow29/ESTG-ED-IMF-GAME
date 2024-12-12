@@ -1,6 +1,5 @@
 package game;
 
-import entities.BackPackSize;
 import entities.Player;
 import lib.lists.ArrayUnorderedList;
 

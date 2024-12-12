@@ -1,6 +1,9 @@
-package game;
+package game.modes;
 
 import entities.*;
+import entities.enums.ScenarioNr;
+import entities.enums.Turn;
+import game.Mission;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.graphs.CustomNetwork;

@@ -1,6 +1,11 @@
 package game;
 
 import entities.*;
+import entities.enums.BackPackSize;
+import game.modes.AutomaticMode;
+import game.modes.ManualMode;
+import game.util.JsonSimpleRead;
+import game.util.SaveToJsonFile;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;

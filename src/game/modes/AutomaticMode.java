@@ -1,6 +1,9 @@
-package game;
+package game.modes;
 
 import entities.*;
+import game.Display;
+import game.Mission;
+import game.Report;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 

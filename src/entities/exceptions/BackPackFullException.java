@@ -1,4 +1,4 @@
-package entities;
+package entities.exceptions;
 
 /**
  * Exception thrown to indicate that a backpack is full

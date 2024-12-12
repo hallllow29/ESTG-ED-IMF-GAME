@@ -1,4 +1,4 @@
-package entities;
+package entities.enums;
 
 /**
  * The Turn enum represents the two possible states in a turn-based simulation:

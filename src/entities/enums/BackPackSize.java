@@ -1,4 +1,4 @@
-package entities;
+package entities.enums;
 
 /**
  * Enum representing different backpack sizes with their respective capacities.

@@ -1,4 +1,4 @@
-package entities;
+package entities.enums;
 
 /**
  * Enumeration representing the various scenarios or states within a simulation.
