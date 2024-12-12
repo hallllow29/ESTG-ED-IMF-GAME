@@ -30,11 +30,11 @@
     ["Heliporto", "Escada 6"]
     ],
     "inimigos": [
-    {"nome": "badguy1", "poder": 150, "divisao": "Garagem"},
-    {"nome": "badguy2", "poder": 150, "divisao": "Corredor 1"},
-    {"nome": "badguy3", "poder": 150, "divisao": "Heliporto"},
-    {"nome": "badguy4", "poder": 100, "divisao": "Laboratório"},
-    {"nome": "badguy5", "poder": 50, "divisao": "Heliporto"}
+    {"nome": "badguy1", "poder": 10, "divisao": "Garagem"},
+    {"nome": "badguy2", "poder": 15, "divisao": "Corredor 1"},
+    {"nome": "badguy3", "poder": 15, "divisao": "Heliporto"},
+    {"nome": "badguy4", "poder": 10, "divisao": "Laboratório"},
+    {"nome": "badguy5", "poder": 5, "divisao": "Heliporto"}
     ],
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
     "alvo": {"divisao": "Laboratório", "tipo": "quimico"},

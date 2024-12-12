@@ -1,6 +1,7 @@
 package game.modes;
 
 import entities.*;
+import entities.enums.ScenarioNr;
 import entities.enums.Turn;
 import game.briefings.Report;
 import game.io.Display;
@@ -505,4 +506,34 @@ public class ManualMode extends Simulation {
 		}
 		System.out.print(gatheringEnemiesInfo);
 	}
+
+	/**
+	 * Determines whether the mission is accomplished.
+	 * <p>
+	 * This method checks if the player is alive, the mission target is secured, and the
+	 * player is positioned at the designated extraction point.
+	 *
+	 * @return true if the mission is accomplished; false otherwise
+	 */
+	@Override
+	protected boolean isMissionAccomplished() {
+		Room playerPosition = getPlayer().getPosition();
+		Room extractionPoint = null;
+
+		for (Room room : getMission().getEntryExitPoints()) {
+			if (room.equals(playerPosition)) {
+				extractionPoint = room;
+			}
+		}
+
+		if (getPlayer().isAlive() && getMission().isTargetSecured() && playerPosition.equals(extractionPoint)) {
+
+			setNextScenario(ScenarioNr.SIX);
+			setGameOver(true);
+			return true;
+		}
+
+		return false;
+	}
+
 }

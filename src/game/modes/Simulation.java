@@ -128,14 +128,6 @@ public abstract class Simulation {
 	private LinkedList<Enemy> enemies;
 
 	/**
-	 * Represents the room that is geographically closest to the player's current position
-	 * and contains items. It is used during the simulation to identify and interact with
-	 * nearby rooms of interest that have collectible items. The room may change
-	 * dynamically based on the player's movement and gameplay actions.
-	 */
-	private Room closestItem;
-
-	/**
 	 * Represents the report associated with the simulation. This report maintains the
 	 * details of the simulation lifecycle, such as mission status, player performance,
 	 * enemies confronted, and paths traversed during the mission.
@@ -210,6 +202,7 @@ public abstract class Simulation {
 	protected void gameFlow() throws EmptyCollectionException, ElementNotFoundException {
 		while (!isGameOver()) {
 
+
 			if (this.getCurrentTurn() == Turn.PLAYER) {
 				playerTurn();
 			}
@@ -259,9 +252,10 @@ public abstract class Simulation {
 			playerTurnOutput += "\n" + this.getPlayer().getName() + " is moving..." + "\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
 
 			movePlayer();
+		} else if (isMissionAccomplished()) {
+			scenarioSEIS();
 		} else {
 			scenarioUM();
-
 		}
 
 		System.out.println(playerTurnOutput);
@@ -514,7 +508,7 @@ public abstract class Simulation {
 			 */
 			setNextScenario(getCurrentTurn() == Turn.PLAYER ? ScenarioNr.ONE : ScenarioNr.THREE);
 
-		} else if (!hasEnemies && !atTarget) {
+		} else if (!hasEnemies && !atTarget && !gameOver) {
 			setNextScenario(ScenarioNr.TWO);
 		} else {
 			setNextScenario(ScenarioNr.SIX);
@@ -817,7 +811,7 @@ public abstract class Simulation {
 	 * @throws ElementNotFoundException if an element required for the execution of the
 	 *                                  scenario is not found.
 	 */
-	private void scenarioSEIS() throws ElementNotFoundException {
+	protected void scenarioSEIS() throws ElementNotFoundException {
 		Room playerPosition = this.player.getPosition();
 
 		String scenarioSEISinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
