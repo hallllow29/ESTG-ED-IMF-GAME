@@ -1,5 +1,10 @@
 package entities;
 
+/**
+ * Represents a Kevlar item in a game that provides additional health points to
+ * the player or entity equipping it. This class extends the abstract Item class
+ * and overrides specific methods to define the unique behavior of Kevlar.
+ */
 public class Kevlar extends Item {
 
 	/**
@@ -28,6 +33,12 @@ public class Kevlar extends Item {
 		return extra_hp;
 	}
 
+	/**
+	 * Retrieves the value of the item, which in this implementation corresponds to
+	 * the extra health points provided by the Kevlar item.
+	 *
+	 * @return the extra health points provided by the Kevlar item as an integer.
+	 */
 	@Override
 	public int getItemValue() {
 		return this.extra_hp;
@@ -43,6 +54,13 @@ public class Kevlar extends Item {
 		return "Kevlar";
 	}
 
+	/**
+	 * Returns a string representation of the Kevlar object, including its superclass string
+	 * representation and the extra health points provided by this Kevlar item.
+	 *
+	 * @return a string representation of the Kevlar object, including the name, current
+	 *         position, and the additional health points it provides.
+	 */
 	public String toString() {
 		return super.toString() + " Extra hp: " + this.extra_hp;
 	}

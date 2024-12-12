@@ -5,10 +5,6 @@ import lib.DoubleNode;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author pedro
- */
 public class DoublyLinkedList<T> {
 
     private DoubleNode<T> head;
