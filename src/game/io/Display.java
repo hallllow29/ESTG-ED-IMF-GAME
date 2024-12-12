@@ -257,7 +257,7 @@ public class Display {
 	}
 
 	public static String renderingNextSituationMessage() {
-		return "\n\t======== ENVIRONMENT =========" +
+		return "\n\n\t======== ENVIRONMENT =========" +
 			"\n|Rendering next situation...";
 	}
 
