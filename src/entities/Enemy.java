@@ -1,7 +1,18 @@
 package entities;
 
+/**
+ * Represents an enemy character within the game that extends the {@code Character} class.
+ * The {@code Enemy} class includes additional properties for tracking the current
+ * position of the enemy and implements the {@code Comparable} interface to compare
+ * enemies based on their fire power.
+ */
 public class Enemy extends Character implements Comparable<Enemy> {
 
+	/**
+	 * Represents the current position of the enemy as a {@code Room} object.
+	 * This variable tracks the specific location or room where the enemy is situated
+	 * within the game's environment.
+	 */
 	private Room position;
 
 	/**
@@ -25,10 +36,22 @@ public class Enemy extends Character implements Comparable<Enemy> {
 		return this.position;
 	}
 
+	/**
+	 * Updates the current position of the enemy.
+	 *
+	 * @param position the new position of the enemy as a {@code Room} object
+	 */
 	public void setPosition(Room position) {
 		this.position = position;
 	}
 
+	/**
+	 * Compares this enemy to another enemy based on their fire power.
+	 *
+	 * @param other the other enemy to compare with
+	 * @return a negative integer, zero, or a positive integer as this enemy's fire power
+	 *         is less than, equal to, or greater than the specified enemy's fire power
+	 */
 	@Override
 	public int compareTo(Enemy other) {
 		return Integer.compare(super.getFirePower(), other.getFirePower());

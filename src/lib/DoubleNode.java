@@ -1,8 +1,5 @@
-package lib;/*
-/**
- *
- * @author pedro
- */
+package lib;
+
 public class DoubleNode<T> {
 
     /**

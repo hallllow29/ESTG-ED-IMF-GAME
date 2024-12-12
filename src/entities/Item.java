@@ -1,5 +1,10 @@
 package entities;
 
+/**
+ * Represents an abstract item in a game that has a name and a position.
+ * The Item class provides functionality to manage its position and
+ * implements the Comparable interface to allow comparison based on the item's value.
+ */
 public abstract class Item implements Comparable<Item> {
 
 	/**
@@ -31,6 +36,11 @@ public abstract class Item implements Comparable<Item> {
 	public abstract String getName();
 
 	/**
+	 * Retrieves the value associated*/
+	public abstract int getItemValue();
+
+
+	/**
 	 * Retrieves the current position of the item.
 	 *
 	 * @return the current position of the item as a entities.Room object.
@@ -48,15 +58,23 @@ public abstract class Item implements Comparable<Item> {
 		this.position = position;
 	}
 
-	public abstract int getItemValue();
 
+	/**
+	 * Compares this item with the specified item for order based on their values.
+	 * The comparison is*/
 	public int compareTo(Item other) {
 		return Integer.compare(this.getItemValue(), other.getItemValue());
 	}
 
+	/**
+	 * Returns a string representation of the Item object.
+	 * The returned string includes the name and current position
+	 * of the item.
+	 *
+	 * @return a string representation of the Item, including its
+	 *         name and position.
+	 */
 	public String toString() {
-		// return "Name: " + this.name +
-		// 		"\tPosition: " + this.position;
 		return "Name: " + this.name + " Position: " + this.position;
 	}
 

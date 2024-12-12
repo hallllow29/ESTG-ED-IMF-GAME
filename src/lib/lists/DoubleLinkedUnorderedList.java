@@ -7,10 +7,6 @@ import lib.interfaces.UnorderedListADT;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- *
- * @author pedro
- */
 public class DoubleLinkedUnorderedList<T extends Comparable<T>> implements UnorderedListADT<T> {
 
     private int count;

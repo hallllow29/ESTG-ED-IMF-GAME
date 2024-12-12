@@ -1,5 +1,12 @@
 package entities;
 
+/**
+ * Represents a generic character in the game.
+ * This is an abstract class that provides basic properties and behavior
+ * for characters, including their name, health, and fire power. Concrete
+ * classes such as Player or Enemy can extend this class to provide
+ * specific implementations and additional functionality.
+ */
 public abstract class Character implements CharacterI {
 
     /**
@@ -101,6 +108,12 @@ public abstract class Character implements CharacterI {
         return this.current_health > 0;
     }
 
+    /**
+     * Returns a string representation of the character, including its name, current health,
+     * and fire power.
+     *
+     * @return a string representing the character's name, current health, and fire power
+     */
     public String toString() {
         return "Name :" + this.name +
                 "\nHP: " + this.current_health +

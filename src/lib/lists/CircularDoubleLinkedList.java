@@ -17,13 +17,49 @@ import lib.exceptions.EmptyCollectionException;
 import java.util.ConcurrentModificationException;
 import java.util.NoSuchElementException;
 
+/**
+ * A generic circular doubly linked list implementation that provides various
+ * operations to manage elements of the list.
+ *
+ * @param <T> the type of elements stored in the list
+ */
 public class CircularDoubleLinkedList <T> implements ListADT<T> {
 
+	/**
+	 * A reference to the first node in the circular doubly linked list.
+	 * This variable serves as a starting point for accessing elements in the list
+	 * and is used to determine if the list is empty or for navigating through the nodes.
+	 * It is updated during various operations such as adding, removing, or modifying elements.
+	 */
 	private DoubleNode<T> front;
+
+	/**
+	 * A reference to the last node in the circular doubly linked list.
+	 * This field helps maintain a link to the rear of the collection,
+	 * facilitating operations such as adding or removing the last element.
+	 */
 	private DoubleNode<T> rear;
+
+	/**
+	 * Represents the current number of elements in the circular doubly linked list.
+	 * This variable is incremented whenever an element is added and decremented when an element is removed.
+	 * It is used to track the size of the collection for operations such as {@code size()}.
+	 */
 	private int size;
+
+	/**
+	 * Tracks the number of structural modifications made to the collection.
+	 * Structural modifications are any changes that alter the size or structure
+	 * of the collection, such as adding, removing, or clearing elements.
+	 * This variable is useful for tracking concurrent modification or ensuring
+	 * consistency during iteration processes.
+	 */
 	private int modCount;
 
+	/**
+	 * Constructs an empty CircularDoubleLinkedList with no elements.
+	 * Initializes the front and rear references to null, size to 0, and modification count to 0.
+	 */
 	public CircularDoubleLinkedList() {
 		this.front = null;
 		this.rear = null;

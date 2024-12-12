@@ -1,5 +1,9 @@
 package entities;
 
+/**
+ * Represents a MediKit, an item in a game that can restore health points to an entity.
+ * The MediKit is a specific type of item that has a healing power attribute.
+ */
 public class MediKit extends Item {
 
 	/**
@@ -40,11 +44,24 @@ public class MediKit extends Item {
 		return "MediKit";
 	}
 
+	/**
+	 * Retrieves the value of the item.
+	 *
+	 * @return the item value as an integer.
+	 */
 	@Override
 	public int getItemValue() {
 		return this.heal_power;
 	}
 
+	/**
+	 * Returns a string representation of the MediKit object. The returned string
+	 * includes the name and position of the MediKit from the superclass's toString
+	 * method, followed by the healing power of the MediKit.
+	 *
+	 * @return a string representation of the MediKit, including its name, position,
+	 *         and healing power.
+	 */
 	public String toString() {
 		return super.toString() + " HP: " + this.getHealPower();
  	}

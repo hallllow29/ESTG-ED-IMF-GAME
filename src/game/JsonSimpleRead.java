@@ -11,9 +11,25 @@ import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
 
-
+/**
+ * The JsonSimpleRead class provides methods to read and parse data from JSON files,
+ * specifically to load mission-related information into a graph-based data model.
+ * The class handles JSON parsing, object creation, and graph population, including rooms,
+ * connections, enemies, items, and entry/exit points.
+ */
 public class JsonSimpleRead {
 
+    /**
+     * Loads a mission from a JSON file, initializes its configuration, and populates the provided graph with
+     * rooms, connections, enemies, items, entry/exit points, and mission target based on the JSON data.
+     *
+     * @param file_in_path the file path of the JSON file containing mission data
+     * @param graph the graph structure representing the mission's rooms and their connections
+     * @return a Mission object initialized with the configuration and data parsed from the JSON file
+     * @throws IOException if there is an issue reading the JSON file
+     * @throws ParseException if the JSON file content cannot be parsed
+     * @throws NotElementComparableException if there is an issue adding elements to the mission or graph
+     */
     public static Mission loadMissionFromJson(String file_in_path, CustomNetwork<Room> graph) throws IOException, ParseException, NotElementComparableException {
 
         JSONObject jsonObject = parseJsonFile(file_in_path);
