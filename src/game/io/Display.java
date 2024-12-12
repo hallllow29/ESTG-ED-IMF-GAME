@@ -214,7 +214,8 @@ public class Display {
 	}
 
 	public static String collectingData() {
-		return "\n|Collecting Simulation Environment Data...";
+		return "\n|Collecting Simulation Environment Data..." +
+			"\n|Collecting ENEMIES Movement Data";
 	}
 
 	public static String enemiesBanner() {

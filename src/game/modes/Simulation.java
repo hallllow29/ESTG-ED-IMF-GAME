@@ -614,7 +614,7 @@ public abstract class Simulation {
 		}
 
 		scenarioUMinfo += Display.scenarioUMendMessage();
-		System.out.print(scenarioUMinfo);
+		System.out.println(scenarioUMinfo);
 
 	}
 
@@ -692,29 +692,38 @@ public abstract class Simulation {
 
 				scenarioTRESinfo = Display.playerTurnMessage();
 				System.out.print(scenarioTRESinfo);
-
 				playerConfronts();
 			}
 
 			scenarioTRESinfo = "";
 			setNextScenario(ScenarioNr.THREE);
 			scenarioTRESinfo += Display.enemyTurnMessage();
-			scenarioTRESinfo += Display.enemiesNotIsTheSamePositionMessage(playerPosition.getName());
+
+			if (!playerPosition.hasEnemies()) {
+				scenarioTRESinfo += Display.enemiesAreMovingMessage();
+				moveEnemiesNotInSameRoom();
+				System.out.print(scenarioTRESinfo);
+				break;
+			}
+			else if (!this.enemies.isEmpty()) {
+				scenarioTRESinfo += Display.enemiesNotIsTheSamePositionMessage(playerPosition.getName());
+				System.out.print(scenarioTRESinfo);
+				scenarioTRESinfo= "";
+				moveEnemiesNotInSameRoom();
+				enemiesConfronts(player);
+			} else {
+				scenarioTRESinfo += Display.noEnemiesLeftMessage();
+			}
 			System.out.print(scenarioTRESinfo);
-
-			moveEnemiesNotInSameRoom();
-			enemiesConfronts(player);
-
+			scenarioTRESinfo = "";
 		}
 
 		scenarioTRESinfo = "";
 		scenarioTRESinfo += Display.playerTurnMessage();
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
-
 			scenarioTRESinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());
 
 		} else if (!player.isAlive()) {
-
 			scenarioTRESinfo += Display.playerDiedMessage(player.getName());
 			setGameOver(true);
 		}

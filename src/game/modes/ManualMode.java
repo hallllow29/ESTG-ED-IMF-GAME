@@ -68,6 +68,7 @@ public class ManualMode extends Simulation {
 		getReport().addRoom(getPlayer().getPosition().getName());
 		getReport().setEntryPoint(getPlayer().getPosition().getName());
 
+
 		super.gameFlow();
 	}
 
@@ -150,23 +151,21 @@ public class ManualMode extends Simulation {
 
 		int medicKitOption = lastSelection + 1;
 		selectNextPositionInfo += optionNrMessage(medicKitOption, "Use MedicKit - HP" + currentHealthMessage());
-
 		selectNextPositionInfo += "\n\nOption: ";
-		System.out.print(selectNextPositionInfo);
-		selectNextPositionInfo = "";
+
+		// selectNextPositionInfo = "";
 
 		while (true) {
+			System.out.print(selectNextPositionInfo);
 
 			if (scanner.hasNextInt()) {
 				choice = scanner.nextInt();
 
 				if (choice >= 0 && choice <= medicKitOption) {
 
-					if (choice == medicKitOption && !getPlayer().hasRecoveryItem() && !getPlayer().playerNeedsRecoveryItem()) {
-						System.out.println(Display.noMediKitsBackPackMessage());
-						continue;
-					}
 					selectedRoom = decideNextMove(choice, lastSelection, possibleMoves);
+
+					if (selectedRoom != null);
 					break;
 				}
 			} else {
@@ -175,9 +174,9 @@ public class ManualMode extends Simulation {
 			}
 		}
 
-		selectNextPositionInfo += Display.yourNextPositionMessage(selectedRoom.getName());
+		selectNextPositionInfo = Display.yourNextPositionMessage(selectedRoom.getName());
 		System.out.print(selectNextPositionInfo);
-
+		
 		return selectedRoom;
 	}
 
@@ -203,6 +202,7 @@ public class ManualMode extends Simulation {
 			displayRooms.addToRear(room);
 			possiblePositions++;
 		}
+
 
 		System.out.print(possiblePositionInfo);
 
@@ -255,28 +255,21 @@ public class ManualMode extends Simulation {
 		Room selectedRoom = null;
 		int medicKitOption = lastSelection + 1;
 
-		boolean validMove = false;
-		while (!validMove) {
-			if (choice >= 0 && choice < lastSelection) {
-				selectedRoom = possibleMoves.getElement(choice);
-				validMove = true;
-			} else if (choice == lastSelection) {
+		if (choice >= 0 && choice < lastSelection) {
+			selectedRoom = possibleMoves.getElement(choice);
+		} else if (choice == lastSelection) {
+			decideNextMoveInfo += Display.youChooseStayMessage();
+			selectedRoom = getPlayer().getPosition();
+		} else if (choice == medicKitOption) {
 
-				decideNextMoveInfo += Display.youChooseStayMessage();
+			if (getPlayer().getBack_pack().isBackPackEmpty()) {
+				decideNextMoveInfo += Display.noMediKitsBackPackMessage();
+			} else if (getPlayer().playerNeedsRecoveryItem()) {
+				useMedicKit();
 				selectedRoom = getPlayer().getPosition();
-				validMove = true;
-
-			} else if (choice == medicKitOption) {
-				if (getPlayer().getBack_pack().isBackPackEmpty()) {
-					decideNextMoveInfo += Display.noMediKitsBackPackMessage();
-				} else if (getPlayer().playerNeedsRecoveryItem()) {
-					useMedicKit();
-					selectedRoom = getPlayer().getPosition();
-					validMove = true;
-				}
-			} else {
-				decideNextMoveInfo += Display.invalidOptionMessage();
 			}
+		} else {
+			decideNextMoveInfo += Display.invalidOptionMessage();
 		}
 
 		System.out.println(decideNextMoveInfo);
