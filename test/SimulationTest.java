@@ -1,8 +1,9 @@
 import entities.*;
-import game.AutomaticMode;
-import game.Mission;
-import game.Report;
-import game.Simulation;
+import entities.enums.BackPackSize;
+import game.modes.AutomaticMode;
+import entities.Mission;
+import game.briefings.Report;
+import game.modes.Simulation;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;

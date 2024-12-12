@@ -102,6 +102,7 @@ public class ManualMode extends Simulation {
 			if (nextRoom.equals(currentRoom)) {
 				super.getPlayer().setPosition(currentRoom);
 			}
+
 			super.getPlayer().setPosition(nextRoom);
 
 			super.addRoomToReport(nextRoom.getName());
@@ -402,9 +403,10 @@ public class ManualMode extends Simulation {
 
 		if (stack.isEmpty()) {
 			displayMedicKitsInfo += Display.backPackNoItemsMessage();
+		} else {
+			displayMedicKitsInfo += Display.backPackContentMessage(stack.toString());
 		}
 
-		displayMedicKitsInfo += Display.backPackContentMessage(stack.toString());
 		System.out.print(displayMedicKitsInfo);
 	}
 
@@ -447,13 +449,16 @@ public class ManualMode extends Simulation {
 			gatheringItemsInfo += Display.itemsIntelMessage(item.getName(), item.getItemValue(), item.getPosition().getName());
 		}
 
+		gatheringItemsInfo += Display.closestMediKitBanner();
+		System.out.print(gatheringItemsInfo);
+		gatheringItemsInfo = "";
+
 		if (getPlayer().getPosition() != null) {
-			gatheringItemsInfo += Display.closestMediKitBanner();
 			try {
 
-				Room toPosition = calculateClosestPathToMedicKit();
-				if (toPosition != null) {
-					displayPath(getPlayer().getPosition(), toPosition);
+				Room toNextMediKit = calculateClosestPathToMedicKit();
+				if (toNextMediKit != null) {
+					displayPath(getPlayer().getPosition(), toNextMediKit);
 				} else {
 					gatheringItemsInfo += Display.noMediKitsLeftMessage();
 				}
@@ -465,6 +470,14 @@ public class ManualMode extends Simulation {
 
 		System.out.print(gatheringItemsInfo);
 	}
+
+
+
+
+
+
+
+
 
 	/**
 	 * Gathers and displays intelligence information about all known enemies
