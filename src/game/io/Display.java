@@ -343,7 +343,7 @@ public class Display {
 
 	public static String selectReportMenu() {
 		return "\n\t==== REPORTS MENU ====" +
-			"\n[1] List Available Reports" +
+			"\n[1] Export all reports" +
 			"\n[2] Visualize Report" +
 			"\n[3] Back" +
 			"\n\nOption: ";

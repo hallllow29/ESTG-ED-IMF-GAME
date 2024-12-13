@@ -41,6 +41,12 @@ public class ModeManager {
 	 */
 	private Mission missionImpl;
 
+	/**
+	 * A static instance of MissionReportManager used to manage and process mission reports.
+	 * This variable holds a singleton-like instance, ensuring that only one MissionReportManager
+	 * is maintained and accessed within the application runtime.
+	 * It is initialized and accessed statically.
+	 */
 	private static MissionReportManager repManager;
 
 	/**
@@ -232,7 +238,6 @@ public class ModeManager {
 		Report report = new Report("Automatic", player, missionImpl);
 		report.setBackPackSize(player.getBack_pack().getMaxCapacity());
 		AutomaticMode autoMode = new AutomaticMode(missionImpl, player, report);
-		MissionReportManager missionReportManager = new MissionReportManager();
 
 		autoMode.game();
 
@@ -242,7 +247,6 @@ public class ModeManager {
 			System.out.println("erro");
 		}
 
-		SaveToJsonFile.saveJsonFile(report);
 	}
 
 	/**
@@ -261,7 +265,6 @@ public class ModeManager {
 		Report report = new Report("Manual", player, missionImpl);
 		report.setBackPackSize(player.getBack_pack().getMaxCapacity());
 		ManualMode manualMode = new ManualMode(missionImpl, player, report);
-		MissionReportManager missionReportManager = new MissionReportManager();
 
 		manualMode.game();
 
@@ -271,7 +274,6 @@ public class ModeManager {
 			System.out.println("erro");
 		}
 
-		SaveToJsonFile.saveJsonFile(report);
 	}
 
 	/**

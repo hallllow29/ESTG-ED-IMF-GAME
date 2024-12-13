@@ -346,6 +346,32 @@ public class LinkedList <T> implements ListADT<T>, Iterable<T> {
 	 *
 	 * @return the number of modifications made to the list
 	 */
+
+	/**
+	 * Retrieves the element at the specified index in the linked list.
+	 *
+	 * @param index the position of the element to retrieve, where 0 represents the first element
+	 * @return the element at the specified index in the linked list
+	 * @throws EmptyCollectionException if the linked list is empty
+	 * @throws IndexOutOfBoundsException if the specified index is out of the bounds of the linked list
+	 */
+	public T getElement(int index) throws EmptyCollectionException {
+		if (isEmpty()) {
+			throw new EmptyCollectionException("LinkedList");
+		}
+
+		if (index < 0 || index >= size) {
+			throw new IndexOutOfBoundsException("Index out of bounds.");
+		}
+
+		LinearNode<T> currentNode = this.front;
+		for (int i = 0; i < index; i++) {
+			currentNode = currentNode.getNext();
+
+		}
+
+		return currentNode.getElement();
+	}
 	public int getModCount() {
 		return this.modCount;
 	}

@@ -85,7 +85,7 @@ public class MainMenu {
 	 * @param reportManager the manager object responsible for handling report-related
 	 *                      operations such as listing and visualizing reports
 	 */
-	private static void showReportsMenu(Scanner scanner, MissionReportManager reportManager) {
+	private static void showReportsMenu(Scanner scanner, MissionReportManager reportManager) throws EmptyCollectionException, IOException {
 		boolean running = true;
 		String showReportMenuInfo = "";
 
@@ -102,11 +102,11 @@ public class MainMenu {
 					switch (choice) {
 						case 1:
 							System.out.println("Listing all reports available....");
-							ModeManager.getRepManager().viewReports();
+							ModeManager.getRepManager().saveALlReports();
 							validSelection = true;
 							break;
 						case 2:
-							reportManager.viewReports();
+							ModeManager.getRepManager().viewReports();
 							validSelection = true;
 							break;
 						case 3:

@@ -1,5 +1,7 @@
 package game.briefings;
 
+import com.sun.security.jgss.GSSUtil;
+import game.util.SaveToJsonFile;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
@@ -12,6 +14,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -23,113 +26,13 @@ import java.util.Scanner;
 public class MissionReportManager {
 
     private LinkedOrderedList<Report> reports;
-    /**
-     * Lists all available report files located in the "reports/" directory.
-     *
-     * The method searches for JSON files in the directory and prints their names
-     * in a numbered list. If no reports are found, an appropriate message is displayed.
-     *
-     * This method relies on the presence of the "reports/" directory and the
-     * {@code checkIfThereAreReports(File dir)} method to validate its existence
-     * and check if it contains any files.
-     */
 
     public MissionReportManager() {
         this.reports = new LinkedOrderedList<>();
     }
 
-    /*public void listReports() {
-        File dir = new File("reports/");
-
-        if (this.checkIfThereAreReports(dir)) {
-            File[] files = dir.listFiles();
-
-            System.out.println("\n\t==== REPORTS AVAILABLE ====");
-            int index = 1;
-            for (File file : files) {
-                if (file.isFile() && file.getName().endsWith(".json")) {
-                    System.out.println("[" + index + "]-> " + file.getName());
-                    index++;
-                }
-            }
-        } else {
-            System.out.println("No reports available! Do missions little warrior");
-        }
-
-    }*/
-
-    /**
-     * Checks if the given directory exists, is a directory, and contains at least one file.
-     *
-     * @param dir the directory to check
-     * @return true if the directory exists, is a directory, and contains files; otherwise false
-     */
-    /*
-    private boolean checkIfThereAreReports(File dir) {
-        if (!dir.exists() || !dir.isDirectory()) {
-            return false;
-        }
-
-        File[] files = dir.listFiles();
-		return files != null && files.length != 0;
-
-	}*/
-
-    /**
-     * Displays a menu for visualizing mission reports from JSON files located in the "reports/" directory.
-     *
-     * The method lists all available JSON report files, prompts the user to select one, and then displays
-     * the contents of the selected report in a predefined format. If no reports or JSON files are found,
-     * appropriate messages are displayed. The user is required to input a number corresponding to the report
-     * they wish to view.
-     *
-     */
-    /*
-    public void visualizeReport() {
-        Scanner scanner = new Scanner(System.in);
-        File dir = new File("reports/");
-
-        File[] files = dir.listFiles();
-        if (files == null || files.length == 0) {
-            System.out.println("Reports not found");
-            return;
-        }
-
-        File[] jsonFiles = filterJsonFiles(files);
-        if (jsonFiles.length == 0) {
-            System.out.println("No json file found");
-            return;
-        }
-
-        System.out.println("\n\t==== VISUALIZE REPORT ====");
-        for (int i = 0; i < jsonFiles.length; i++) {
-            System.out.println("[" + (i + 1) + "] -> " + jsonFiles[i].getName());
-
-        }
-
-        try {
-            System.out.print("Option: ");
-            int choice = scanner.nextInt() - 1;
-
-            if (choice < 0 || choice >= jsonFiles.length) {
-                System.out.println("Invalid option!");
-                return;
-            }
-
-            File selectedFile = jsonFiles[choice];
-            showReport(selectedFile);
-
-        } catch (NumberFormatException e) {
-            System.out.print("Option: ");
-        }
-    }*/
-
     public void addReport(Report report) throws NotElementComparableException {
         this.reports.add(report);
-    }
-
-    public void removeReport(Report report) throws EmptyCollectionException, ElementNotFoundException {
-        this.reports.remove(report);
     }
 
     public void viewReports() {
@@ -142,31 +45,17 @@ public class MissionReportManager {
         }
     }
 
-    /**
-     * Filters an array of files and returns only the files with a ".json" extension.
-     *
-     * @param files an array of File objects to be filtered
-     * @return an array of File objects containing only files with a ".json" extension
-     */
-    /*
-    private File[] filterJsonFiles(File[] files) {
-        int counter = 0;
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".json")) {
-                counter++;
-            }
+    public void saveALlReports() {
+        if (this.reports.isEmpty()) {
+            System.out.println("No reports found");
         }
 
-        File[] jsonFiles = new File[counter];
-        int index = 0;
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".json")) {
-                jsonFiles[index++] = file;
-            }
+        for (Report report : this.reports) {
+            SaveToJsonFile.saveJsonFile(report);
         }
 
-        return jsonFiles;
-    }*/
+        System.out.println("All reports saved!");
+    }
 
     /**
      * Displays the details of a specific mission report stored in a JSON file.
