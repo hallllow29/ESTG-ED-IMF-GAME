@@ -270,7 +270,7 @@ public class ModeManager {
 		try {
 			ModeManager.repManager.addReport(report);
 		} catch (NotElementComparableException e) {
-			System.out.println("erro");
+			System.err.println("Error with report.");
 		}
 
 	}
@@ -312,7 +312,7 @@ public class ModeManager {
 	 * display the mission identifier to the user.
 	 */
 	private void displayMission() {
-		System.out.println("\n\t=========  MISSAO  =========");
+		System.out.println("\n\t=========  MISSION  =========");
 		System.out.println(this.missionImpl.getCode());
 	}
 
@@ -324,7 +324,7 @@ public class ModeManager {
 	 * @param graph the graph containing the room vertices to be displayed
 	 */
 	private void displayRoomDetails(CustomNetwork<Room> graph) {
-		String result = ("\n\t========= DIVISOES =========");
+		String result = ("\n\t========= DIVISIONS =========");
 
 		for (Room room : graph.getVertices()) {
 			result += "\nRoom: " + room.getName();
@@ -340,7 +340,6 @@ public class ModeManager {
 	 * @param graph the graph containing the room vertices and their connections
 	 */
 	private void displayAdjacentRoomDetails(CustomNetwork<Room> graph) {
-		// System.out.println("\n\t========= CONEXOES =========");
 
 		String result = ("\n\t========= CONEXOES =========");
 
@@ -370,7 +369,7 @@ public class ModeManager {
 	 * within the mission's context.
 	 */
 	private void displayEnemyIntel() {
-		String result = ("\n\t========= INIMIGOS =========");
+		String result = ("\n\t========= ENEMIES =========");
 		for (Enemy enemy : missionImpl.getEnemies()) {
 			// System.out.printf("Name: %-10s Fire Power: %-4s Position: %s\n",
 			// 	enemy.getName(), enemy.getFirePower(), enemy.getPosition());
@@ -413,7 +412,7 @@ public class ModeManager {
 	 * header indicating that the displayed rooms are entry and exit points.
 	 */
 	private void displayEntryExitPoints() {
-		System.out.println("\n===== Pontos de Entrada/Saída =====");
+		System.out.println("\n===== ENTRY & EXIT POINTS =====");
 		for (Room roomObj : missionImpl.getEntryExitPoints()) {
 			System.out.println(roomObj.getName());
 		}
@@ -489,6 +488,17 @@ public class ModeManager {
 		return new BackPack(backPackSize.getCapacity());
 	}
 
+	/**
+	 * Allows the user to select a file path either for saving or opening a file.
+	 * Displays a file chooser dialog to the user.
+	 *
+	 * Reference: Trabalgo Pratico de SI do aluno 8230069
+	 *
+	 * @param save a boolean value indicating the type of dialog to display.
+	 *             If {@code true}, a "Save File" dialog is shown.
+	 *             If {@code false}, an "Open File" dialog is shown.
+	 * @return the absolute path of the selected file if approved, or {@code null} if the user cancels the operation.
+	 */
 	protected String choosePath(boolean save) {
 		JFileChooser jfile = new JFileChooser();
 		jfile.setDialogTitle("Select File");

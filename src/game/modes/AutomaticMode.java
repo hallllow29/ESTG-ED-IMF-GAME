@@ -78,23 +78,16 @@ public class AutomaticMode extends Simulation {
 
         updateWeightsForEnemies();
         nextMissionStageInfo(isReturningToExit());
-        // getBestPath();
-
-        // Pode ficar aqui
         this.displayPath(playerPosition, nextObjective);
-
         path = this.getBattlefield().iteratorShortestPath(playerPosition, nextObjective);
-
         path.next();
-
         if (path.hasNext()) {
-
             Room nextPosition = path.next();
 
             movePlayerOutput.append("\n" + this.getPlayer().getName() + " plans to move from...").append
                 (String.format("\n\t[%s] ---> [%s]\n", playerPosition.getName(), nextPosition.getName()));
-            this.getPlayer().setPosition(nextPosition);
 
+            this.getPlayer().setPosition(nextPosition);
             super.addRoomToReport(nextPosition.getName());
 
         } else {
@@ -104,5 +97,4 @@ public class AutomaticMode extends Simulation {
         }
         System.out.print(movePlayerOutput);
     }
-
 }

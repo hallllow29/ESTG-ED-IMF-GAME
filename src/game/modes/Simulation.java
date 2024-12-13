@@ -240,7 +240,7 @@ public abstract class Simulation {
 
 		String playerTurnOutput = "";
 		if (!playerPosition.hasEnemies() || this.getCurrentScenario() == ScenarioNr.TWO) {
-			playerTurnOutput += "\n" + this.getPlayer().getName() + " is moving..." + "\n" + this.getPlayer().getName() + " leaves " + playerPosition.getName() + "...";
+			playerTurnOutput += Display.playerIsLeavingMessage(player.getName(), playerPosition.getName());
 
 			movePlayer();
 		} else if (isMissionAccomplished()) {
@@ -576,7 +576,8 @@ public abstract class Simulation {
 	 * turn in the game based on whether enemies remain in the room or not.
 	 */
 	protected void scenarioUM() {
-		Room playerPosition = player.getPosition(); boolean enemiesRemained;
+		Room playerPosition = player.getPosition();
+		boolean enemiesRemained;
 
 		String scenarioUMinfo = Display.playerEntersInMessage(player.getName(), playerPosition.getName());
 		scenarioUMinfo += Display.scenarioUMstartMessage(player.getName());
@@ -700,6 +701,7 @@ public abstract class Simulation {
 				scenarioTRESinfo += Display.enemiesNotIsTheSamePositionMessage(playerPosition.getName());
 				System.out.print(scenarioTRESinfo);
 				scenarioTRESinfo= "";
+
 				moveEnemiesNotInSameRoom();
 				enemiesConfronts(player);
 			} else {
@@ -711,6 +713,7 @@ public abstract class Simulation {
 
 		scenarioTRESinfo = "";
 		scenarioTRESinfo += Display.playerTurnMessage();
+
 		if (!playerPosition.hasEnemies() && player.isAlive()) {
 			scenarioTRESinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());
 
@@ -992,19 +995,15 @@ public abstract class Simulation {
 			int bfsLevel = 0;
 
 			while (bfsIterator.hasNext() && bfsLevel <= 2) {
-
 				Room toRoom = bfsIterator.next();
 
 				if (bfsLevel == 1 || bfsLevel == 2) {
-
 					if (toRoom != null) {
 						possibleMoves.addToRear(toRoom);
 					}
 				}
-
 				bfsLevel++;
 			}
-
 		} catch (EmptyCollectionException e) {
 			System.err.println(e.getMessage());
 		}
@@ -1023,7 +1022,7 @@ public abstract class Simulation {
 	 * @return A string containing messages about the items spotted and actions performed,
 	 * such as adding items to the backpack or equipping them.
 	 */
-	private String gatherItems(Room room) {
+	private String gatherItems(Room position) {
 		String gatherItemsOutput = "";
 		Room playerPosition = player.getPosition();
 		Iterator<Item> itemIterator = mission.getItems().iterator();
@@ -1033,7 +1032,7 @@ public abstract class Simulation {
 
 			Item item = itemIterator.next();
 
-			if (item.getPosition() != null && item.getPosition().equals(room)) {
+			if (item.getPosition() != null && item.getPosition().equals(position)) {
 
 				if (item instanceof MediKit && !player.getBack_pack().isBackPackFull()) {
 					player.addKitToBackPack((MediKit) item);
@@ -1134,9 +1133,7 @@ public abstract class Simulation {
 				playerAttacksEnemy(player, enemy, PLAYER_ATTACK);
 
 				if (!enemy.isAlive()) {
-
 					report.addEnemyKilled(enemy.getName());
-
 					oneEnemyDies(enemy, enemies);
 
 				} else {
@@ -1144,7 +1141,6 @@ public abstract class Simulation {
 				}
 			}
 		}
-
 		noEnemiesInPlayerPosition(player.getPosition());
 
 		System.out.print(playerConfrontsInfo);
@@ -1249,7 +1245,6 @@ public abstract class Simulation {
 		double calculatedDamage = 0.0;
 
 		while (extractionPoints.hasNext()) {
-
 			Room extractionPoint = extractionPoints.next();
 			Iterator<Room> extractionPointsPaths = battlefield.iteratorShortestPath(playerPosition, extractionPoint);
 			calculatedDamage = calculatePathDamage(extractionPointsPaths);
@@ -1276,14 +1271,11 @@ public abstract class Simulation {
 		int playerHealth = player.getCurrentHealth();
 
 		while (path.hasNext()) {
-
 			Room room = path.next();
 
 			if (room.hasEnemies()) {
-
 				for (Enemy enemy : enemies) {
 					if (enemy.getPosition().equals(room)) {
-
 						totalDamage += enemy.getFirePower();
 
 					}
@@ -1339,7 +1331,6 @@ public abstract class Simulation {
 		final double NONE = 0.0; double weight = 0.0; int totalDamage = 0;
 
 		if (room.getTotalEnemies() > 0) {
-
 			for (Enemy enemy : this.enemies) {
 				if (enemy.getPosition().equals(room)) {
 					totalDamage += enemy.getFirePower();
@@ -1405,18 +1396,17 @@ public abstract class Simulation {
 	protected StringBuilder appendNextRoomInfo(StringBuilder pathOutput, Room nextRoom) {
 
 		if (!nextRoom.equals(this.nextObjective)) {
-
 			if (nextRoom.hasItems()) {
 				pathOutput.append(String.format("\n  | %-21s <--- %-20s", nextRoom.getName(), "ITEM"));
+
 			} else {
 				pathOutput.append("\n  |\t").append(nextRoom.getName());
 			}
 
 		} else if (returningToExtraction) {
-
 			pathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "EXTRACTION POINT"));
-		} else {
 
+		} else {
 			pathOutput.append(String.format("\n%-25s <--- %-20s", this.nextObjective.getName(), "OBJECTIVE"));
 		}
 

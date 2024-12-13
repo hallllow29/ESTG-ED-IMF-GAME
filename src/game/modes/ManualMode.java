@@ -57,14 +57,12 @@ public class ManualMode extends Simulation {
 	@Override
 	public void game() throws ElementNotFoundException, EmptyCollectionException {
 		System.out.print(Display.initSimulation());
+
 		renderManualSimulation(getMission().getTarget().getRoom());
-
-		this.displaySophisticatedSpySystem();
+		displaySophisticatedSpySystem();
 		Room entryRoom = displayAllEntries();
-
 		super.setEntryPoint(entryRoom);
 		super.getPlayer().setPosition(entryRoom);
-
 		getReport().addRoom(getPlayer().getPosition().getName());
 		getReport().setEntryPoint(getPlayer().getPosition().getName());
 
@@ -111,8 +109,7 @@ public class ManualMode extends Simulation {
 			System.out.println(Display.sophisticatedSpySystemBanner());
 
 			super.displayPath(getPlayer().getPosition(), getNextObjective());
-
-			Room nextRoom = this.selectNextRoom(currentRoom);
+			Room nextRoom = selectNextRoom(currentRoom);
 
 			// STAY
 			if (nextRoom.equals(currentRoom)) {
@@ -141,7 +138,7 @@ public class ManualMode extends Simulation {
 	 * @param playerPosition the current position of the player in the game.
 	 * @return the selected room for the player's next move.
 	 */
-	private Room selectNextRoom(Room playerPosition) {
+	private Room selectNextPosition(Room playerPosition) {
 		String selectNextPositionInfo = "";
 		int choice = -1;
 		Scanner scanner = new Scanner(System.in);
@@ -149,9 +146,9 @@ public class ManualMode extends Simulation {
 		int lastSelection = 0;
 
 		ArrayUnorderedList<Room> possibleMoves = getMission().getBattlefield().getConnectedVertices(getPlayer().getPosition());
-		ArrayUnorderedList<Room> displayRooms = new ArrayUnorderedList<>();
+		ArrayUnorderedList<Room> displayPositions = new ArrayUnorderedList<>();
 
-		lastSelection = countPossiblePositions(possibleMoves, displayRooms);
+		lastSelection = countPossiblePositions(possibleMoves, displayPositions);
 
 		int stayOption = lastSelection;
 		selectNextPositionInfo += optionNrMessage(stayOption, "Stay");
@@ -200,14 +197,14 @@ public class ManualMode extends Simulation {
 	 *                      possible moves.
 	 * @return the total number of possible positions (rooms) a player can move to.
 	 */
-	private int countPossiblePositions(ArrayUnorderedList<Room> possibleMoves, ArrayUnorderedList<Room> displayRooms) {
+	private int countPossiblePositions(ArrayUnorderedList<Room> possibleMoves, ArrayUnorderedList<Room> displayPositions) {
 		int possiblePositions = 0;
 		String possiblePositionInfo = "";
 		possiblePositionInfo += Display.possibleMovesMessage();
 
 		for (Room room : possibleMoves) {
 			possiblePositionInfo += "\n[" + possiblePositions + "] " + possibleMoves.getElement(possiblePositions);
-			displayRooms.addToRear(room);
+			displayPositions.addToRear(room);
 			possiblePositions++;
 		}
 
@@ -264,16 +261,19 @@ public class ManualMode extends Simulation {
 
 		if (choice >= 0 && choice < lastSelection) {
 			selectedRoom = possibleMoves.getElement(choice);
+
 		} else if (choice == lastSelection) {
 			decideNextMoveInfo += Display.youChooseStayMessage();
 			selectedRoom = getPlayer().getPosition();
-		} else if (choice == medicKitOption) {
 
+		} else if (choice == medicKitOption) {
 			if (getPlayer().getBack_pack().isBackPackEmpty()) {
 				decideNextMoveInfo += Display.noMediKitsBackPackMessage();
+
 			} else if (getPlayer().getCurrentHealth() >= 100) {
 				decideNextMoveInfo += Display.playerHealthFullMessage();
 				setNextTurn(Turn.PLAYER);
+
 			} else {
 				useMedicKit();
 				selectedRoom = getPlayer().getPosition();
@@ -301,7 +301,7 @@ public class ManualMode extends Simulation {
 		String displayAllEntiesInfo = "";
 		displayAllEntiesInfo += Display.allPossibleEntriesBanner();
 		System.out.print(displayAllEntiesInfo);
-		Room selectedRoom = null;
+		Room selectedPosition = null;
 		Room ourRecommendation = super.findBestEntryPoint();
 
 		Iterator<Room> roomIterator = getMission().getEntryExitPoints().iterator();
@@ -320,21 +320,24 @@ public class ManualMode extends Simulation {
 
 		while (choice != 1) {
 			for (Room entryPoint : entryPoints) {
-
 				displayEntryPointInfo +=
 					Display.entryPointSelection(ourRecommendation.getName(), entryPoint.getName());
 				System.out.print(displayEntryPointInfo);
 				displayEntryPointInfo = "";
-				boolean validSelection = false;
-				while (!validSelection) {
 
+				boolean validSelection = false;
+
+				while (!validSelection) {
 					if (scanner.hasNextInt()) {
 						choice = scanner.nextInt();
+
 						if (choice == 1) {
-							selectedRoom = entryPoint;
+							selectedPosition = entryPoint;
 							validSelection = true;
+
 						} else if (choice == 2) {
 							validSelection = true;
+
 						} else {
 							System.out.println("\nInvalid option!");
 							System.out.print("Option: ");
@@ -351,7 +354,7 @@ public class ManualMode extends Simulation {
 				}
 			}
 		}
-		return selectedRoom;
+		return selectedPosition;
 	}
 
 	/**
@@ -366,13 +369,12 @@ public class ManualMode extends Simulation {
 		gatheringIntelInfo = "";
 
 		displayEnemiesIntel();
-
 		displayItemsIntel();
 
 		gatheringIntelInfo += Display.playerBanner();
 		gatheringIntelInfo += Display.playerHealthStatusMessage(getPlayer().getCurrentHealth());
-
 		System.out.print(gatheringIntelInfo);
+
 		displayMedicKits();
 
 		gatheringIntelInfo = Display.renderingNextSituationMessage();

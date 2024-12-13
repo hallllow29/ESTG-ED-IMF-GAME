@@ -24,7 +24,6 @@ public class LinkedBinarySearchTree<T> extends LinkedBinaryTree<T> implements Bi
         } else {
             // BinaryTreeNode<T> current = this.root;
             BinaryTreeNode<T> current = super.getRoot();
-            // TODO: ASK THIS.
 
             boolean added = false;
             while (!added) {
