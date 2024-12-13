@@ -17,6 +17,7 @@ import java.util.Scanner;
  */
 public class MissionReportManager {
 
+    //TODO : GUARDAR NUMA ORDEREDLIST POR PONTOS DE VIDA RESTANTES, É O QUE ELE QUER EXTRAIR REPORTS E GAURDAR EM JSON???????
     /**
      * Lists all available report files located in the "reports/" directory.
      *
