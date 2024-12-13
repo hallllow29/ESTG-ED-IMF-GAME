@@ -272,11 +272,12 @@ public class ManualMode extends Simulation {
 
 			if (getPlayer().getBack_pack().isBackPackEmpty()) {
 				decideNextMoveInfo += Display.noMediKitsBackPackMessage();
-			} else if (getPlayer().playerNeedsRecoveryItem()) {
+			} else if (getPlayer().getCurrentHealth() >= 100) {
+				decideNextMoveInfo += Display.playerHealthFullMessage();
+				setNextTurn(Turn.PLAYER);
+			} else {
 				useMedicKit();
 				selectedRoom = getPlayer().getPosition();
-			} else if (!getPlayer().playerNeedsRecoveryItem()) {
-				decideNextMoveInfo += Display.playerHealthFullMessage();
 			}
 		} else {
 			decideNextMoveInfo += Display.invalidOptionMessage();

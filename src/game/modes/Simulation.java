@@ -794,7 +794,9 @@ public abstract class Simulation {
 
 		scenarioCINCOinfo = "";
 
-		enemiesRemained = playerPosition.hasEnemies(); if (enemiesRemained) {
+		enemiesRemained = playerPosition.hasEnemies();
+
+		if (enemiesRemained) {
 			scenarioCINCOinfo += Display.enemyTurnMessage();
 			scenarioCINCOinfo += Display.enemiesSurvivedAttackMessage(playerPosition.getName());
 
@@ -802,6 +804,8 @@ public abstract class Simulation {
 				scenarioCINCOinfo += Display.enemiesAreMovingMessage();
 
 			}
+		} else {
+			scenarioCINCOinfo += Display.playerEliminatedAllEnemiesInPositionMessage(player.getName(), playerPosition.getName());
 		}
 
 		scenarioCINCOinfo += Display.scenarioCINCOendMessage();
