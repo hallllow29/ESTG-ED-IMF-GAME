@@ -1,3 +1,4 @@
+import game.briefings.MissionReportManager;
 import game.io.MainMenu;
 import lib.exceptions.NotElementComparableException;
 import org.json.simple.parser.ParseException;

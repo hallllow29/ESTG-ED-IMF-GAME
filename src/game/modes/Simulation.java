@@ -3,16 +3,19 @@ package game.modes;
 import entities.*;
 import entities.enums.ScenarioNr;
 import entities.enums.Turn;
+import game.briefings.MissionReportManager;
 import game.briefings.Report;
 import game.io.Display;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
+import lib.exceptions.NotElementComparableException;
 import lib.graphs.CustomNetwork;
 import lib.graphs.Network;
 import lib.lists.ArrayList;
 import lib.lists.ArrayUnorderedList;
 import lib.lists.LinkedList;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Random;
 

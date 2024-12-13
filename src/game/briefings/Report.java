@@ -14,7 +14,7 @@ import java.util.UUID;
  * timing, entry point, trajectories, enemies encountered, and backpack details.
  * The report is used to track the progress, status, and outcomes of a mission or game session.
  */
-public class Report {
+public class Report implements Comparable<Report> {
 
     /**
      * Represents the unique identifier for a simulation.
@@ -390,4 +390,29 @@ public class Report {
         return this.enemiesKilled;
     }
 
+    @Override
+    public int compareTo(Report o) {
+        return Integer.compare(o.getPlayer().getCurrentHealth(), this.player.getCurrentHealth());
+    }
+
+    //TODO : FAZ ISTO
+    @Override
+    public String toString() {
+        StringBuilder report = new StringBuilder();
+        report.append("Simulation ID: ").append(this.simulationId).append("\n")
+                .append("Timestamp: ").append(this.timestamp).append("\n")
+                .append("Type: ").append(this.type).append("\n")
+                .append("Mission Status: ").append(this.missionStatus).append("\n")
+                .append("Player: ").append(this.player == null ? "None" : this.player.getName()).append("\n")
+                .append("Player Health: ").append(this.player == null ? "None" : this.player.getCurrentHealth()).append("\n")
+                .append("Mission: ").append(this.mission == null ? "None" : this.mission.getCode()).append("\n")
+                .append("Mission Target: ").append(this.mission == null ? "None" : this.mission.getTarget()).append("\n")
+                .append("Entry Point: ").append(this.entryPoint == null ? "Undefined" : this.entryPoint).append("\n")
+                .append("Backpack Size: ").append(this.backPackSize == null ? "None" : this.backPackSize).append("\n")
+                .append("Trajectory to Target: ").append(this.trajectoryToTarget).append("\n")
+                .append("Trajectory to Extraction: ").append(this.trajectoryToExtraction).append("\n")
+                .append("Enemies Survived: ").append(this.enemiesSurvived).append("\n")
+                .append("Enemies Killed: ").append(this.enemiesKilled);
+        return report.toString();
+    }
 }

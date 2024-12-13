@@ -1,5 +1,10 @@
 package game.briefings;
 
+import lib.exceptions.ElementNotFoundException;
+import lib.exceptions.EmptyCollectionException;
+import lib.exceptions.NotElementComparableException;
+import lib.interfaces.OrderedListADT;
+import lib.lists.LinkedOrderedList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,7 +22,7 @@ import java.util.Scanner;
  */
 public class MissionReportManager {
 
-    //TODO : GUARDAR NUMA ORDEREDLIST POR PONTOS DE VIDA RESTANTES, É O QUE ELE QUER EXTRAIR REPORTS E GAURDAR EM JSON???????
+    private LinkedOrderedList<Report> reports;
     /**
      * Lists all available report files located in the "reports/" directory.
      *
@@ -28,7 +33,12 @@ public class MissionReportManager {
      * {@code checkIfThereAreReports(File dir)} method to validate its existence
      * and check if it contains any files.
      */
-    public void listReports() {
+
+    public MissionReportManager() {
+        this.reports = new LinkedOrderedList<>();
+    }
+
+    /*public void listReports() {
         File dir = new File("reports/");
 
         if (this.checkIfThereAreReports(dir)) {
@@ -46,7 +56,7 @@ public class MissionReportManager {
             System.out.println("No reports available! Do missions little warrior");
         }
 
-    }
+    }*/
 
     /**
      * Checks if the given directory exists, is a directory, and contains at least one file.
@@ -54,6 +64,7 @@ public class MissionReportManager {
      * @param dir the directory to check
      * @return true if the directory exists, is a directory, and contains files; otherwise false
      */
+    /*
     private boolean checkIfThereAreReports(File dir) {
         if (!dir.exists() || !dir.isDirectory()) {
             return false;
@@ -62,7 +73,7 @@ public class MissionReportManager {
         File[] files = dir.listFiles();
 		return files != null && files.length != 0;
 
-	}
+	}*/
 
     /**
      * Displays a menu for visualizing mission reports from JSON files located in the "reports/" directory.
@@ -73,6 +84,7 @@ public class MissionReportManager {
      * they wish to view.
      *
      */
+    /*
     public void visualizeReport() {
         Scanner scanner = new Scanner(System.in);
         File dir = new File("reports/");
@@ -110,6 +122,24 @@ public class MissionReportManager {
         } catch (NumberFormatException e) {
             System.out.print("Option: ");
         }
+    }*/
+
+    public void addReport(Report report) throws NotElementComparableException {
+        this.reports.add(report);
+    }
+
+    public void removeReport(Report report) throws EmptyCollectionException, ElementNotFoundException {
+        this.reports.remove(report);
+    }
+
+    public void viewReports() {
+        if (this.reports == null) {
+            System.out.println("No reports found");
+        }
+
+        for (Report report : this.reports) {
+            System.out.println(report.toString());
+        }
     }
 
     /**
@@ -118,6 +148,7 @@ public class MissionReportManager {
      * @param files an array of File objects to be filtered
      * @return an array of File objects containing only files with a ".json" extension
      */
+    /*
     private File[] filterJsonFiles(File[] files) {
         int counter = 0;
         for (File file : files) {
@@ -135,7 +166,7 @@ public class MissionReportManager {
         }
 
         return jsonFiles;
-    }
+    }*/
 
     /**
      * Displays the details of a specific mission report stored in a JSON file.

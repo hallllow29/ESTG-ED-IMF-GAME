@@ -52,7 +52,7 @@ public class MainMenu {
 					switch (choice) {
 						case 1:
 							validSelection = true;
-							ModeManager modeManager = new ModeManager();
+							ModeManager modeManager = new ModeManager(repManager);
 							modeManager.startGame();
 							break;
 						case 2:
@@ -102,11 +102,11 @@ public class MainMenu {
 					switch (choice) {
 						case 1:
 							System.out.println("Listing all reports available....");
-							reportManager.listReports();
+							ModeManager.getRepManager().viewReports();
 							validSelection = true;
 							break;
 						case 2:
-							reportManager.visualizeReport();
+							reportManager.viewReports();
 							validSelection = true;
 							break;
 						case 3:

@@ -2,6 +2,7 @@ package game.modes;
 
 import entities.*;
 import entities.enums.BackPackSize;
+import game.briefings.MissionReportManager;
 import game.briefings.Report;
 import game.io.Display;
 import game.util.JsonSimpleRead;
@@ -11,6 +12,7 @@ import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
 import lib.graphs.CustomNetwork;
 import org.json.simple.parser.ParseException;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import javax.swing.*;
 import java.io.File;
@@ -39,13 +41,20 @@ public class ModeManager {
 	 */
 	private Mission missionImpl;
 
+	private static MissionReportManager repManager;
+
 	/**
 	 * Default constructor for the ModeManager class. Initializes the instance of the
 	 * ModeManager by setting its internal mission implementation to null. This class
 	 * handles the selection of missions, game initialization, and simulation modes.
 	 */
-	public ModeManager() {
+	public ModeManager(MissionReportManager repManager) {
 		this.missionImpl = null;
+		ModeManager.repManager = repManager;
+	}
+
+	public static MissionReportManager getRepManager() {
+		return repManager;
 	}
 
 	/**
@@ -223,8 +232,15 @@ public class ModeManager {
 		Report report = new Report("Automatic", player, missionImpl);
 		report.setBackPackSize(player.getBack_pack().getMaxCapacity());
 		AutomaticMode autoMode = new AutomaticMode(missionImpl, player, report);
+		MissionReportManager missionReportManager = new MissionReportManager();
 
 		autoMode.game();
+
+		try {
+			ModeManager.repManager.addReport(report);
+		} catch (NotElementComparableException e) {
+			System.out.println("erro");
+		}
 
 		SaveToJsonFile.saveJsonFile(report);
 	}
@@ -245,8 +261,15 @@ public class ModeManager {
 		Report report = new Report("Manual", player, missionImpl);
 		report.setBackPackSize(player.getBack_pack().getMaxCapacity());
 		ManualMode manualMode = new ManualMode(missionImpl, player, report);
+		MissionReportManager missionReportManager = new MissionReportManager();
 
 		manualMode.game();
+
+		try {
+			ModeManager.repManager.addReport(report);
+		} catch (NotElementComparableException e) {
+			System.out.println("erro");
+		}
 
 		SaveToJsonFile.saveJsonFile(report);
 	}
