@@ -54,9 +54,9 @@ public class ModeManager {
 	 * ModeManager by setting its internal mission implementation to null. This class
 	 * handles the selection of missions, game initialization, and simulation modes.
 	 */
-	public ModeManager(MissionReportManager repManager) {
+	public ModeManager() {
 		this.missionImpl = null;
-		ModeManager.repManager = repManager;
+		ModeManager.repManager = new MissionReportManager();
 	}
 
 	public static MissionReportManager getRepManager() {

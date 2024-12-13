@@ -93,6 +93,14 @@ public class Mission implements MissionI {
 	}
 
 	/**
+	 * Retrieves the version number of the mission.
+	 *
+	 * @return an integer representing the version of the mission.
+	 */
+	public int getVersion() {
+		return this.version;
+	}
+	/**
 	 * Adds an enemy to the mission's list of enemies.
 	 *
 	 * @param enemy the enemy to be added to the mission

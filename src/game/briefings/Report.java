@@ -399,7 +399,8 @@ public class Report implements Comparable<Report> {
     @Override
     public String toString() {
         StringBuilder report = new StringBuilder();
-        report.append("Simulation ID: ").append(this.simulationId).append("\n")
+        report.append("Mission Version: ").append(this.mission.getVersion()).append("\n")
+                .append("Simulation ID: ").append(this.simulationId).append("\n")
                 .append("Timestamp: ").append(this.timestamp).append("\n")
                 .append("Type: ").append(this.type).append("\n")
                 .append("Mission Status: ").append(this.missionStatus).append("\n")

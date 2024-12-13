@@ -33,7 +33,6 @@ public class MainMenu {
 	 * @throws ParseException                if an error occurs while parsing inputs
 	 */
 	public static void mainMenu() throws NotElementComparableException, EmptyCollectionException, ElementNotFoundException, IOException, ParseException {
-		MissionReportManager repManager = new MissionReportManager();
 		boolean running = true;
 
 		Scanner scanner = new Scanner(System.in);
@@ -52,11 +51,11 @@ public class MainMenu {
 					switch (choice) {
 						case 1:
 							validSelection = true;
-							ModeManager modeManager = new ModeManager(repManager);
+							ModeManager modeManager = new ModeManager();
 							modeManager.startGame();
 							break;
 						case 2:
-							showReportsMenu(scanner, repManager);
+							showReportsMenu(scanner);
 							validSelection = true;
 							break;
 						case 9:
@@ -76,16 +75,16 @@ public class MainMenu {
 		}
 	}
 
+
 	/**
-	 * Displays the reports menu and allows the user to interact with options such as
-	 * listing available reports, visualizing a specific report, or going back to the main
-	 * menu. The method runs in a loop until the user selects the "Back" option.
+	 * Displays the report menu to the user, allowing them to view, save, or exit the report-related options.
+	 * The method interacts with the user via the provided scanner and performs actions based on the user's selection.
 	 *
-	 * @param scanner       the input scanner used to read user choices from the console
-	 * @param reportManager the manager object responsible for handling report-related
-	 *                      operations such as listing and visualizing reports
+	 * @param scanner the Scanner object used to read user input from the console
+	 * @throws EmptyCollectionException if the operation requires a collection that is empty
+	 * @throws IOException if an I/O error occurs during report handling
 	 */
-	private static void showReportsMenu(Scanner scanner, MissionReportManager reportManager) throws EmptyCollectionException, IOException {
+	private static void showReportsMenu(Scanner scanner) {
 		boolean running = true;
 		String showReportMenuInfo = "";
 

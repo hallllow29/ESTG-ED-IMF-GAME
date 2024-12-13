@@ -66,7 +66,7 @@ public class MissionReportManager {
      *
      * @param file the JSON file containing the mission report to be displayed
      */
-    private void showReport(File file) {
+   /* private void showReport(File file) {
         JSONParser parser = new JSONParser();
 
         try (FileReader reader = new FileReader(file)) {
@@ -131,6 +131,6 @@ public class MissionReportManager {
         } catch (IOException | ParseException e) {
             System.out.println("Error reading report" + e.getMessage());
         }
-    }
+    } */
 
 }
