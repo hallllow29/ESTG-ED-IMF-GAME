@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 
 /**
  * The SaveToJsonFile class is responsible for saving a {@link Report} object as a JSON file.
@@ -25,7 +26,7 @@ public class SaveToJsonFile {
      * Each time a report is saved, this counter is incremented to ensure file names are unique
      * within the "reports" directory.
      */
-    private static int counter = 0;
+    private static final int counter = 0;
 
     /**
      * Saves the given {@code Report} object as a JSON file in the specified directory.
@@ -41,7 +42,8 @@ public class SaveToJsonFile {
             dir.mkdir();
         }
 
-        String fileName = REPORTS_DIR + "Report_" + (++counter) + ".json";
+
+        String fileName = REPORTS_DIR + report.getMission().getCode()+ "_" + report.getSimulationId() + ".json";
 
         //Main report info
         JSONObject jsonReport = new JSONObject();

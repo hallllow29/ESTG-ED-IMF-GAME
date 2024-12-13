@@ -60,13 +60,13 @@ public class ManualMode extends Simulation {
 
 		renderManualSimulation(getMission().getTarget().getRoom());
 		displaySophisticatedSpySystem();
-		Room entryRoom = displayAllEntries();
-		super.setEntryPoint(entryRoom);
-		super.getPlayer().setPosition(entryRoom);
+		Room entryPoint = displayAllEntries();
+		super.setEntryPoint(entryPoint);
+		super.getPlayer().setPosition(entryPoint);
 		getReport().addRoom(getPlayer().getPosition().getName());
 		getReport().setEntryPoint(getPlayer().getPosition().getName());
 
-		if (entryRoom.hasItems()){
+		if (entryPoint.hasItems()){
 			scenariosSituations();
 			scenariosCase(getCurrentScenario());
 		}
@@ -77,52 +77,44 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Moves the player within the game simulation by determining the next room based on
-	 * the player's current position and the next objective. This method is invoked to
-	 * handle player movement and update the game state accordingly.
-	 * <p>
-	 * The player's current position is evaluated to determine the next room for movement.
-	 * Additionally, the method utilizes pathfinding and decision-making logic to manage
-	 * the movement. If the player completes their mission, the game ends.
-	 * <p>
-	 * During execution:
-	 * - The current player position is retrieved.
-	 * - If the mission is not accomplished, the path to the next objective is displayed.
-	 * - Advanced spy intelligence is rendered for player guidance.
-	 * - The next room is selected based on the current position.
-	 * - If the selected room is the same as the current position, the player's position
-	 * remains unchanged; otherwise, the position updates to the next room.
-	 * - The name of the room the player moves into is added to the game report.
-	 * - If the mission is accomplished, the game is set as over.
+	 * Moves the player to the next position or stays in the current position based on the game state
+	 * and the player's decision. This method manages the overall game progression during the player's turn.
 	 *
-	 * @throws ElementNotFoundException if an element required for room selection or
-	 *                                  movement is missing.
-	 * @throws EmptyCollectionException if the collection required for operation is empty,
-	 *                                  indicating no valid movement paths are available.
+	 * If the mission is not accomplished, the method:
+	 * - Displays relevant game information using the sophisticated spy system.
+	 * - Calculates and displays the possible path to the player's next objective.
+	 * - Allows the player to select their next position from available options, including staying in the current room.
+	 * - Updates the player's position and the turn order based on the player's choice.
+	 * - Adds the new room to the game report for tracking movement history.
+	 * - Renders additional intel using the sophisticated spy system interface.
+	 *
+	 * If the mission is accomplished, the game is marked as over.
+	 *
+	 * @throws ElementNotFoundException if any required game element, such as a room or objective, is missing.
 	 */
 	@Override
-	public void movePlayer() throws ElementNotFoundException, EmptyCollectionException {
-		Room currentRoom = getPlayer().getPosition();
+	public void movePlayer() throws ElementNotFoundException {
+		Room playerPosition = getPlayer().getPosition();
 
 		if (!isMissionAccomplished()) {
 
 			System.out.println(Display.sophisticatedSpySystemBanner());
 
 			super.displayPath(getPlayer().getPosition(), getNextObjective());
-			Room nextRoom = selectNextRoom(currentRoom);
+			Room nextPlayerPosition = selectNextPosition();
 
 			// STAY
-			if (nextRoom.equals(currentRoom)) {
-				super.getPlayer().setPosition(currentRoom);
+			if (nextPlayerPosition.equals(playerPosition)) {
+				super.getPlayer().setPosition(playerPosition);
 				super.setNextTurn(Turn.ENEMY);
 			} else {
-				super.getPlayer().setPosition(nextRoom);
+				super.getPlayer().setPosition(nextPlayerPosition);
 				super.setNextTurn(Turn.PLAYER);
 			}
 
 			this.displaySophisticatedSpySystem();
 
-			super.addRoomToReport(nextRoom.getName());
+			super.addRoomToReport(nextPlayerPosition.getName());
 
 		} else {
 			setGameOver(true);
@@ -130,15 +122,16 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Selects the next room for the player to move into based on the current player
-	 * position and user input. Provides options to stay, use a recovery item, or move to
-	 * a connected room. Validates the user's input and updates the player's position
-	 * appropriately.
+	 * Allows the player to select the next position to move within the game by
+	 * presenting a list of possible moves, the option to stay, and the option to
+	 * use a MedicKit. The method interacts with the player via the console to
+	 * capture their choice and determines the corresponding action or position
+	 * based on the selection.
 	 *
-	 * @param playerPosition the current position of the player in the game.
-	 * @return the selected room for the player's next move.
+	 * @return the selected Room object that represents the player's next position,
+	 * or the current position if the player chooses to stay.
 	 */
-	private Room selectNextPosition(Room playerPosition) {
+	private Room selectNextPosition() {
 		String selectNextPositionInfo = "";
 		int choice = -1;
 		Scanner scanner = new Scanner(System.in);
@@ -186,16 +179,12 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Counts the number of possible positions (rooms) a player can move to based on the
-	 * provided possible moves. The method builds and displays a message containing the
-	 * possible move options and updates the provided list of display rooms with the
-	 * possible rooms.
+	 * Counts the possible positions a player or element can move to based on the given list of possible moves
+	 * and populates a display list with these positions.
 	 *
-	 * @param possibleMoves the list of rooms representing possible moves the player can
-	 *                      make.
-	 * @param displayRooms  the list of rooms to be updated with the rooms from the
-	 *                      possible moves.
-	 * @return the total number of possible positions (rooms) a player can move to.
+	 * @param possibleMoves the list of rooms that represent possible move options
+	 * @param displayPositions the list to be populated with the positions for display purposes
+	 * @return the number of possible positions available for movement
 	 */
 	private int countPossiblePositions(ArrayUnorderedList<Room> possibleMoves, ArrayUnorderedList<Room> displayPositions) {
 		int possiblePositions = 0;
@@ -228,30 +217,26 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Generates a message displaying the player's current health status. The message is
-	 * formatted as "{currentHealth}/100", where "{currentHealth}" represents the player's
-	 * current health value.
+	 * Computes the current health message of the player by retrieving the player's
+	 * current health and formatting it as a string in the format "currentHealth/100".
 	 *
-	 * @return a string representing the player's current health in the format
-	 * "{currentHealth}/100"
+	 * @return A string representing the player's current health in the format "currentHealth/100".
 	 */
 	private String currentHealthMessage() {
 		return getPlayer().getCurrentHealth() + "/100";
 	}
 
 	/**
-	 * Determines the player's next move based on their choice, the last allowable option,
-	 * and the list of possible moves. The method evaluates the player's selection and
-	 * updates the game state accordingly. It handles staying in the current room, moving
-	 * to a selected room, or using a medical kit if applicable.
+	 * Decides the next move based on the player's choice, current position, and available moves.
+	 * This method handles various scenarios such as staying in the current position, using a medic kit,
+	 * or moving to a selected room.
 	 *
-	 * @param choice        the player's input representing their decision for the next
-	 *                      move
-	 * @param lastSelection the index of the last valid move option (e.g., the maximum
-	 *                      choice for room selection or stay option)
-	 * @param possibleMoves the list of rooms that the player can choose to move to
-	 * @return the Room object representing the selected room for the next move, or the
-	 * current room if the player chooses to stay or uses a medical kit
+	 * @param choice the player's selected choice for the next move
+	 * @param lastSelection the index of the last available room choice
+	 * @param possibleMoves a collection of possible rooms the player can move to
+	 * @return the selected Room based on the player's choice;
+	 *         returns the current room if the player chooses to stay or uses a medic kit
+	 *         when applicable, or null for invalid options
 	 */
 	private Room decideNextMove(int choice, int lastSelection, ArrayUnorderedList<Room> possibleMoves) {
 
@@ -287,15 +272,12 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Displays all possible entry points by iterating over the available rooms and
-	 * presenting them to the user for selection. This method interacts with the user to
-	 * select a preferred entry point or follows the recommended entry point identified by
-	 * the system. The user can navigate through the options until a selection is made.
+	 * Displays all possible entry points and allows the user to select an entry point
+	 * based on the recommendations provided. The user is prompted to make a choice
+	 * between selecting an entry point or continuing to view other options.
 	 *
-	 * @return the Room object representing the selected entry point.
-	 *
-	 * @throws ElementNotFoundException if any required element for displaying or
-	 *                                  selecting entry points is missing.
+	 * @return Returns the selected Room object corresponding to the user's choice.
+	 * @throws ElementNotFoundException if an error occurs while fetching entry points.
 	 */
 	private Room displayAllEntries() throws ElementNotFoundException {
 		String displayAllEntiesInfo = "";
@@ -363,7 +345,7 @@ public class ManualMode extends Simulation {
 	 * upcoming scenarios. This method consolidates and outputs critical game information
 	 * for the user to observe and analyze.
 	 */
-	private void displaySophisticatedSpySystem() throws ElementNotFoundException {
+	private void displaySophisticatedSpySystem() {
 		String gatheringIntelInfo = Display.collectingData();
 		System.out.print(gatheringIntelInfo);
 		gatheringIntelInfo = "";
@@ -442,32 +424,36 @@ public class ManualMode extends Simulation {
 	}
 
 	/**
-	 * Executes the action of using a medical kit during the manual gameplay mode. This
-	 * method triggers the predefined Scenario QUATRO game logic by invoking the
-	 * corresponding superclass method.
-	 * <p>
-	 * Scenario QUATRO includes the following sequence:
-	 * - Displays messages related to the player's turn.
-	 * - Simulates checking the player's backpack for available medical kits.
-	 * - Attempts to utilize a medical kit if available. If no medical kit exists, an
-	 * exception is handled gracefully without interrupting the game flow.
-	 * - Updates the game state to set the subsequent turn for the enemy.
-	 * <p>
-	 * This method encapsulates the usage of a medical kit as part of the scenario and
-	 * ensures proper handling of any
+	 * Utilizes a medical kit by invoking the `scenarioQUATRO` method of the superclass.
+	 *
+	 * This method is designed to handle the application of a medical kit within the game
+	 * scenario, potentially affecting the player's health or other game-related parameters
+	 * as part of the current mission simulation logic. The specific effects and operations
+	 * are managed by the superclass implementation of `scenarioQUATRO`. The exact behavior
+	 * may depend on the overarching game mechanics defined in the `Simulation` class.
 	 */
 	private void useMedicKit() {
 		super.scenarioQUATRO();
 	}
 
 	/**
-	 * Displays information about the items available during the mission, including their
-	 * names, values, and positions. It also determines and outputs the closest path to a
-	 * medical kit if any are available, providing actionable intelligence to the player.
-	 * <p>
-	 * This method is crucial for providing the player with strategic insights into the
-	 * items present in the game and facilitating informed decision-making during the
-	 * mission.
+	 * Displays intelligence related to items available in the current mission and the
+	 * player's surroundings. This method collects and formats information about
+	 * available items and outputs it to the console.
+	 *
+	 * The method performs the following operations:
+	 * - Calls the Display class to render banners and messages, such as the available
+	 *   medical kits in the mission.
+	 * - Iterates through the items in the mission to retrieve and display their
+	 *   details, such as name, value, and position.
+	 * - Identifies and displays the closest medical kit to the player's position, if
+	 *   available, along with the path to it.
+	 *
+	 * If there are no medical kits left or an error occurs during path calculation,
+	 * appropriate messages are displayed to indicate these conditions.
+	 *
+	 * Any exceptions related to empty collections or missing elements during the closest
+	 * medical kit calculation are caught and output as error messages.
 	 */
 	private void displayItemsIntel() {
 

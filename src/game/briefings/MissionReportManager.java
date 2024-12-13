@@ -13,14 +13,33 @@ public class MissionReportManager {
 
 	private final LinkedOrderedList<Report> reports;
 
+	/**
+	 * Constructs a new MissionReportManager instance.
+	 * Initializes an internal collection for managing mission reports using a LinkedOrderedList.
+	 */
 	public MissionReportManager() {
 		this.reports = new LinkedOrderedList<>();
 	}
 
+	/**
+	 * Adds a new report to the collection of mission reports.
+	 *
+	 * @param report the report to be added to the collection
+	 * @throws NotElementComparableException if the report cannot be compared or added
+	 *                                       to the underlying collection
+	 */
 	public void addReport(Report report) throws NotElementComparableException {
 		this.reports.add(report);
 	}
 
+	/**
+	 * Displays all the reports in the collection managed by the MissionReportManager.
+	 *
+	 * If the collection of reports is null, a message is displayed indicating
+	 * that no reports are found. If the collection is empty, a prompt is shown
+	 * to add a new report in order to visualize them. Otherwise, each report in
+	 * the collection is printed using its string representation.
+	 */
 	public void viewReports() {
 		if (this.reports == null) {
 			System.out.println("No reports found");
@@ -33,6 +52,15 @@ public class MissionReportManager {
 		}
 	}
 
+	/**
+	 * Saves all the reports in the collection to JSON files.
+	 *
+	 * This method iterates through the collection of reports and uses the
+	 * SaveToJsonFile utility to save each report as a JSON file. If the
+	 * collection of reports is empty, a message indicating the absence of
+	 * reports is displayed. If the collection contains reports, a confirmation
+	 * message is printed after all reports have been successfully saved.
+	 */
 	public void saveALlReports() {
 		if (this.reports.isEmpty()) {
 			System.out.println("No reports found");
@@ -46,6 +74,23 @@ public class MissionReportManager {
 
 	}
 
+	/**
+	 * Displays reports grouped by the mission they belong to, with detailed information about
+	 * each mission and its corresponding reports.
+	 *
+	 * This method organizes the reports from the collection by their associated mission codes
+	 * and ensures that duplicates are not displayed. For each unique mission, a header with
+	 * the mission code is printed, followed by details of all reports associated with that
+	 * mission. Each report displays the mission version, simulation ID, player's current health,
+	 * and mission status.
+	 *
+	 * If the collection of reports is empty, a prompt message is displayed to indicate that
+	 * new reports should be added.
+	 *
+	 * @throws NotElementComparableException if adding a report to the internal linked list
+	 *                                       fails due to incompatibility with the required
+	 *                                       comparable constraints
+	 */
 	public void displayReportByMission() throws NotElementComparableException {
 		LinkedOrderedList<Report> codes = new LinkedOrderedList<>();
 
@@ -79,85 +124,11 @@ public class MissionReportManager {
 			}
 
 			for (Report report : missionReports) {
-				System.out.println("Version: " + report.getMission().getVersion() + " | HP : " + report.getPlayer().getCurrentHealth() + " | Status: " + report.getMissionStatus());
+				System.out.println("Version: " + report.getMission().getVersion() + " | ID: " + report.getSimulationId() + " | HP : " + report.getPlayer().getCurrentHealth() + " | Status: " + report.getMissionStatus());
 			}
+
+			System.out.println();
 		}
 	}
-
-	/**
-	 * Displays the details of a specific mission report stored in a JSON file.
-	 *
-	 * The method parses the given file, extracts information such as simulation details,
-	 * player statistics, mission details, trajectories to target and extraction points,
-	 * and lists of enemies survived or killed. The extracted data is printed in a structured format.
-	 *
-	 * @param file the JSON file containing the mission report to be displayed
-	 */
-   /* private void showReport(File file) {
-        JSONParser parser = new JSONParser();
-
-        try (FileReader reader = new FileReader(file)) {
-            JSONObject report = (JSONObject) parser.parse(reader);
-
-            System.out.println("\n==== REPORT DETAILS ====");
-            System.out.println("Simulation ID -> " + report.get("simulationId"));
-            System.out.println("Time -> " + report.get("timestamp"));
-            System.out.println("Type -> " + report.get("type"));
-
-            JSONObject player = (JSONObject) report.get("player");
-            System.out.println("\n==== PLAYER DETAILS ====");
-            System.out.println("Name ->" + player.get("name"));
-            System.out.println("Final HP -> " + player.get("finalHealth"));
-            System.out.println("Fire Power -> " + player.get("firePower"));
-            System.out.println("Backpack -> " + player.get("backPack"));
-
-            JSONObject mission = (JSONObject) report.get("mission");
-            System.out.println("\n==== MISSION DETAILS ====");
-            System.out.println("Code -> " + mission.get("code"));
-            System.out.println("Target -> " + mission.get("target"));
-            System.out.println("Entry point -> " + mission.get("entryPoint"));
-            System.out.println("Status -> " + mission.get("missionStatus"));
-
-            System.out.println("\n==== TRAJECTORY TO TARGET ====");
-            JSONArray trajectoryToTarget = (JSONArray) report.get("trajetoryToTarget");
-
-            for (int i = 0; i < trajectoryToTarget.size(); i++) {
-                System.out.print("->" + trajectoryToTarget.get(i));
-            }
-
-            System.out.println("\n==== TRAJECTORY TO EXTRACTION POINT ====");
-            JSONArray trajectoryToExtraction = (JSONArray) report.get("trajectoryToExtraction");
-
-            if (trajectoryToExtraction.isEmpty()) {
-                System.out.println("Player are bad that he didnt even make to the extraction point!");
-            } else {
-                for (int i = 0; i < trajectoryToExtraction.size(); i++) {
-                    System.out.print("-> " + trajectoryToExtraction.get(i));
-                }
-            }
-
-            System.out.println("\n==== ENEMIES SURVIVED ====");
-            JSONArray enemiesSurvived = (JSONArray) report.get("enemiesSurvived");
-
-            if (enemiesSurvived.isEmpty()) {
-                System.out.println("Player is so good that he rescue the target without killing an enemy! Ninja!");
-            } else {
-                for (int i = 0; i < enemiesSurvived.size(); i++) {
-                    System.out.println("-> " + enemiesSurvived.get(i));
-                }
-            }
-
-
-
-            System.out.println("\n==== ENEMIES KILLED ====");
-            JSONArray enemiesKilled = (JSONArray) report.get("enemiesKilled");
-
-            for (int i = 0; i < enemiesKilled.size(); i++) {
-                System.out.println("-> " + enemiesKilled.get(i));
-            }
-        } catch (IOException | ParseException e) {
-            System.out.println("Error reading report" + e.getMessage());
-        }
-    } */
 
 }

@@ -6,6 +6,7 @@ import lib.lists.ArrayUnorderedList;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -18,19 +19,18 @@ import java.util.UUID;
 public class Report implements Comparable<Report> {
 
 	/**
-	 * Represents the unique identifier for a simulation. This variable is used to
-	 * uniquely distinguish and track a specific simulation instance within the context of
-	 * the application. It ensures that each simulation report can be accurately
-	 * identified and referenced as needed.
+	 * Represents a unique identifier for a simulation associated with this report.
+	 * The simulation ID is assigned during the creation of the report and is used to
+	 * distinguish it from other reports within the system.
 	 */
-	private final String simulationId;
+	private final int simulationId;
 
 	/**
 	 * Represents the timestamp associated with the report. This variable holds the time
 	 * at which the report was generated or updated, formatted as a string. It can be used
 	 * to track or identify the temporal information related to the report.
 	 */
-	private String timestamp;
+	private final LocalDateTime timestamp;
 
 	/**
 	 * Represents the type or category of a report in the simulation. This variable is
@@ -112,6 +112,7 @@ public class Report implements Comparable<Report> {
 	 */
 	private final ArrayUnorderedList<String> enemiesKilled;
 
+
 	/**
 	 * Constructs a new Report instance with the specified type, player, and mission. This
 	 * constructor initializes the report with a unique simulation ID, a timestamp, and
@@ -124,8 +125,8 @@ public class Report implements Comparable<Report> {
 	 * @param mission the Mission instance associated with the report
 	 */
 	public Report(String type, Player player, Mission mission) {
-		this.simulationId = UUID.randomUUID().toString();
-		this.timestamp = getCurrentTimestamp();
+		this.simulationId = new Random().nextInt(22222);
+		this.timestamp = LocalDateTime.now();
 		this.player = player;
 		this.mission = mission;
 		this.type = type;
@@ -200,17 +201,8 @@ public class Report implements Comparable<Report> {
 	 * @return the timestamp as a string.
 	 */
 	public String getTimestamp() {
-		return timestamp;
-	}
-
-	/**
-	 * Sets the timestamp for the report.
-	 *
-	 * @param timestamp a string representing the timestamp to be set. The timestamp
-	 *                  typically indicates when the report was created or updated.
-	 */
-	public void setTimestamp(String timestamp) {
-		this.timestamp = timestamp;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		return this.timestamp.format(formatter);
 	}
 
 	/**
@@ -303,7 +295,7 @@ public class Report implements Comparable<Report> {
 	 *
 	 * @return a string representing the simulation ID.
 	 */
-	public String getSimulationId() {
+	public int getSimulationId() {
 		return simulationId;
 	}
 
@@ -385,17 +377,35 @@ public class Report implements Comparable<Report> {
 		return this.enemiesKilled;
 	}
 
+	/**
+	 * Compares this report object to another report object for order based on the
+	 * player's current health. The comparison is done in descending order, where
+	 * higher current health comes first.
+	 *
+	 * @param o the other Report object to be compared
+	 * @return a negative integer, zero, or a positive integer as this report's player
+	 *         has less than, equal to, or greater current health compared to the other
+	 *         report's player
+	 */
 	@Override
 	public int compareTo(Report o) {
 		return Integer.compare(o.getPlayer().getCurrentHealth(), this.player.getCurrentHealth());
 	}
 
+	/**
+	 * Returns a string representation of the Report object.
+	 * The string contains details about the report, including the mission version, simulation ID,
+	 * timestamp, type, mission status, player information, backpack size, and various
+	 * trajectory and mission-related details.
+	 *
+	 * @return a string representation incorporating the properties of the Report object.
+	 */
 	@Override
 	public String toString() {
 		return
 			"\nMission Version:\t" + this.mission.getVersion() +
 				"\nSimulation ID:\t" + this.simulationId +
-				"\nTimestamp:\t " + this.timestamp +
+				"\nTimestamp:\t " + getTimestamp() +
 				"\nType:\t " + this.type +
 				"\nMission Status: " + this.missionStatus +
 				"\nPlayer: " + this.player.getName() +

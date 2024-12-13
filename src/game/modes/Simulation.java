@@ -24,7 +24,7 @@ import java.util.Random;
  * including the battlefield, player status, mission objectives, and various other
  * scenarios.
  */
-public abstract class Simulation {
+public abstract class Simulation implements SimulationI {
 
 	/**
 	 * Represents the mission instance associated with the simulation. Provides essential
@@ -218,6 +218,11 @@ public abstract class Simulation {
 
 		addStatusToReport();
 
+		// Count enemies which survivived.
+		for (Enemy enemy : getEnemies()) {
+			this.getReport().addEnemy(enemy.getName());
+		}
+
 	}
 
 	/**
@@ -321,7 +326,7 @@ public abstract class Simulation {
 	 *
 	 * @return the CustomNetwork of Room objects representing the battlefield.
 	 */
-	public CustomNetwork<Room> getBattlefield() {
+	public CustomNetwork<Room> getBattleField() {
 		return this.battlefield;
 	}
 
@@ -534,16 +539,14 @@ public abstract class Simulation {
 	 * @throws EmptyCollectionException if an operation is attempted on an empty
 	 *                                  collection during scenario execution.
 	 */
-	protected void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException, EmptyCollectionException {
+	protected void scenariosCase(ScenarioNr nextScenario) throws ElementNotFoundException {
 
 		switch (nextScenario) {
 			case TWO:
 				scenarioDOIS(); setNextTurn(Turn.ENEMY); break;
 			case ONE:
 				scenarioUM();
-				// setNextTurn(Turn.PLAYER);
 
-				// NAO SEI SE DEIXO AQUI, ou dentro do scenarioUM()...
 				if (!this.player.isAlive()) {
 					setMissionAccomplished(false);
 					setGameOver(true);
@@ -787,7 +790,6 @@ public abstract class Simulation {
 		playerConfronts();
 
 		scenarioCINCOinfo = "";
-
 		enemiesRemained = playerPosition.hasEnemies();
 
 		if (enemiesRemained) {
@@ -833,7 +835,6 @@ public abstract class Simulation {
 			setGameOver(true);
 
 		} else {
-
 			playerReachedTarget();
 			scenarioSEISinfo += Display.targetIsSecuredMessage(player.getName(), nextObjective.getName());
 		}
@@ -1012,15 +1013,13 @@ public abstract class Simulation {
 	}
 
 	/**
-	 * Collects items located in the specified room and processes their pickup by the
-	 * player. If the player's backpack is not full, items such as MediKit are added to
-	 * the backpack, and Kevlar is equipped directly. Updates the player's position and
-	 * item collection state.
+	 * Collects and processes items located in the specified room.
+	 * Depending on the item type, the method updates the player's inventory or equipment
+	 * and generates appropriate display messages.
 	 *
-	 * @param room The room where items are being gathered. Only items located in this
-	 *             room are processed.
-	 * @return A string containing messages about the items spotted and actions performed,
-	 * such as adding items to the backpack or equipping them.
+	 * @param position The room in which the items are to be gathered.
+	 * @return A string containing messages about the items collected by the player
+	 *         and their actions (e.g., equipping or storing items).
 	 */
 	private String gatherItems(Room position) {
 		String gatherItemsOutput = "";
@@ -1311,10 +1310,10 @@ public abstract class Simulation {
 	protected void updateWeightsForEnemies() {
 		double newWeight = 0.0;
 
-		for (Room room : getBattlefield().getVertices()) {
-			for (Room connectedRoom : getBattlefield().getConnectedVertices(room)) {
+		for (Room room : getBattleField().getVertices()) {
+			for (Room connectedRoom : getBattleField().getConnectedVertices(room)) {
 				newWeight = calculateWeight(connectedRoom);
-				getBattlefield().addEdge(room, connectedRoom, newWeight);
+				getBattleField().addEdge(room, connectedRoom, newWeight);
 			}
 		}
 	}
@@ -1374,7 +1373,7 @@ public abstract class Simulation {
 	 *                                  cannot be determined.
 	 */
 	protected void displayPath(Room fromPosition, Room toPosition) throws ElementNotFoundException {
-		Iterator<Room> bestPath = getBattlefield().iteratorShortestPath(fromPosition, toPosition);
+		Iterator<Room> bestPath = getBattleField().iteratorShortestPath(fromPosition, toPosition);
 		Room nextRoom;
 
 		StringBuilder displayPathOutput = appendPlayerPositionInfo(bestPath.next());
