@@ -184,7 +184,7 @@ public class ManualMode extends Simulation {
 
 		selectNextPositionInfo = Display.yourNextPositionMessage(selectedRoom.getName());
 		System.out.print(selectNextPositionInfo);
-		
+
 		return selectedRoom;
 	}
 
@@ -210,7 +210,6 @@ public class ManualMode extends Simulation {
 			displayRooms.addToRear(room);
 			possiblePositions++;
 		}
-
 
 		System.out.print(possiblePositionInfo);
 
@@ -540,9 +539,11 @@ public class ManualMode extends Simulation {
 			setNextScenario(ScenarioNr.SIX);
 			setGameOver(true);
 			return true;
+		} else if (getPlayer().isAlive() && !getMission().isTargetSecured() && playerPosition.equals(extractionPoint)) {
+			setGameOver(true);
 		}
-
 		return false;
+
 	}
 
 }
