@@ -345,7 +345,8 @@ public class Display {
 		return "\n\t==== REPORTS MENU ====" +
 			"\n[1] Export all reports" +
 			"\n[2] Visualize Report" +
-			"\n[3] Back" +
+				"\n[3] Display Reports By mission" +
+				"\n[4] back" +
 			"\n\nOption: ";
 	}
 

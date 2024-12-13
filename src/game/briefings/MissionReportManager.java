@@ -57,6 +57,40 @@ public class MissionReportManager {
         System.out.println("All reports saved!");
     }
 
+    public void displayReportByMission() throws NotElementComparableException {
+        LinkedOrderedList<Report> codes = new LinkedOrderedList<>();
+
+        for (Report report : this.reports) {
+            boolean alreadyAdded = false;
+            for (Report code : codes) {
+                if (code.getMission().getCode().equals(report.getMission().getCode())) {
+                    alreadyAdded = true;
+                    break;
+                }
+            }
+
+            if (!alreadyAdded) {
+                codes.add(report);
+            }
+        }
+
+        for (Report uniqueReport : codes) {
+            String missionCode = uniqueReport.getMission().getCode();
+            System.out.println("Mission: " + missionCode);
+            LinkedOrderedList<Report> missionReports = new LinkedOrderedList<>();
+
+            for (Report report : this.reports){
+                if (report.getMission().getCode().equals(missionCode)) {
+                    missionReports.add(report);
+                }
+            }
+
+            for (Report report : missionReports) {
+                System.out.println("Version: " + report.getMission().getVersion() + " | HP : " + report.getPlayer().getCurrentHealth() + " | Status: " + report.getMissionStatus());
+            }
+        }
+    }
+
     /**
      * Displays the details of a specific mission report stored in a JSON file.
      *

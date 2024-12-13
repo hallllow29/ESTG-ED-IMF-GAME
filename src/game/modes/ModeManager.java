@@ -81,7 +81,7 @@ public class ModeManager {
 
 		String playerName = scanner.nextLine();
 
-		return new Player(playerName, 10, chooseBackPackSize(scanner));
+		return new Player(playerName, 100, chooseBackPackSize(scanner));
 
 	}
 

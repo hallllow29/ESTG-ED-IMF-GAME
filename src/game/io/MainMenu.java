@@ -34,7 +34,7 @@ public class MainMenu {
 	 */
 	public static void mainMenu() throws NotElementComparableException, EmptyCollectionException, ElementNotFoundException, IOException, ParseException {
 		boolean running = true;
-
+		ModeManager modeManager = new ModeManager();
 		Scanner scanner = new Scanner(System.in);
 		int choice = 0;
 		String welcomeMenuInfo = "";
@@ -51,7 +51,6 @@ public class MainMenu {
 					switch (choice) {
 						case 1:
 							validSelection = true;
-							ModeManager modeManager = new ModeManager();
 							modeManager.startGame();
 							break;
 						case 2:
@@ -84,7 +83,7 @@ public class MainMenu {
 	 * @throws EmptyCollectionException if the operation requires a collection that is empty
 	 * @throws IOException if an I/O error occurs during report handling
 	 */
-	private static void showReportsMenu(Scanner scanner) {
+	private static void showReportsMenu(Scanner scanner) throws NotElementComparableException {
 		boolean running = true;
 		String showReportMenuInfo = "";
 
@@ -109,6 +108,10 @@ public class MainMenu {
 							validSelection = true;
 							break;
 						case 3:
+							ModeManager.getRepManager().displayReportByMission();
+							validSelection = true;
+							break;
+						case 4:
 							running = false;
 							validSelection = true;
 							break;
