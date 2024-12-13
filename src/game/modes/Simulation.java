@@ -3,19 +3,17 @@ package game.modes;
 import entities.*;
 import entities.enums.ScenarioNr;
 import entities.enums.Turn;
-import game.briefings.MissionReportManager;
 import game.briefings.Report;
 import game.io.Display;
 import lib.exceptions.ElementNotFoundException;
 import lib.exceptions.EmptyCollectionException;
-import lib.exceptions.NotElementComparableException;
 import lib.graphs.CustomNetwork;
 import lib.graphs.Network;
 import lib.lists.ArrayList;
 import lib.lists.ArrayUnorderedList;
 import lib.lists.LinkedList;
 
-import java.io.IOException;
+
 import java.util.Iterator;
 import java.util.Random;
 
@@ -220,16 +218,6 @@ public abstract class Simulation {
 
 		addStatusToReport();
 
-		System.out.println("TO CRUZ DIED !!!"); System.out.println("JUST KIDDING...");
-		System.out.println("IT WAS A SIMULATION...");
-		System.out.println("...OR WASN'T IT..."); System.out.println("GAME OVER!");
-
-		Iterator<Enemy> enemies = getEnemies().iterator();
-
-		while (enemies.hasNext()) {
-			Enemy enemy = enemies.next(); System.out.println(enemy);
-			this.getReport().addEnemy(enemy.getName());
-		}
 	}
 
 	/**
@@ -1375,8 +1363,6 @@ public abstract class Simulation {
 
 		String getBestPathOutput = "";
 
-		// updateWeightsForEnemies();
-
 		if (isReturningToExit) {
 			getBestPathOutput += Display.bestPathExtractionMessage();
 		} else {
@@ -1384,7 +1370,6 @@ public abstract class Simulation {
 		}
 
 		System.out.println(getBestPathOutput);
-		// this.displayPath(playerPosition, this.nextObjective);
 	}
 
 	/**
@@ -1473,9 +1458,11 @@ public abstract class Simulation {
 	 */
 	protected void addStatusToReport() {
 		if (player.isAlive() && isGameOver()) {
-			getReport().setMissionStatus("entities.Mission Accomplished");
+			missionAccomplished = true;
+			getReport().setMissionStatus("Mission Accomplished");
 		} else {
-			report.setMissionStatus("entities.Mission Failed");
+			missionAccomplished = false;
+			report.setMissionStatus("Mission Failed");
 		}
 	}
 

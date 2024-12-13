@@ -12,13 +12,13 @@ public class Target {
      * within the target, and it may contain additional contextual
      * information such as items, enemies, or other attributes.
      */
-    private Room room;
+    private final Room room;
     /**
      * Represents the type descriptor of a target within a mission or objective.
      * The type can define additional characteristics or categorization for the target,
      * such as its specific objective type, purpose, or classification.
      */
-    private String type;
+    private final String type;
 
     /**
      * Constructs a Target object with the specified room and type.
@@ -53,7 +53,6 @@ public class Target {
      *         including the room and type information.
      */
     public String toString() {
-        return this.room +
-                " Type: " + this.type;
+        return  "[" + this.room + "] " + this.type;
     }
 }

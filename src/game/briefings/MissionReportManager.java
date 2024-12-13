@@ -1,105 +1,98 @@
 package game.briefings;
 
-import com.sun.security.jgss.GSSUtil;
 import game.util.SaveToJsonFile;
-import lib.exceptions.ElementNotFoundException;
-import lib.exceptions.EmptyCollectionException;
 import lib.exceptions.NotElementComparableException;
-import lib.interfaces.OrderedListADT;
 import lib.lists.LinkedOrderedList;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * The MissionReportManager class provides functionality to manage mission reports,
- * including listing available reports, visualizing individual reports, and
- * retrieving information about missions and simulations.
+ * including listing available reports, visualizing individual reports, and retrieving
+ * information about missions and simulations.
  */
 public class MissionReportManager {
 
-    private LinkedOrderedList<Report> reports;
+	private final LinkedOrderedList<Report> reports;
 
-    public MissionReportManager() {
-        this.reports = new LinkedOrderedList<>();
-    }
+	public MissionReportManager() {
+		this.reports = new LinkedOrderedList<>();
+	}
 
-    public void addReport(Report report) throws NotElementComparableException {
-        this.reports.add(report);
-    }
+	public void addReport(Report report) throws NotElementComparableException {
+		this.reports.add(report);
+	}
 
-    public void viewReports() {
-        if (this.reports == null) {
-            System.out.println("No reports found");
-        }
+	public void viewReports() {
+		if (this.reports == null) {
+			System.out.println("No reports found");
+		} else if (this.reports.isEmpty()) {
+			System.out.println("Add a new report, to be able to visualize");
+		}
 
-        for (Report report : this.reports) {
-            System.out.println(report.toString());
-        }
-    }
+		for (Report report : this.reports) {
+			System.out.println(report.toString());
+		}
+	}
 
-    public void saveALlReports() {
-        if (this.reports.isEmpty()) {
-            System.out.println("No reports found");
-        }
+	public void saveALlReports() {
+		if (this.reports.isEmpty()) {
+			System.out.println("No reports found");
+		} else {
+			for (Report report : this.reports) {
+				SaveToJsonFile.saveJsonFile(report);
+			}
+			System.out.println("All reports saved!");
 
-        for (Report report : this.reports) {
-            SaveToJsonFile.saveJsonFile(report);
-        }
+		}
 
-        System.out.println("All reports saved!");
-    }
+	}
 
-    public void displayReportByMission() throws NotElementComparableException {
-        LinkedOrderedList<Report> codes = new LinkedOrderedList<>();
+	public void displayReportByMission() throws NotElementComparableException {
+		LinkedOrderedList<Report> codes = new LinkedOrderedList<>();
 
-        for (Report report : this.reports) {
-            boolean alreadyAdded = false;
-            for (Report code : codes) {
-                if (code.getMission().getCode().equals(report.getMission().getCode())) {
-                    alreadyAdded = true;
-                    break;
-                }
-            }
+		if (this.reports.isEmpty()) {
+			System.out.println("Complete a mission and a add a new report.");
+		}
 
-            if (!alreadyAdded) {
-                codes.add(report);
-            }
-        }
+		for (Report report : this.reports) {
+			boolean alreadyAdded = false;
+			for (Report code : codes) {
+				if (code.getMission().getCode().equals(report.getMission().getCode())) {
+					alreadyAdded = true;
+					break;
+				}
+			}
 
-        for (Report uniqueReport : codes) {
-            String missionCode = uniqueReport.getMission().getCode();
-            System.out.println("Mission: " + missionCode);
-            LinkedOrderedList<Report> missionReports = new LinkedOrderedList<>();
+			if (!alreadyAdded) {
+				codes.add(report);
+			}
+		}
 
-            for (Report report : this.reports){
-                if (report.getMission().getCode().equals(missionCode)) {
-                    missionReports.add(report);
-                }
-            }
+		for (Report uniqueReport : codes) {
+			String missionCode = uniqueReport.getMission().getCode();
+			System.out.println("Mission: " + missionCode);
+			LinkedOrderedList<Report> missionReports = new LinkedOrderedList<>();
 
-            for (Report report : missionReports) {
-                System.out.println("Version: " + report.getMission().getVersion() + " | HP : " + report.getPlayer().getCurrentHealth() + " | Status: " + report.getMissionStatus());
-            }
-        }
-    }
+			for (Report report : this.reports) {
+				if (report.getMission().getCode().equals(missionCode)) {
+					missionReports.add(report);
+				}
+			}
 
-    /**
-     * Displays the details of a specific mission report stored in a JSON file.
-     *
-     * The method parses the given file, extracts information such as simulation details,
-     * player statistics, mission details, trajectories to target and extraction points,
-     * and lists of enemies survived or killed. The extracted data is printed in a structured format.
-     *
-     * @param file the JSON file containing the mission report to be displayed
-     */
+			for (Report report : missionReports) {
+				System.out.println("Version: " + report.getMission().getVersion() + " | HP : " + report.getPlayer().getCurrentHealth() + " | Status: " + report.getMissionStatus());
+			}
+		}
+	}
+
+	/**
+	 * Displays the details of a specific mission report stored in a JSON file.
+	 *
+	 * The method parses the given file, extracts information such as simulation details,
+	 * player statistics, mission details, trajectories to target and extraction points,
+	 * and lists of enemies survived or killed. The extracted data is printed in a structured format.
+	 *
+	 * @param file the JSON file containing the mission report to be displayed
+	 */
    /* private void showReport(File file) {
         JSONParser parser = new JSONParser();
 

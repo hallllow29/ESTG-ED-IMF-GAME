@@ -346,7 +346,7 @@ public class Display {
 			"\n[1] Export all reports" +
 			"\n[2] Visualize Report" +
 				"\n[3] Display Reports By mission" +
-				"\n[4] back" +
+				"\n[4] Back" +
 			"\n\nOption: ";
 	}
 

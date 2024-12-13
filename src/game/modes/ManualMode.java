@@ -536,7 +536,7 @@ public class ManualMode extends Simulation {
 
 		if (getPlayer().isAlive() && getMission().isTargetSecured() && playerPosition.equals(extractionPoint)) {
 			setNextScenario(ScenarioNr.SIX);
-			setGameOver(true);
+			setGameOver(false);
 			return true;
 		}
 
