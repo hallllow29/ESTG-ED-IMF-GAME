@@ -30,18 +30,28 @@
     ["Heliporto", "Escada 6"]
     ],
     "inimigos": [
-    {"nome": "badguy1", "poder": 10, "divisao": "Garagem"},
-    {"nome": "badguy2", "poder": 15, "divisao": "Corredor 1"},
-    {"nome": "badguy3", "poder": 15, "divisao": "Heliporto"},
-    {"nome": "badguy4", "poder": 10, "divisao": "Laboratório"},
-    {"nome": "badguy5", "poder": 5, "divisao": "Heliporto"}
+    {"nome": "badguy1", "poder": 1, "divisao": "Heliporto"},
+    {"nome": "badguy2", "poder": 1, "divisao": "Heliporto"},
+    {"nome": "badguy3", "poder": 1, "divisao": "Heliporto"},
+    {"nome": "badguy4", "poder": 1, "divisao": "Heliporto"},
+    {"nome": "badguy5", "poder": 1, "divisao": "Heliporto"},
+        {"nome": "badguy6", "poder": 1, "divisao": "Garagem"},
+        {"nome": "badguy7", "poder": 1, "divisao": "Garagem"},
+        {"nome": "badguy8", "poder": 1, "divisao": "Garagem"},
+        {"nome": "badguy9", "poder": 1, "divisao": "Garagem"},
+        {"nome": "badguy10", "poder": 1, "divisao": "Garagem"},
+        {"nome": "badguy11", "poder": 1, "divisao": "Escritório 1"},
+        {"nome": "badguy12", "poder": 1, "divisao": "Escritório 1"},
+        {"nome": "badguy13", "poder": 1, "divisao": "Escritório 1"},
+        {"nome": "badguy14", "poder": 1, "divisao": "Escada 6"},
+        {"nome": "badguy15", "poder": 1, "divisao": "Escada 6"}
     ],
     "entradas-saidas": ["Escada de Emergência", "Garagem", "Heliporto", "Porteiro"],
-    "alvo": {"divisao": "Laboratório", "tipo": "quimico"},
+    "alvo": {"divisao": "Escritório 1", "tipo": "quimico"},
     "itens":[
     {"divisao": "WC", "pontos-recuperados": 20, "tipo":"kit de vida"},
     {"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},{"divisao": "Escritório 1", "pontos-recuperados": 15, "tipo":"kit de vida"},
-        {"divisao": "Laboratório", "pontos-recuperados": 15, "tipo":"colete"},
+        {"divisao": "Escada de Emergência", "pontos-recuperados": 15, "tipo":"colete"},
         {"divisao": "Heliporto", "pontos-recuperados": 15, "tipo":"colete"},
         {"divisao": "Escada 5", "pontos-recuperados": 15, "tipo":"colete"},
     {"divisao": "Escada 2", "pontos-extra": 25, "tipo":"colete"} ]

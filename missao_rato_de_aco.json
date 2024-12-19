@@ -1,6 +1,6 @@
 {
     "cod-missao": "rato de aco",
-    "versao": 1,
+    "versao": 2,
     "edificio": [
         "Heliporto",
         "Escada A",
@@ -172,7 +172,7 @@
         },
 
         {
-            "divisao": "Heliporto",
+            "divisao": "Hall de Entrada",
             "pontos-recuperados": 30,
             "tipo": "kit de vida"
         },

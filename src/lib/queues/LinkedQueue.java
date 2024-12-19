@@ -1,4 +1,3 @@
-
 package lib.queues;
 
 import lib.Node;
